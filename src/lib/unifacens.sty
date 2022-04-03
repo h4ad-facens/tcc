@@ -1,0 +1,105 @@
+%%
+%% Customizações do abnTeX2 (http://abnTeX2.googlecode.com) para o Centro Universitário Facens
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is Vinícius. 
+%% Further information about abnTeX2 are available
+%% on https://github.com/abntex/abntex2
+%%
+
+% ---
+% INICIO DAS CUSTOMIZACOES PARA O CENTRO UNIVERSITÁRIO FACENS.
+% ---
+
+% ---
+% Variáveis
+% ---
+\newcommand{\coordenadoria}{\def \@coordenadoria}
+\newcommand{\integranteum}{\def \@integranteum}
+\newcommand{\integrantedois}{\def \@integrantedois}
+\newcommand{\subtitulo}{\def \@subtitulo}
+
+% ---
+% Inicialização das variáveis
+% ---
+\coordenadoria{}
+\integranteum{}
+\integrantedois{}
+\subtitulo{}
+
+% ---
+% Imprimir as váriaveis
+% ---
+\newcommand{\imprimircoordenadoria}{\@coordenadoria}
+\newcommand{\imprimirintegranteum}{\@integranteum}
+\newcommand{\imprimirintegrantedois}{\@integrantedois}
+\newcommand{\imprimirsubtitulo}{\@subtitulo}
+
+% ---
+% Re-adaptações de capa e folha de rosto
+% ---
+
+% Capa
+\renewcommand{\imprimircapa}{
+    \begin{titlingpage}
+        \begin{center}
+            % Todos elementos da capa devem estar em negrito
+            \bfseries
+            \includegraphics[scale=0.5]{logo-f.png}
+            
+            \Large{\MakeUppercase{\imprimircoordenadoria}}
+            
+            \vspace*{5cm}
+
+            \large{\MakeUppercase{\imprimirintegranteum}}\par
+            \large{\MakeUppercase{\imprimirintegrantedois}}
+            
+            \vspace*{5cm}
+
+            \large{\MakeUppercase{\imprimirtitulo}: \imprimirsubtitulo}
+            
+            \vfill
+            \large\imprimirlocal\par
+            \large\imprimirdata
+        \end{center}
+    \end{titlingpage}
+}
+
+% Folha de rosto
+\renewcommand{\folhaderostocontent}{
+    \begin{center}
+        \normalsize{\textbf{\imprimirintegranteum}}\par
+        \normalsize{\textbf{\imprimirintegrantedois}}
+
+        \vspace*{5cm}
+
+        \large{\textbf{\MakeUppercase{\imprimirtitulo}: \imprimirsubtitulo}}
+
+        \vspace*{5cm}
+
+        %Adiciona o espaço da margem
+        \hspace*{8cm}
+        \begin{minipage}{8cm}
+            \begin{SingleSpace}
+                \small\imprimirpreambulo
+            \end{SingleSpace}
+        \end{minipage}
+
+        \vfill
+        \large{\textbf\imprimirlocal}\par
+        \large{\textbf\imprimirdata}
+    \end{center}
+}
+
+% ---
+% FIM DAS CUSTOMIZACOES PARA O CENTRO UNIVERSITÁRIO FACENS
+% ---
