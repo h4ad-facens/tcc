@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  margin: 1.5rem 1.5rem 0;
+  font-family: Montserrat;
+  font-weight: 400;
+}
+
+/** Fonts **/
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(/assets/fonts/Montserrat-Light.ttf) format("opentype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(/assets/fonts/Montserrat-Regular.ttf) format("opentype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(/assets/fonts/Montserrat-Bold.ttf) format("opentype");
+  font-weight: 600;
+}

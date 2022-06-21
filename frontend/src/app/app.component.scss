@@ -1,0 +1,46 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &--logo {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 2rem;
+      margin-right: 1rem;
+      border-radius: 10px;
+    }
+
+    h1 {
+      color: #232323;
+      margin: 0;
+      letter-spacing: 0.15rem;
+      font-weight: 400;
+      font-size: 1.2rem;
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1rem;
+    border: 0;
+    outline: 0;
+    border-radius: 100px;
+    background-color: #1F50FF;
+
+    padding: 1rem;
+    color: white;
+    font-weight: 300;
+    letter-spacing: 0.05rem;
+
+    strong {
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+      font-weight: 300;
+    }
+  }
+}
