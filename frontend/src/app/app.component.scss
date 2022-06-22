@@ -1,11 +1,18 @@
+$header-height: 3rem;
+
 .header {
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1.5rem;
+  min-height: $header-height;
+  height: $header-height;
 
   &--logo {
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     img {
       width: 2rem;
@@ -31,6 +38,7 @@
     outline: 0;
     border-radius: 100px;
     background-color: #1F50FF;
+    cursor: pointer;
 
     padding: 1rem;
     color: white;
@@ -42,5 +50,78 @@
       margin-right: 0.5rem;
       font-weight: 300;
     }
+  }
+}
+
+.container {
+  $navbar-width: 5%;
+
+  display: flex;
+  width: 100%;
+  height: calc(100vh - #{$header-height} - 1.5rem - 1.5rem); // 1.5rem margin-bottom + 1.5rem margin-top
+
+  .navbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: $navbar-width;
+    padding-right: 2rem;
+
+    &--top {
+      height: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    &--bottom {
+      height: 15%;
+    }
+
+    &--item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 4.4rem;
+      height: 4.4rem;
+      cursor: pointer;
+      transition: all ease-out 0.1s;
+      user-select: none;
+
+      &-active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: #2323231A;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+
+        &::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          width: 3px;
+          height: 30px;
+          background-color: #1F50FF;
+        }
+
+        img {
+          margin-bottom: 0 !important;
+        }
+      }
+
+      img {
+        width: 2rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
+  .body {
+    width: calc(100% - #{$navbar-width});
   }
 }

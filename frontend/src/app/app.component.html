@@ -1,7 +1,7 @@
 <!--header-->
 
 <div class="header">
-  <div class="header--logo">
+  <div class="header--logo" routerLink="/home">
     <img src="assets/imgs/logo.svg" alt="Logo">
     <h1>Freedapp</h1>
   </div>
@@ -11,3 +11,34 @@
 
 <!--navbar-->
 
+<div class="container">
+  <div class="navbar">
+    <div class="navbar--top">
+      <div routerLink="/home" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.HOME">
+        <img [src]=" (currentNavbar === navbarStates.HOME) ? 'assets/imgs/home-icon-active.svg' : 'assets/imgs/home-icon.svg'" alt="Home">
+        <span *ngIf="currentNavbar !== navbarStates.HOME">Início</span>
+      </div>
+      <div routerLink="/shoot" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.SHOOT">
+        <img [src]=" (currentNavbar === navbarStates.SHOOT) ? 'assets/imgs/shoot-icon-active.svg' : 'assets/imgs/shoot-icon.svg'" alt="Lances">
+        <span *ngIf="currentNavbar !== navbarStates.SHOOT">Lances</span>
+      </div>
+      <div routerLink="/proposal" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.PROPOSAL">
+        <img [src]=" (currentNavbar === navbarStates.PROPOSAL) ? 'assets/imgs/proposal-icon-active.svg' : 'assets/imgs/proposal-icon.svg'" alt="Propostas">
+        <span *ngIf="currentNavbar !== navbarStates.PROPOSAL">Propostas</span>
+      </div>
+      <div routerLink="/dispute" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.DISPUTE">
+        <img [src]=" (currentNavbar === navbarStates.DISPUTE) ? 'assets/imgs/dispute-icon-active.svg' : 'assets/imgs/dispute-icon.svg'" alt="Disputas">
+        <span *ngIf="currentNavbar !== navbarStates.DISPUTE">Disputas</span>
+      </div>
+    </div>
+    <div class="navbar--bottom">
+      <div routerLink="/help" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.HELP">
+        <img [src]=" (currentNavbar === navbarStates.HELP) ? 'assets/imgs/help-icon.svg' : 'assets/imgs/help-icon.svg'" alt="Ajuda">
+        <span *ngIf="currentNavbar !== navbarStates.HELP">Ajuda</span>
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <router-outlet></router-outlet>
+  </div>
+</div>
