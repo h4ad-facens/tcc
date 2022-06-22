@@ -1,1 +1,9 @@
-<p>dispute works!</p>
+<div class="dispute">
+  <h3>Disputas</h3>
+
+  <div class="dispute--cards">
+    <ng-container *ngFor="let card of listCards">
+      <app-home-card [disputeStatus]="card.disputeStatus"></app-home-card>
+    </ng-container>
+  </div>
+</div>
