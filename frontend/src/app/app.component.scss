@@ -9,6 +9,10 @@ $header-height: 3rem;
   min-height: $header-height;
   height: $header-height;
 
+  img {
+    cursor: pointer;
+  }
+
   &--logo {
     display: flex;
     align-items: center;

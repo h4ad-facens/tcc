@@ -6,7 +6,8 @@
     <h1>Freedapp</h1>
   </div>
 
-  <button><strong>+</strong> Entrar com a Wallet</button>
+  <button *ngIf="currentNavbar === navbarStates.HOME"><strong>+</strong> Entrar com a Wallet</button>
+  <img *ngIf="currentNavbar !== navbarStates.HOME" src="assets/imgs/yellow-face.png">
 </div>
 
 <!--navbar-->

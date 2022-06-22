@@ -7,14 +7,14 @@
 
   &--cards {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     padding-right: 2rem;
     margin-bottom: 2rem;
 
     app-home-card {
-      min-width: 11vw;
-      width: 11vw;
+      min-width: 10vw;
+      width: 10vw;
       height: 30vh;
       margin: 2rem;
       cursor: pointer;
