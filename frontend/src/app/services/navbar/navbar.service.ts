@@ -24,7 +24,6 @@ export class NavbarService {
   }
 
   public setCurrentNavbar(currentNavbar: NavbarStateEnum): void {
-    console.log(currentNavbar);
     this.selectedNavbar.next(currentNavbar);
   }
 

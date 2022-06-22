@@ -1,0 +1,23 @@
+.home {
+  h3 {
+    padding-left: 2rem;
+    color: #232323E5;
+    font-size: 1.5rem;
+  }
+
+  &--cards {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-right: 2rem;
+    margin-bottom: 2rem;
+
+    app-home-card {
+      min-width: 11vw;
+      width: 11vw;
+      height: 30vh;
+      margin: 2rem;
+      cursor: pointer;
+    }
+  }
+}
