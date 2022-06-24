@@ -32,7 +32,6 @@ export class CreateProposalComponent {
   public proposal: ProposalPayload = {
     title: '',
     description: '',
-    price: 0,
     category: '',
     contact: '',
     imageUrl: '',

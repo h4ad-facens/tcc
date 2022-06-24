@@ -1,1 +1,43 @@
-<p>proposal-detail works!</p>
+<div class="proposal-detail">
+  <h3>Visualizar proposta</h3>
+
+  <div class="proposal-detail--container">
+    <div class="proposal-detail--container--left">
+      <img src="assets/imgs/home-card-bg.png" alt="Imagem">
+      <div class="about card">
+        <h4>Sobre</h4>
+        <p>{{ proposal.description }}</p>
+      </div>
+    </div>
+    <div class="proposal-detail--container--right">
+      <div class="header">
+        <img src="assets/imgs/proposal-person.png" alt="Pessoa">
+        <div class="header--info">
+          <h4>{{ proposal.title }}</h4>
+          <span>Criador: 0x0000</span>
+        </div>
+      </div>
+
+      <div class="price card">
+        <h4>Valor da proposta</h4>
+        <div class="price--info">
+          <img src="assets/imgs/price.png" alt="Preço">
+          <b>{{ proposal.price.toFixed(2) }}</b>
+        </div>
+        <button>Dar um lance</button>
+      </div>
+
+      <div class="shoots card">
+        <h4>Lances atuais</h4>
+        <div class="shoots--list">
+          <ng-container *ngFor="let item of [1,2,3,4]">
+            <div class="shoots--list--item">
+              <img src="assets/imgs/price.png" alt="Preço">
+              <strong>23.30 | 0x0000000 | 18/06/2022</strong>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
