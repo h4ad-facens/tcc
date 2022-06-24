@@ -126,6 +126,19 @@ h4 {
       }
 
       .shoots {
+        position: relative;
+
+        .cancel {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          cursor: pointer;
+
+          strong {
+            font-weight: bold;
+          }
+        }
+
         &--list {
           max-height: 12rem;
           overflow: auto;

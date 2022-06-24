@@ -24,7 +24,22 @@
           <img src="assets/imgs/price.png" alt="Preço">
           <b>{{ proposal.price.toFixed(2) }}</b>
         </div>
-        <button>Dar um lance</button>
+        <button *ngIf="shootProposalStep === possibleShootProposalStep.INFO" (click)="changeStep(possibleShootProposalStep.SHOOT)">Dar um lance</button>
+      </div>
+
+      <div *ngIf="shootProposalStep === possibleShootProposalStep.SHOOT" class="shoots card">
+        <h4>Seu lance</h4>
+        <div class="shoots--list--item cancel" (click)="changeStep(possibleShootProposalStep.INFO)">
+          <strong>Retirar meu lance</strong>
+        </div>
+        <div class="shoots--list">
+          <ng-container *ngFor="let item of [1]">
+            <div class="shoots--list--item">
+              <img src="assets/imgs/price.png" alt="Preço">
+              <strong>23.30 | 0x0000000 | 18/06/2022</strong>
+            </div>
+          </ng-container>
+        </div>
       </div>
 
       <div class="shoots card">

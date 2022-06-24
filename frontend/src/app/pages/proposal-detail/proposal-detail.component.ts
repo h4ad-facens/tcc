@@ -2,6 +2,7 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ShootProposalStepEnum } from '../../models/enums/shoot-proposal-step.enum';
 import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 //#endregion
@@ -33,6 +34,18 @@ export class ProposalDetailComponent {
     contact: '',
     price: 400,
     imageUrl: '',
+  }
+
+  public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.INFO;
+
+  public possibleShootProposalStep: typeof ShootProposalStepEnum = ShootProposalStepEnum;
+
+  //#endregion
+
+  //#region Public Functions
+
+  public changeStep(newStep: ShootProposalStepEnum): void {
+    this.shootProposalStep = newStep;
   }
 
   //#endregion
