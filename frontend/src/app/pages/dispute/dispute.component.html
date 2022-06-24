@@ -2,8 +2,8 @@
   <h3>Disputas</h3>
 
   <div class="dispute--cards">
-    <ng-container *ngFor="let card of listCards">
-      <app-home-card [disputeStatus]="card.disputeStatus"></app-home-card>
+    <ng-container *ngFor="let proposal of listProposal">
+      <app-home-card [proposal]="proposal"></app-home-card>
     </ng-container>
   </div>
 </div>

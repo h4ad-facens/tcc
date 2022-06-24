@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
 import { CardInterface } from '../../models/interfaces/card.interface';
+import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
 
 //#endregion
@@ -27,20 +28,32 @@ export class DisputeComponent {
 
   //#region Public Properties
 
-  public listCards: CardInterface[] = [
+  public listProposal: ProposalProxy[] = [
     {
-      title: 'Freelancer C#/ReactJs - Projeto de Landing Page',
+      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      description: '',
+      category: '',
+      contact: '',
       price: 400,
+      imageUrl: '',
       disputeStatus: DisputeStatusEnum.CHOOSING,
     },
     {
-      title: 'Freelancer C#/ReactJs - Projeto de Landing Page',
+      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      description: '',
+      category: '',
+      contact: '',
       price: 400,
+      imageUrl: '',
       disputeStatus: DisputeStatusEnum.AWAITING,
     },
     {
-      title: 'Freelancer C#/ReactJs - Projeto de Landing Page',
+      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      description: '',
+      category: '',
+      contact: '',
       price: 400,
+      imageUrl: '',
       disputeStatus: DisputeStatusEnum.FINISHED,
     },
   ];

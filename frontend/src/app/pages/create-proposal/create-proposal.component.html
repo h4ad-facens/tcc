@@ -1,0 +1,19 @@
+<div class="create-proposal">
+  <h3>Criar proposta</h3>
+
+  <div class="create-proposal--forms">
+    <img src="assets/imgs/home-card-bg.png" alt="Imagem">
+    <div class="create-proposal--forms--inputs">
+      <input type="text" placeholder="Digite o título dessa proposta" [(ngModel)]="proposal.title">
+      <textarea placeholder="Digite uma descrição para essa proposta" [(ngModel)]="proposal.description"></textarea>
+      <input type="number" placeholder="Valor dessa proposta" [(ngModel)]="proposal.price">
+      <input type="text" placeholder="Categoria dessa proposta" [(ngModel)]="proposal.category">
+      <input type="text" placeholder="Informação de contato (eg. cabal.chat)" [(ngModel)]="proposal.contact">
+    </div>
+  </div>
+
+  <div class="create-proposal--buttons">
+    <button routerLink="/proposal" class="btn-back">Voltar</button>
+    <button (click)="createProposal()" class="btn-create">Criar proposta!</button>
+  </div>
+</div>

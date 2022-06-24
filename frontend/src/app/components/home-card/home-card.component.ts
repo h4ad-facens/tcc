@@ -2,6 +2,7 @@
 
 import { Component, Input } from '@angular/core';
 import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
+import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 //#endregion
 
@@ -16,8 +17,13 @@ export class HomeCardComponent {
 
   //#region Public Properties
 
-  @Input()
-  public disputeStatus: DisputeStatusEnum | undefined = DisputeStatusEnum.NONE;
+  @Input('proposal')
+  public set _proposal(value: ProposalProxy) {
+    this.proposal = value;
+    this.proposal.disputeStatus = value.disputeStatus || DisputeStatusEnum.NONE;
+  };
+
+  public proposal!: ProposalProxy;
 
   public possibleDisputeStatus: typeof DisputeStatusEnum = DisputeStatusEnum;
 

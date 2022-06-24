@@ -2,8 +2,8 @@
   <h3>Seus lances</h3>
 
   <div class="shoot--cards">
-    <ng-container *ngFor="let card of [1,2,3]">
-      <app-home-card></app-home-card>
+    <ng-container *ngFor="let proposal of listProposal">
+      <app-home-card [proposal]="proposal"></app-home-card>
     </ng-container>
   </div>
 </div>

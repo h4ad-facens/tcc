@@ -6,15 +6,15 @@
   <div class="home-card--gradient"></div>
 
   <div class="home-card--info">
-    <p>Freelancer C#/ReactJs - Projeto de Landing Page</p>
+    <p>{{ proposal.title }}</p>
     <div class="home-card--info--price">
-      <ng-container *ngIf="disputeStatus === possibleDisputeStatus.NONE">
+      <ng-container *ngIf="proposal.disputeStatus === possibleDisputeStatus.NONE">
         <img src="assets/imgs/price.png" alt="Preço">
-        <b>400,00</b>
+        <b>{{ proposal.price.toFixed(2) }}</b>
       </ng-container>
-      <ng-container *ngIf="disputeStatus !== possibleDisputeStatus.NONE">
-        <strong [style.color]="formatDisputeStatus[disputeStatus || 0].color">
-          {{ formatDisputeStatus[disputeStatus || 0].text }}
+      <ng-container *ngIf="proposal.disputeStatus !== possibleDisputeStatus.NONE">
+        <strong [style.color]="formatDisputeStatus[proposal.disputeStatus || 0].color">
+          {{ formatDisputeStatus[proposal.disputeStatus || 0].text }}
         </strong>
       </ng-container>
     </div>
