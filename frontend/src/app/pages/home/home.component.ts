@@ -28,6 +28,7 @@ export class HomeComponent {
 
   public listProposal: ProposalProxy[] = [
     {
+      id: 1,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -36,6 +37,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 2,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -44,6 +46,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 3,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -52,6 +55,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 4,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -60,6 +64,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 5,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -68,6 +73,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 6,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -76,6 +82,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 7,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -84,6 +91,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 8,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -92,6 +100,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 9,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -100,6 +109,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 10,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -108,6 +118,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 11,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -116,6 +127,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 12,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -124,6 +136,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 13,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -132,6 +145,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 14,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -140,6 +154,7 @@ export class HomeComponent {
       imageUrl: '',
     },
     {
+      id: 15,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',

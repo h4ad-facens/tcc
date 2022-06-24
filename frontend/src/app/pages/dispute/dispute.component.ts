@@ -3,7 +3,6 @@
 import { Component } from '@angular/core';
 import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
-import { CardInterface } from '../../models/interfaces/card.interface';
 import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
 
@@ -30,6 +29,7 @@ export class DisputeComponent {
 
   public listProposal: ProposalProxy[] = [
     {
+      id: 1,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -39,6 +39,7 @@ export class DisputeComponent {
       disputeStatus: DisputeStatusEnum.CHOOSING,
     },
     {
+      id: 2,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -48,6 +49,7 @@ export class DisputeComponent {
       disputeStatus: DisputeStatusEnum.AWAITING,
     },
     {
+      id: 3,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',

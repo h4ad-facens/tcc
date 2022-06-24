@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'shoot', loadChildren: () => import('./pages/shoot/shoot.module').then(m => m.ShootModule) },
   { path: 'proposal', loadChildren: () => import('./pages/proposal/proposal.module').then(m => m.ProposalModule) },
   { path: 'proposal/create', loadChildren: () => import('./pages/create-proposal/create-proposal.module').then(m => m.CreateProposalModule) },
+  { path: 'proposal/:id', loadChildren: () => import('./pages/proposal-detail/proposal-detail.module').then(m => m.ProposalDetailModule) },
   { path: 'dispute', loadChildren: () => import('./pages/dispute/dispute.module').then(m => m.DisputeModule) },
   { path: 'help', loadChildren: () => import('./pages/help/help.module').then(m => m.HelpModule) },
 ];

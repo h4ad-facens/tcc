@@ -28,6 +28,7 @@ export class ShootComponent {
 
   public listProposal: ProposalProxy[] = [
     {
+      id: 1,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -36,6 +37,7 @@ export class ShootComponent {
       imageUrl: '',
     },
     {
+      id: 2,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
@@ -44,6 +46,7 @@ export class ShootComponent {
       imageUrl: '',
     },
     {
+      id: 3,
       title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',

@@ -2,6 +2,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { HomeCardComponent } from './home-card.component';
 
 //#endregion
@@ -9,6 +10,7 @@ import { HomeCardComponent } from './home-card.component';
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
   ],
   declarations: [
     HomeCardComponent,

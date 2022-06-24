@@ -1,6 +1,7 @@
 import { DisputeStatusEnum } from '../enums/dispute-status.enum';
 
 export interface ProposalProxy {
+  id: number;
   title: string;
   description?: string;
   price: number;
