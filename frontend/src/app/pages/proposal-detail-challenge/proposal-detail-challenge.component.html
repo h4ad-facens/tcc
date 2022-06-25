@@ -3,7 +3,7 @@
 
   <div class="proposal-detail--container">
     <div class="proposal-detail--container--left">
-      <img src="assets/imgs/home-card-bg.png" alt="Imagem">
+      <img [src]="proposal.description | boring : 'bauhaus'" alt="Imagem">
       <div class="about card">
         <h4>Sobre</h4>
         <p>{{ proposal.description }}</p>
@@ -11,7 +11,7 @@
     </div>
     <div class="proposal-detail--container--right">
       <div class="header">
-        <img src="assets/imgs/proposal-person.png" alt="Pessoa">
+        <img [src]="proposal.description | boring : 'beam'" alt="Pessoa">
         <div class="header--info">
           <h4>{{ proposal.title }}</h4>
           <span>Criador: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</span>

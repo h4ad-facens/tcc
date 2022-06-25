@@ -1,11 +1,43 @@
 //#region Imports
 
 import { Component } from '@angular/core';
+import { randPhrase } from '@ngneat/falso';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
 import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
 
 //#endregion
+
+const proposals = [
+  {
+    id: 1,
+    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    description: randPhrase(),
+    category: '',
+    contact: '',
+    price: 400,
+    imageUrl: '',
+  },
+  {
+    id: 2,
+    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    description: randPhrase(),
+    category: '',
+    contact: '',
+    price: 400,
+    imageUrl: '',
+  },
+  {
+    id: 3,
+    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    description: randPhrase(),
+    category: '',
+    contact: '',
+    price: 400,
+    imageUrl: '',
+    shootAccepted: true,
+  },
+];
 
 @Component({
   selector: 'app-shoot',
@@ -26,36 +58,7 @@ export class ShootComponent {
 
   //#region Public Properties
 
-  public listProposal: ProposalProxy[] = [
-    {
-      id: 1,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-      description: '',
-      category: '',
-      contact: '',
-      price: 400,
-      imageUrl: '',
-    },
-    {
-      id: 2,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-      description: '',
-      category: '',
-      contact: '',
-      price: 400,
-      imageUrl: '',
-    },
-    {
-      id: 3,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-      description: '',
-      category: '',
-      contact: '',
-      price: 400,
-      imageUrl: '',
-      shootAccepted: true,
-    },
-  ];
+  public listProposal: ProposalProxy[] = proposals;
 
   //#endregion
 

@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component } from '@angular/core';
+import { randPhrase } from '@ngneat/falso';
 import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
 import { NavbarService } from '../../services/navbar/navbar.service';
@@ -31,7 +32,7 @@ export class DisputeComponent {
   public choosingProposal = {
     id: 1,
     title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: '',
+    description: randPhrase(),
     category: '',
     contact: '',
     price: 400,
@@ -42,7 +43,7 @@ export class DisputeComponent {
   public awaitingProposal = {
     id: 2,
     title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: '',
+    description: randPhrase(),
     category: '',
     contact: '',
     price: 400,
@@ -53,7 +54,7 @@ export class DisputeComponent {
   public finishedProposal = {
     id: 3,
     title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: '',
+    description: randPhrase(),
     category: '',
     contact: '',
     price: 400,
@@ -64,7 +65,7 @@ export class DisputeComponent {
   public distributeProposal = {
     id: 3,
     title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: '',
+    description: randPhrase(),
     category: '',
     contact: '',
     price: 400,

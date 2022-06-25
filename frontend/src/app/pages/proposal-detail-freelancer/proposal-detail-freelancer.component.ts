@@ -37,12 +37,6 @@ export class ProposalDetailFreelancerComponent {
     imageUrl: '',
   }
 
-  public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.INFO;
-
-  public possibleShootProposalStep: typeof ShootProposalStepEnum = ShootProposalStepEnum;
-
-  public shootValue: number = 0;
-
   public today = new Date();
 
   public shoots = [
@@ -51,14 +45,6 @@ export class ProposalDetailFreelancerComponent {
     { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
     { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
   ].sort((a, b) => a.shootValue > b.shootValue ? -1 : 1);
-
-  //#endregion
-
-  //#region Public Functions
-
-  public changeStep(newStep: ShootProposalStepEnum): void {
-    this.shootProposalStep = newStep;
-  }
 
   //#endregion
 

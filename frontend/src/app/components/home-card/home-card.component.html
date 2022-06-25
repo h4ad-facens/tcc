@@ -1,7 +1,7 @@
 <div class="home-card">
 
-  <img class="home-card--bg" src="assets/imgs/home-card-bg.png" alt="Fundo">
-  <img class="home-card--profile" src="assets/imgs/profile-icon.png" alt="Perfil">
+  <img class="home-card--bg" [src]="proposal.description | boring : 'bauhaus'" alt="Fundo">
+  <img class="home-card--profile" [src]="proposal.description | boring : 'beam'"  alt="Perfil">
   <img class="home-card--more" src="assets/imgs/info-icon.svg" alt="Informação">
   <div class="home-card--gradient" [class.home-card--gradient__accepted]="proposal.shootAccepted"></div>
 
