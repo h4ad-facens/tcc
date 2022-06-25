@@ -3,7 +3,7 @@
 
   <div class="proposal-detail--container">
     <div class="proposal-detail--container--left">
-      <img [src]="proposal.description | boring : 'bauhaus'" onerror="this.src = 'assets/imgs/home-card-bg.png'; this.onerror=null" alt="Imagem">
+      <img [src]="proposal.description | boring : 'bauhaus'" onerror="this.src = 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/home-card-bg.png'; this.onerror=null" alt="Imagem">
       <div class="about card">
         <h4>Sobre</h4>
         <p>{{ proposal.description }}</p>
@@ -11,7 +11,7 @@
     </div>
     <div class="proposal-detail--container--right">
       <div class="header">
-        <img [src]="proposal.description | boring : 'beam'" onerror="this.src = 'assets/imgs/profile-icon.png'; this.onerror=null" alt="Pessoa">
+        <img [src]="proposal.description | boring : 'beam'" onerror="this.src = 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/profile-icon.png'; this.onerror=null" alt="Pessoa">
         <div class="header--info">
           <h4>{{ proposal.title }}</h4>
           <span>Criador: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</span>
