@@ -3,7 +3,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { randEthereumAddress, randNumber, randParagraph, randPastDate } from '@ngneat/falso';
-import { ShootProposalStepEnum } from '../../models/enums/shoot-proposal-step.enum';
+import { ResultsInterface } from '../../models/interfaces/results.interface';
 import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 //#endregion
@@ -26,6 +26,12 @@ export class ProposalDetailChallengeDistributeComponent {
   //#endregion
 
   //#region Public Properties
+
+  public results: ResultsInterface = {
+    freelance: NaN,
+    creator: NaN,
+    total: 200,
+  }
 
   public proposal: ProposalProxy = {
     id: 15,

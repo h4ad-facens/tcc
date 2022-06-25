@@ -136,6 +136,25 @@ h4 {
             border: 3px solid #1F50FF;
           }
         }
+
+        &--result {
+          display: flex;
+          flex-direction: column;
+          background: #FFFFFF;
+          border: 1px solid #1F50FF;
+          border-radius: 20px;
+          color: #1F50FF;
+
+          span {
+            text-align: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #1F50FF;
+
+            &:last-child {
+              border: 0;
+            }
+          }
+        }
       }
 
       .shoots {
