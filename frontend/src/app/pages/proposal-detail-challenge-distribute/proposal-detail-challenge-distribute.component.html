@@ -33,8 +33,8 @@
         <div class="price--result">
           <span>Total a ser distribuido: <b>{{ results.total }} matic</b></span>
           <span>Mediador: <b>{{ results.total * 0.05 }} matic (taxa de 5%)</b></span>
-          <span>Criador: <b>{{ (results.total - (results.total * 0.05)) * results.creator / 100 }} matic</b></span>
-          <span>Freelancer: <b>{{ (results.total - (results.total * 0.05)) * results.freelance / 100 }} matic</b></span>
+          <span>Criador: <b>{{ ((results.total - (results.total * 0.05)) * results.creator / 100) || 0 }} matic</b></span>
+          <span>Freelancer: <b>{{ ((results.total - (results.total * 0.05)) * results.freelance / 100) || 0 }} matic</b></span>
         </div>
 
         <br />
