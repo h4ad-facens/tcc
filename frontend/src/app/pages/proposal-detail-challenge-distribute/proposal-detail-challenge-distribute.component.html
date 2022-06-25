@@ -21,23 +21,21 @@
       <div *ngIf="state === 'choose'" class="price card">
         <h4>Selecionar o mediador</h4>
 
-        <input class="free--input" type="number" min="0" max="100" placeholder="Digite a porcentagem para o Freelancer">
+        <input class="free--input" type="number" min="0" max="100" placeholder="Digite a porcentagem para o Freelancer" [(ngModel)]="results.freelance">
 
         <br />
         <br />
 
-        <input class="free--input" type="number" min="0" max="100" placeholder="Digite a porcentagem para o Criador">
+        <input class="free--input" type="number" min="0" max="100" placeholder="Digite a porcentagem para o Criador" [(ngModel)]="results.creator">
 
-        <dl>
-          <dt>Total a ser distribuido:</dt>
-          <dd>400 matic</dd>
-          <dt>Mediador:</dt>
-          <dd>20 matic (taxa de 5%</dd>
-          <dt>Criador:</dt>
-          <dd>0 matic</dd>
-          <dt>Freelancer:</dt>
-          <dd>47,5 matic</dd>
-        </dl>
+        <h4>Saldo resultante:</h4>
+
+        <div class="price--result">
+          <span>Total a ser distribuido: <b>{{ results.total }} matic</b></span>
+          <span>Mediador: <b>{{ results.total * 0.05 }} matic (taxa de 5%)</b></span>
+          <span>Criador: <b>{{ ((results.total - (results.total * 0.05)) * results.creator / 100) || 0 }} matic</b></span>
+          <span>Freelancer: <b>{{ ((results.total - (results.total * 0.05)) * results.freelance / 100) || 0 }} matic</b></span>
+        </div>
 
         <br />
         <br />

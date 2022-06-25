@@ -10,10 +10,10 @@ import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 @Component({
   selector: 'app-proposal-detail',
-  templateUrl: './proposal-detail-challenge-distribute.component.html',
-  styleUrls: ['./proposal-detail-challenge-distribute.component.scss'],
+  templateUrl: './proposal-detail-challenge-claim.component.html',
+  styleUrls: ['./proposal-detail-challenge-claim.component.scss'],
 })
-export class ProposalDetailChallengeDistributeComponent {
+export class ProposalDetailChallengeClaimComponent {
 
   //#region Constructor
 
@@ -43,16 +43,7 @@ export class ProposalDetailChallengeDistributeComponent {
     imageUrl: '',
   }
 
-  public state: 'waiting' | 'choose' = 'choose';
-
-  public today = new Date();
-
-  public shoots = [
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-  ].sort((a, b) => a.shootValue > b.shootValue ? -1 : 1);
+  public total: number = randNumber({ min: 0, max: 200, precision: 1 });
 
   //#endregion
 
