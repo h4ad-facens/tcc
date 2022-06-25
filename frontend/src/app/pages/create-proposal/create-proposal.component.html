@@ -2,7 +2,7 @@
   <h3>Criar proposta</h3>
 
   <div class="create-proposal--forms">
-    <img src="assets/imgs/home-card-bg.png" alt="Imagem">
+    <img [src]="undefined | boring : 'bauhaus'" onerror="this.src = 'assets/imgs/home-card-bg.png'; this.onerror=null" alt="Imagem">
     <div class="create-proposal--forms--inputs">
       <input class="free--input" type="text" placeholder="Digite o título dessa proposta" [(ngModel)]="proposal.title">
       <textarea class="free--input" placeholder="Digite uma descrição para essa proposta" [(ngModel)]="proposal.description"></textarea>
