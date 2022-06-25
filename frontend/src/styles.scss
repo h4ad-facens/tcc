@@ -25,3 +25,30 @@ body {
   src: url(/assets/fonts/Montserrat-Bold.ttf) format("opentype");
   font-weight: 600;
 }
+
+input, textarea {
+  &.free--input {
+    width: calc(100% - 1.6rem);
+    background: #DBDCDF;
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    border: 0;
+    outline: 0;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    font-family: Montserrat;
+
+    &::placeholder {
+      color: #23232366;
+    }
+  }
+}
+
+textarea.free--input {
+  resize: none;
+  height: 8rem;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

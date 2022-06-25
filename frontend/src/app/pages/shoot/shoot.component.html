@@ -3,7 +3,7 @@
 
   <div class="shoot--cards">
     <ng-container *ngFor="let proposal of listProposal">
-      <app-home-card [proposal]="proposal"></app-home-card>
+      <app-home-card [proposal]="proposal" [routerLink]="'/proposal/' + proposal.id + (proposal.shootAccepted ? '/accepted/freelancer' : '/shoot')"></app-home-card>
     </ng-container>
   </div>
 </div>

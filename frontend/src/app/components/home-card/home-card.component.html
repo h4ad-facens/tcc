@@ -1,21 +1,26 @@
-<div class="home-card" [routerLink]="'/proposal/' + proposal.id">
+<div class="home-card">
 
   <img class="home-card--bg" src="assets/imgs/home-card-bg.png" alt="Fundo">
   <img class="home-card--profile" src="assets/imgs/profile-icon.png" alt="Perfil">
   <img class="home-card--more" src="assets/imgs/info-icon.svg" alt="Informação">
-  <div class="home-card--gradient"></div>
+  <div class="home-card--gradient" [class.home-card--gradient__accepted]="proposal.shootAccepted"></div>
 
   <div class="home-card--info">
     <p>{{ proposal.title }}</p>
     <div class="home-card--info--price">
-      <ng-container *ngIf="proposal.disputeStatus === possibleDisputeStatus.NONE">
+      <ng-container *ngIf="proposal.disputeStatus === possibleDisputeStatus.NONE && !proposal.shootAccepted">
         <img src="assets/imgs/price.png" alt="Preço">
         <b>{{ proposal.price.toFixed(2) }}</b>
       </ng-container>
+
       <ng-container *ngIf="proposal.disputeStatus !== possibleDisputeStatus.NONE">
         <strong [style.color]="formatDisputeStatus[proposal.disputeStatus || 0].color">
           {{ formatDisputeStatus[proposal.disputeStatus || 0].text }}
         </strong>
+      </ng-container>
+
+      <ng-container *ngIf="proposal.shootAccepted">
+        <p class="home-card--info--accepted">Aceito</p>
       </ng-container>
     </div>
   </div>

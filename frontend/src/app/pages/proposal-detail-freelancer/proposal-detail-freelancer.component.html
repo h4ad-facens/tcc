@@ -1,0 +1,43 @@
+<div class="proposal-detail">
+  <h3>Visualizar proposta</h3>
+
+  <div class="proposal-detail--container">
+    <div class="proposal-detail--container--left">
+      <img src="assets/imgs/home-card-bg.png" alt="Imagem">
+      <div class="about card">
+        <h4>Sobre</h4>
+        <p>{{ proposal.description }}</p>
+      </div>
+    </div>
+    <div class="proposal-detail--container--right">
+      <div class="header">
+        <img src="assets/imgs/proposal-person.png" alt="Pessoa">
+        <div class="header--info">
+          <h4>{{ proposal.title }}</h4>
+          <span>Criador: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</span>
+        </div>
+      </div>
+
+      <div class="price card">
+        <h4>Valor da proposta</h4>
+        <div class="price--info">
+          <img src="assets/imgs/price.png" alt="Preço">
+          <b>{{ proposal.price.toFixed(2) }}</b>
+        </div>
+      </div>
+
+      <div class="price card">
+        <h4>Ações</h4>
+        <button class="full" [routerLink]="['/proposal', proposal.id, 'challenge']">Entrar em disputa</button>
+      </div>
+
+      <div class="price card">
+        <h4>Criador</h4>
+
+        <a href="mailto:vinyygamerlol@gmail.com">
+          <button class="outline full">Entrar em contato</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

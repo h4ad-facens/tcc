@@ -3,4 +3,5 @@ export enum DisputeStatusEnum {
   CHOOSING = 1,
   AWAITING = 2,
   FINISHED = 3,
+  DISTRIBUTE = 4,
 }

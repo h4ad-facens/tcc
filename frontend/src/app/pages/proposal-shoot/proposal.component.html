@@ -6,7 +6,7 @@
 
   <div class="proposal--cards">
     <ng-container *ngFor="let proposal of listProposal">
-      <app-home-card [proposal]="proposal" [routerLink]="'/proposal/' + proposal.id + (proposal.shootAccepted ? '/accepted/creator' : '')"></app-home-card>
+      <app-home-card [proposal]="proposal" [routerLink]="'/proposal/' + proposal.id"></app-home-card>
     </ng-container>
   </div>
 </div>

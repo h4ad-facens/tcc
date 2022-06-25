@@ -8,5 +8,6 @@ export interface ProposalProxy {
   category?: string;
   contact?: string;
   imageUrl: string;
+  shootAccepted?: boolean;
   disputeStatus?: DisputeStatusEnum;
 }

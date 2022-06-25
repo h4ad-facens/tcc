@@ -53,6 +53,7 @@ export class ShootComponent {
       contact: '',
       price: 400,
       imageUrl: '',
+      shootAccepted: true,
     },
   ];
 

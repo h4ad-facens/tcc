@@ -32,6 +32,7 @@ export class HomeCardComponent {
     [DisputeStatusEnum.CHOOSING]: { text: 'Escolher mediador', color: '#FFFFFF' },
     [DisputeStatusEnum.AWAITING]: { text: 'Aguardando mediador', color: '#FFD130' },
     [DisputeStatusEnum.FINISHED]: { text: 'Reinvidicar ganhos', color: '#00FF29' },
+    [DisputeStatusEnum.DISTRIBUTE]: { text: 'Distribuir valores', color: '#d20f0f' },
   };
 
   //#endregion

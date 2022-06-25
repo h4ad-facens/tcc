@@ -10,10 +10,10 @@ import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 @Component({
   selector: 'app-proposal-detail',
-  templateUrl: './proposal-detail.component.html',
-  styleUrls: ['./proposal-detail.component.scss'],
+  templateUrl: './proposal-detail-challenge-distribute.component.html',
+  styleUrls: ['./proposal-detail-challenge-distribute.component.scss'],
 })
-export class ProposalDetailComponent {
+export class ProposalDetailChallengeDistributeComponent {
 
   //#region Constructor
 
@@ -37,11 +37,7 @@ export class ProposalDetailComponent {
     imageUrl: '',
   }
 
-  public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.INFO;
-
-  public possibleShootProposalStep: typeof ShootProposalStepEnum = ShootProposalStepEnum;
-
-  public shootValue: number = 0;
+  public state: 'waiting' | 'choose' = 'choose';
 
   public today = new Date();
 
@@ -51,14 +47,6 @@ export class ProposalDetailComponent {
     { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
     { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
   ].sort((a, b) => a.shootValue > b.shootValue ? -1 : 1);
-
-  //#endregion
-
-  //#region Public Functions
-
-  public changeStep(newStep: ShootProposalStepEnum): void {
-    this.shootProposalStep = newStep;
-  }
 
   //#endregion
 

@@ -10,10 +10,10 @@ import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 @Component({
   selector: 'app-proposal-detail',
-  templateUrl: './proposal-detail.component.html',
-  styleUrls: ['./proposal-detail.component.scss'],
+  templateUrl: './proposal-detail-creator.component.html',
+  styleUrls: ['./proposal-detail-creator.component.scss'],
 })
-export class ProposalDetailComponent {
+export class ProposalDetailCreatorComponent {
 
   //#region Constructor
 

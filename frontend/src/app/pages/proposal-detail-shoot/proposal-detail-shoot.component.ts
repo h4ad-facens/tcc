@@ -10,10 +10,10 @@ import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
 @Component({
   selector: 'app-proposal-detail',
-  templateUrl: './proposal-detail.component.html',
-  styleUrls: ['./proposal-detail.component.scss'],
+  templateUrl: './proposal-detail-shoot.component.html',
+  styleUrls: ['./proposal-detail-shoot.component.scss'],
 })
-export class ProposalDetailComponent {
+export class ProposalDetailShootComponent {
 
   //#region Constructor
 
@@ -37,11 +37,11 @@ export class ProposalDetailComponent {
     imageUrl: '',
   }
 
-  public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.INFO;
+  public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.SHOOT;
 
   public possibleShootProposalStep: typeof ShootProposalStepEnum = ShootProposalStepEnum;
 
-  public shootValue: number = 0;
+  public shootValue: number = randNumber({ min: 200, max: 400, precision: 2 }) as number;
 
   public today = new Date();
 

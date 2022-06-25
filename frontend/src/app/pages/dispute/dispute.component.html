@@ -2,8 +2,9 @@
   <h3>Disputas</h3>
 
   <div class="dispute--cards">
-    <ng-container *ngFor="let proposal of listProposal">
-      <app-home-card [proposal]="proposal"></app-home-card>
-    </ng-container>
+      <app-home-card [proposal]="choosingProposal"  [routerLink]="'/proposal/' + choosingProposal.id + '/challenge'"></app-home-card>
+      <app-home-card [proposal]="awaitingProposal"  [routerLink]="'/proposal/' + awaitingProposal.id + '/challenge/selected'"></app-home-card>
+      <app-home-card [proposal]="distributeProposal"  [routerLink]="'/proposal/' + distributeProposal.id + '/challenge/distribute'"></app-home-card>
+      <app-home-card [proposal]="finishedProposal"  [routerLink]="'/proposal/' + finishedProposal.id + '/challenge/claim'"></app-home-card>
   </div>
 </div>

@@ -80,8 +80,8 @@ h4 {
       .price {
         position: relative;
         display: block;
-        color: white;
-        font-size: 1.5rem;
+        color: #232323E5;
+        font-size: 1rem;
         margin-bottom: 1.5rem;
 
         &--info {
@@ -103,6 +103,10 @@ h4 {
           }
         }
 
+        a {
+          text-decoration: none;
+        }
+
         button {
           display: flex;
           align-items: center;
@@ -121,6 +125,16 @@ h4 {
           letter-spacing: 0.05rem;
           font-size: 1.1rem;
           border: 3px solid #1F50FF;
+
+          &.full {
+            width: 100%;
+          }
+
+          &.outline {
+            background-color: white;
+            color: #1F50FF;
+            border: 3px solid #1F50FF;
+          }
         }
       }
 

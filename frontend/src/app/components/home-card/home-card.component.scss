@@ -17,6 +17,10 @@
     width: 100%;
     height: 25%;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.94) 100%);
+
+    &__accepted {
+      background: linear-gradient(180deg, rgba(0, 255, 148, 0) 0%, rgba(66, 255, 0, 0.94) 100%);
+    }
   }
 
   &--bg {
@@ -67,6 +71,12 @@
         text-align: center;
         max-width: 80%;
       }
+    }
+
+    &--accepted {
+      font-size: 1.5rem !important;
+      font-weight: bold;
+      margin: 0;
     }
   }
 }

@@ -9,18 +9,18 @@ import { NavbarService } from '../../services/navbar/navbar.service';
 //#endregion
 
 @Component({
-  selector: 'app-proposal-shoot',
+  selector: 'app-proposal',
   templateUrl: './proposal.component.html',
   styleUrls: ['./proposal.component.scss'],
 })
-export class ProposalComponent implements OnInit {
+export class ProposalShootComponent implements OnInit {
 
   //#region Constructors
 
   constructor(
     private readonly navbarService: NavbarService,
   ) {
-    this.navbarService.setCurrentNavbar(NavbarStateEnum.PROPOSAL);
+    this.navbarService.setCurrentNavbar(NavbarStateEnum.SHOOT);
   }
 
   //#endregion
@@ -45,7 +45,6 @@ export class ProposalComponent implements OnInit {
       contact: '',
       price: 400,
       imageUrl: '',
-      shootAccepted: true,
     },
   ];
 
