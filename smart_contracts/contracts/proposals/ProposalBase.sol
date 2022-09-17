@@ -4,7 +4,7 @@ pragma solidity >=0.8.4;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./IProposalBase.sol";
-import "./ProposalStatus.sol";
+import "../common/ProposalStatus.sol";
 import "../common/EnumerateIdByAddress.sol";
 
 abstract contract ProposalBase is IProposalBase, ProposalStatus, EnumerateIdByAddress, Ownable {
@@ -16,6 +16,9 @@ abstract contract ProposalBase is IProposalBase, ProposalStatus, EnumerateIdByAd
 
     /// @dev O evento lançado quando uma proposta é criada
     event Created(uint256 id, string indexed category, uint256 indexed amount);
+
+    /// @dev O evento lançado quando o status muda
+    event StatusChanged(uint256 indexed proposalId, bytes32 oldStatus, bytes32 newStatus);
 
     /// @dev O modificador usado para garantir a execução de um método apenas se a proposta existir
     modifier proposalExist(uint256 proposalId) {

@@ -8,6 +8,4 @@ abstract contract ProposalStatus {
     bytes32 public constant IN_DISPUTE = keccak256("IN_DISPUTE");
     bytes32 public constant IN_DISPUTE_DISTRIBUTION = keccak256("IN_DISPUTE_DISTRIBUTION");
     bytes32 public constant FINISHED = keccak256("FINISHED");
-
-    event StatusChanged(uint256 indexed proposalId, bytes32 oldStatus, bytes32 newStatus);
 }
