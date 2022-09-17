@@ -76,7 +76,7 @@ abstract contract ProposalBase is IProposalBase, ProposalStatus, EnumerateIdByAd
         return _getCountByAddress(userAddress);
     }
 
-    function getProposalIdByIndexByUser(address userAddress, uint256 index) external view returns (uint256) {
+    function getProposalIdByUserAndIndex(address userAddress, uint256 index) external view returns (uint256) {
         return _getIdByAddressAndIndex(userAddress, index);
     }
 

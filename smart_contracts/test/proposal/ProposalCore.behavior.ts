@@ -43,17 +43,17 @@ export function shouldBehaveLikeProposal(): void {
     expect(await this.proposalCore.getStatusOfProposal(2)).to.equal(await this.proposalCore.WAITING_BID());
 
     expect(await this.proposalCore.getCountOfProposalsByUser(creatorAddress)).to.equal(1);
-    expect(await this.proposalCore.getProposalIdByIndexByUser(creatorAddress, 0)).to.equal(1);
+    expect(await this.proposalCore.getProposalIdByUserAndIndex(creatorAddress, 0)).to.equal(1);
 
     expect(await this.proposalCore.getCountOfProposalsByUser(otherSigner.address)).to.equal(1);
-    expect(await this.proposalCore.getProposalIdByIndexByUser(otherSigner.address, 0)).to.equal(2);
+    expect(await this.proposalCore.getProposalIdByUserAndIndex(otherSigner.address, 0)).to.equal(2);
 
     expect(await ethers.provider.getBalance(this.proposalCore.address)).to.equal(20);
   });
 
   it("should validate index in getProposalIdByIndexAndUser", async function () {
     const errorOnGetId = await this.proposalCore
-      .getProposalIdByIndexByUser(this.signers.admin.address, 0)
+      .getProposalIdByUserAndIndex(this.signers.admin.address, 0)
       .catch(error => error);
 
     expect(errorOnGetId.errorName).to.equal("IndexOutOfBounds");

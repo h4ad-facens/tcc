@@ -34,7 +34,7 @@ interface IProposalBase {
 
     function getCountOfProposalsByUser(address userAddress) external view returns (uint256);
 
-    function getProposalIdByIndexByUser(address userAddress, uint256 index) external view returns (uint256);
+    function getProposalIdByUserAndIndex(address userAddress, uint256 index) external view returns (uint256);
 
     function getCountOfProposals() external view returns (uint256);
 }
