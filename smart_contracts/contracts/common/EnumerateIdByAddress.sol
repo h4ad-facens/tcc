@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 abstract contract EnumerateIdByAddress {
     /// @dev O erro emitido quando o usuário tenta acessar um index fora do tamanho da lista
-    error IndexOutOfBounds();
+    error IndexOfAddressOutOfBounds();
 
     /// @dev A estrutura usada para mapear e atuar como uma lista de IDs
     using EnumerableSet for EnumerableSet.UintSet;
@@ -22,11 +22,12 @@ abstract contract EnumerateIdByAddress {
     function _getIdByAddressAndIndex(address targetAddress, uint256 index) internal view returns (uint256) {
         EnumerableSet.UintSet storage userSet = _addressToIds[targetAddress];
 
-        if ((index + 1) > userSet.length()) revert IndexOutOfBounds();
+        if ((index + 1) > userSet.length()) revert IndexOfAddressOutOfBounds();
 
         return _addressToIds[targetAddress].at(index);
     }
 
+    /// @dev Adiciona um novo ID a um endereço
     function _addIdToAddress(uint256 id, address targetAddress) internal {
         _addressToIds[targetAddress].add(id);
     }

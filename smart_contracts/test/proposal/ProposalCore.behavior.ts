@@ -21,7 +21,7 @@ export function shouldBehaveLikeProposal(): void {
     expect(await this.proposalCore.getCountOfProposals()).to.equal(1);
     expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
     expect(await this.proposalCore.getCountOfProposalsByUser(creatorAddress)).to.equal(1);
-    expect(await this.proposalCore.getProposalIdByIndexByUser(creatorAddress, 0)).to.equal(1);
+    expect(await this.proposalCore.getProposalIdByUserAndIndex(creatorAddress, 0)).to.equal(1);
 
     const proposalInfo = await this.proposalCore.getProposalById(1);
 
@@ -56,7 +56,7 @@ export function shouldBehaveLikeProposal(): void {
       .getProposalIdByUserAndIndex(this.signers.admin.address, 0)
       .catch(error => error);
 
-    expect(errorOnGetId.errorName).to.equal("IndexOutOfBounds");
+    expect(errorOnGetId.errorName).to.equal("IndexOfAddressOutOfBounds");
   });
 
   it("should validate proposalId in getProposalById", async function () {
@@ -117,7 +117,7 @@ export function shouldBehaveLikeProposal(): void {
     expect(result.message).to.contains("YouAreNotTheCreator");
   });
 
-  it("should can update proposal status", async function () {
+  it("should can call on bidder selected", async function () {
     await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
     await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
 
@@ -127,37 +127,107 @@ export function shouldBehaveLikeProposal(): void {
 
     expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
 
-    await this.proposalCore.connect(this.signers.other).setProposalStatus(1, await this.proposalCore.IN_DISPUTE());
+    await this.proposalCore.connect(this.signers.other).onBidderSelected(1);
 
-    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE());
-
-    await this.proposalCore
-      .connect(this.signers.admin)
-      .setProposalStatus(1, await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
-
-    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
-
-    await this.proposalCore.connect(this.signers.admin).setProposalStatus(1, await this.proposalCore.FINISHED());
-
-    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
 
     const error = await this.proposalCore
       .connect(this.signers.admin)
-      .setProposalStatus(1, await this.proposalCore.WAITING_BID())
+      .onBidderSelected(1)
       .catch(error => error);
 
-    expect(error.message).to.contains("InvalidStatusToUpdate");
+    expect(error.message).to.contains("InvalidStatusToSelectBidder");
 
     const errorAboutPermission = await this.proposalCore
       .connect(this.signers.third)
-      .setProposalStatus(1, await this.proposalCore.WAITING_BID())
+      .onBidderSelected(1)
       .catch(error => error);
 
     expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
 
     const errorAboutNotFound = await this.proposalCore
       .connect(this.signers.admin)
-      .setProposalStatus(1000, await this.proposalCore.WAITING_BID())
+      .onBidderSelected(1000)
+      .catch(error => error);
+
+    expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
+  });
+
+  it("should can call next dispute status", async function () {
+    await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
+    await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
+
+    await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
+      value: 10,
+    });
+
+    await this.proposalCore.connect(this.signers.other).onBidderSelected(1);
+
+    await this.proposalCore.connect(this.signers.admin).nextDisputeStatus(1, await this.proposalCore.IN_DISPUTE());
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE());
+
+    await this.proposalCore
+      .connect(this.signers.admin)
+      .nextDisputeStatus(1, await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
+
+    const error = await this.proposalCore
+      .connect(this.signers.admin)
+      .nextDisputeStatus(1, await this.proposalCore.WAITING_BID())
+      .catch(error => error);
+
+    expect(error.message).to.contains("InvalidStatusToUpdate");
+
+    const errorAboutPermission = await this.proposalCore
+      .connect(this.signers.third)
+      .nextDisputeStatus(1, await this.proposalCore.WAITING_BID())
+      .catch(error => error);
+
+    expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
+
+    const errorAboutNotFound = await this.proposalCore
+      .connect(this.signers.admin)
+      .nextDisputeStatus(1000, await this.proposalCore.WAITING_BID())
+      .catch(error => error);
+
+    expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
+  });
+
+  it("should can call on finish proposal", async function () {
+    await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
+    await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
+
+    await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
+      value: 10,
+    });
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
+
+    await this.proposalCore.connect(this.signers.other).onBidderSelected(1);
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
+
+    await this.proposalCore.connect(this.signers.other).finishProposal(1, this.signers.other.address);
+
+    const error = await this.proposalCore
+      .connect(this.signers.admin)
+      .finishProposal(1, this.signers.other.address)
+      .catch(error => error);
+
+    expect(error.message).to.contains("InvalidStatusToFinish");
+
+    const errorAboutPermission = await this.proposalCore
+      .connect(this.signers.third)
+      .finishProposal(1, this.signers.other.address)
+      .catch(error => error);
+
+    expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
+
+    const errorAboutNotFound = await this.proposalCore
+      .connect(this.signers.admin)
+      .finishProposal(1000, this.signers.other.address)
       .catch(error => error);
 
     expect(errorAboutNotFound.message).to.contains("ProposalNotFound");

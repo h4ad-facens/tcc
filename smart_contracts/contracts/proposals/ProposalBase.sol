@@ -46,7 +46,7 @@ abstract contract ProposalBase is IProposalBase, ProposalStatus, EnumerateIdByAd
             uint64 createdAt
         )
     {
-        Proposal storage proposal = _proposals[proposalId];
+        Proposal memory proposal = _proposals[proposalId];
 
         name = proposal.name;
         description = proposal.description;

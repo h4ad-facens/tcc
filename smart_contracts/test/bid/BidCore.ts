@@ -3,10 +3,10 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signe
 import { ethers } from "hardhat";
 
 import type { Signers } from "../types";
-import { shouldBehaveLikeProposal } from "./ProposalCore.behavior";
-import { deployProposalFixture } from "./ProposalCore.fixture";
+import { shouldBehaveLikeBid } from "./BidCore.behavior";
+import { deployBidFixture } from "./BidCore.fixture";
 
-describe("ProposalCore", function () {
+describe("BidCore", function () {
   before(async function () {
     this.signers = {} as Signers;
 
@@ -18,13 +18,14 @@ describe("ProposalCore", function () {
     this.loadFixture = loadFixture;
   });
 
-  describe("Proposal", function () {
+  describe("Bid", function () {
     beforeEach(async function () {
-      const { proposal } = await this.loadFixture(deployProposalFixture);
+      const { proposal, bid } = await this.loadFixture(deployBidFixture);
 
       this.proposalCore = proposal;
+      this.bidCore = bid;
     });
 
-    shouldBehaveLikeProposal();
+    shouldBehaveLikeBid();
   });
 });

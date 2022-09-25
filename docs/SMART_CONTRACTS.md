@@ -51,14 +51,15 @@ Proposta:
 
 Lance:
 
-- proposalId: A identificação da propsota
-- timestamp: A data de quando isso foi criado
+- proposalId: A identificação da proposta
 - bidderAddress: O endereço do usuário que fez o lance
+- bidPaidAmount: A quantidade paga pelo usuário para fazer a oferta, uma porcentagem do valor da proposta.
+- createdAt: A data de quando isso foi criado
 
 Dispute:
 
 - proposalId: A identificação da proposta
-- timestamp: A data de quando isso começou
+- createdAt: A data de quando isso começou
 - proposalCreatorAddress: O endereço do contratante
 - bidderAddress: O endereço do licitante (freelancer)
 - mediatorAddress?: Começará nulo, será decidido pelo licitante e o contratante.
@@ -77,7 +78,7 @@ Ações que poderão ser feitas com esse contrato:
 [//]: # (- `getIndexOfProposalByAddress`: Retorna o indice de uma proposta na lista pelo endereço da proposta.)
 
 - `getCountOfProposalsByUser`: Retorna a contagem de propostas de um usuário pelo endereço dele
-- `getProposalIdByIndexByUser`: Retorna o ID de uma proposta pelo indice filtrado por usuário.
+- `getProposalIdByUserAndIndex`: Retorna o ID de uma proposta pelo indice filtrado por usuário.
 - `getProposalById`: Retorna as informações de uma proposta.
 - `getStatusOfProposal`: Retorna o status de uma proposta.
 
@@ -91,25 +92,36 @@ Ações que poderão ser feitas com esse contrato:
 - `cancelProposal`: Cancela uma proposta.
   - Ao cancelar, deve checar se o status da proposta está em `WAITING_BID`. 
   - Ao cancelar, deve ser alterado o status da proposta para `CANCELLED`.
-- `setProposalStatus`: Altera o status de uma proposta.
+- `onBidderSelected`: Deve ser chamado quando um lance for selecionado.
+  - Ao ser chamado, verificar se o status está em `WAITING_BID`.
   - Apenas os contratos de Lances e Disputas podem realizar essa ação.
-
+  - Após chamar, o status irá para `IN_DEVELOPMENT`.
+- `nextDisputeStatus`: Move o status de uma proposta no ciclo de disputa.
+  - Apenas os contratos de Lances e Disputas podem realizar essa ação.
+  - Ao ser chamado em `IN_DEVELOPMENT`, o status vai para `IN_DISPUTE`.
+  - Ao ser chamado em `IN_DISPUTE`, o status vai para `IN_DISPUTE_DISTRIBUTION`.
+- `finishProposal`: Finaliza uma proposta.
+  - Apenas os contratos de Lances e Disputas podem realizar essa ação.
+  - Ao finalizar, o status vai para `FINISHED`.
+  - Ao finalizar, o valor da proposta depositado é enviado para quem ganhou o lance.
 ### Lances
 
 Ações que poderão ser feitas com esse contrato:
 
-- `getBidsByProposalId`: Retorna a lista de endereços dos lances.
-- `getMyBids`: Retorna a lista de endereços dos lances que o meu usuário já fez.
+- `getCountOfBidsByProposalId`: Retorna a contagem de lances por proposta.
+- `getBidIdByProposalIdAndIndex`: Retorna as informações sobre um lance feito para uma proposta no index.
+- `getCountOfMyBids`: Retorna a contagem de lances que eu já fiz.
+- `getMyBidIdByIndex`: Retorna um lance que eu fiz pelo indice.
 - `createBid`: Cria um novo lance para uma proposta.
   - Ao criar, se certificar que a proposta existe.
   - Ao criar, a proposta precisa estar com o status `WAITING_BID`.
 - `selectBid`: Seleciona um lance enviado para uma proposta.
   - Ao selecionar, deve ser alterado o status da proposta para `IN_DEVELOPMENT`.
-- `getSelectedBidByProposalId`: Retorna qual lance foi selecionado para uma proposta.
+- `getSelectedBidIdByProposalId`: Retorna qual lance foi selecionado para uma proposta.
 - `cancelBid`: Remove um lance de uma proposta.
   - Ao cancelar, se certificar que o lance existe.
-  - Ao cancelar, o status deve ser apenas `WAITING_BID` ou `CANCELLED`.
-- `claimPayment`: Pega o pagamento que recebeu de uma proposta como freelancer.
+  - Ao cancelar, o status por ser qualquer um contanto que o lance dele não tenha sido escolhido.
+  - Ao cancelar, devolver o valor depositado.
 - `transferPayment`: Realiza o pagamento de uma proposta como contrante.
   - Ao transferir, o status da proposta deve ser `IN_DEVELOPMENT`.
   - Ao transferir, se certificar que quem está chamando é o dono da proposta (contrante).

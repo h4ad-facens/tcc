@@ -45,29 +45,46 @@ contract ProposalCore is IProposalCore, ProposalPermission {
         Address.sendValue(payable(proposal.creator), proposal.amount);
     }
 
-    function setProposalStatus(uint256 proposalId, bytes32 status)
+    function onBidderSelected(uint256 proposalId) external proposalExist(proposalId) onlyAllowedContract {
+        Proposal memory proposal = _proposals[proposalId];
+
+        if (proposal.status != WAITING_BID) {
+            revert InvalidStatusToSelectBidder(proposal.status);
+        }
+
+        _updateProposalStatus(proposalId, IN_DEVELOPMENT);
+    }
+
+    function nextDisputeStatus(uint256 proposalId, bytes32 status)
         external
         proposalExist(proposalId)
         onlyAllowedContract
     {
         Proposal memory proposal = _proposals[proposalId];
 
-        if (proposal.status == IN_DEVELOPMENT && status == FINISHED) {
-            return _updateProposalStatus(proposalId, status);
+        if (proposal.status == IN_DEVELOPMENT && status == IN_DISPUTE) {
+            _updateProposalStatus(proposalId, status);
+        } else if (proposal.status == IN_DISPUTE && status == IN_DISPUTE_DISTRIBUTION) {
+            _updateProposalStatus(proposalId, status);
+        } else {
+            revert InvalidStatusToUpdate(proposal.status);
         }
+    }
 
-        if (proposal.status == WAITING_BID && status == IN_DISPUTE) {
-            return _updateProposalStatus(proposalId, status);
+    function finishProposal(uint256 proposalId, address bidderAddress)
+        external
+        proposalExist(proposalId)
+        onlyAllowedContract
+    {
+        Proposal memory proposal = _proposals[proposalId];
+
+        if (proposal.status == IN_DEVELOPMENT || proposal.status == IN_DISPUTE_DISTRIBUTION) {
+            _updateProposalStatus(proposalId, FINISHED);
+
+            /// transfere o valor da proposta para o recebedor
+            Address.sendValue(payable(bidderAddress), proposal.amount);
+        } else {
+            revert InvalidStatusToFinish(proposal.status);
         }
-
-        if (proposal.status == IN_DISPUTE && status == IN_DISPUTE_DISTRIBUTION) {
-            return _updateProposalStatus(proposalId, status);
-        }
-
-        if (proposal.status == IN_DISPUTE_DISTRIBUTION && status == FINISHED) {
-            return _updateProposalStatus(proposalId, status);
-        }
-
-        revert InvalidStatusToUpdate(proposal.status);
     }
 }
