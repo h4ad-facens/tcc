@@ -108,10 +108,12 @@ Ações que poderão ser feitas com esse contrato:
 
 Ações que poderão ser feitas com esse contrato:
 
+- `getBidById`: Retorna as informações de um lance pelo ID.
 - `getCountOfBidsByProposalId`: Retorna a contagem de lances por proposta.
 - `getBidIdByProposalIdAndIndex`: Retorna as informações sobre um lance feito para uma proposta no index.
 - `getCountOfMyBids`: Retorna a contagem de lances que eu já fiz.
-- `getMyBidIdByIndex`: Retorna um lance que eu fiz pelo indice.
+- `getCountOfBidsByUser`: Retorna a quantidade de lances feitos por cada usuário.
+- `getBidIdByUserAndIndex`: Retorna um lance que um usuário fez pelo indice.
 - `createBid`: Cria um novo lance para uma proposta.
   - Ao criar, se certificar que a proposta existe.
   - Ao criar, a proposta precisa estar com o status `WAITING_BID`.
