@@ -16,25 +16,25 @@
   <div class="navbar">
     <div class="navbar--top">
       <div routerLink="/home" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.HOME">
-        <img [src]=" (currentNavbar === navbarStates.HOME) ? 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/home-icon-active.svg' : 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/home-icon.svg'" alt="Home">
+        <img [src]="(currentNavbar === navbarStates.HOME) ? imageBaseUrl + '/home-icon-active.svg' : imageBaseUrl + '/home-icon.svg'" alt="Home">
         <span *ngIf="currentNavbar !== navbarStates.HOME">Início</span>
       </div>
       <div routerLink="/shoot" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.SHOOT">
-        <img [src]=" (currentNavbar === navbarStates.SHOOT) ? 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/shoot-icon-active.svg' : 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/shoot-icon.svg'" alt="Lances">
+        <img [src]="(currentNavbar === navbarStates.SHOOT) ? imageBaseUrl + '/shoot-icon-active.svg' : imageBaseUrl + '/shoot-icon.svg'" alt="Lances">
         <span *ngIf="currentNavbar !== navbarStates.SHOOT">Lances</span>
       </div>
       <div routerLink="/proposal" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.PROPOSAL">
-        <img [src]=" (currentNavbar === navbarStates.PROPOSAL) ? 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/proposal-icon-active.svg' : 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/proposal-icon.svg'" alt="Propostas">
+        <img [src]="(currentNavbar === navbarStates.PROPOSAL) ? imageBaseUrl + '/proposal-icon-active.svg' : imageBaseUrl + '/proposal-icon.svg'" alt="Propostas">
         <span *ngIf="currentNavbar !== navbarStates.PROPOSAL">Propostas</span>
       </div>
       <div routerLink="/dispute" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.DISPUTE">
-        <img [src]=" (currentNavbar === navbarStates.DISPUTE) ? 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/dispute-icon-active.svg' : 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/dispute-icon.svg'" alt="Disputas">
+        <img [src]="(currentNavbar === navbarStates.DISPUTE) ? imageBaseUrl + '/dispute-icon-active.svg' : imageBaseUrl + '/dispute-icon.svg'" alt="Disputas">
         <span *ngIf="currentNavbar !== navbarStates.DISPUTE">Disputas</span>
       </div>
     </div>
     <div class="navbar--bottom">
       <div routerLink="/help" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.HELP">
-        <img [src]=" (currentNavbar === navbarStates.HELP) ? 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/help-icon.svg' : 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/help-icon.svg'" alt="Ajuda">
+        <img [src]="(currentNavbar === navbarStates.HELP) ? imageBaseUrl + '/help-icon.svg' : imageBaseUrl + '/help-icon.svg'" alt="Ajuda">
         <span *ngIf="currentNavbar !== navbarStates.HELP">Ajuda</span>
       </div>
     </div>
