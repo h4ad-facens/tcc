@@ -19,8 +19,10 @@
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
     "@ngneat/falso": "^5.7.0",
+    "ethers": "^5.7.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "web3modal": "^1.9.9",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
