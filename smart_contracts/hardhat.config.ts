@@ -1,5 +1,6 @@
 import "@nomicfoundation/hardhat-toolbox";
 import { config as dotenvConfig } from "dotenv";
+import { ethers } from "hardhat";
 import type { HardhatUserConfig } from "hardhat/config";
 import type { NetworkUserConfig } from "hardhat/types";
 import { resolve } from "path";
@@ -78,9 +79,6 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      accounts: {
-        mnemonic,
-      },
       chainId: chainIds.hardhat,
     },
     arbitrum: getChainConfig("arbitrum-mainnet"),

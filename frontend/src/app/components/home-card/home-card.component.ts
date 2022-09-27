@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component, Input } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
 import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 
@@ -34,6 +35,8 @@ export class HomeCardComponent {
     [DisputeStatusEnum.FINISHED]: { text: 'Reinvidicar ganhos', color: '#00FF29' },
     [DisputeStatusEnum.DISTRIBUTE]: { text: 'Distribuir valores', color: '#d20f0f' },
   };
+
+  public imageBaseUrl: string = environment.imageBaseUrl;
 
   //#endregion
 
