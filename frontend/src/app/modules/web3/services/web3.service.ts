@@ -60,7 +60,7 @@ export class Web3Service {
     });
   }
 
-  public async connect() {
+  public async connect(): Promise<void> {
     const instance = await this.web3Modal.connect().catch(() => null);
 
     if (!instance) {
@@ -129,7 +129,7 @@ export class Web3Service {
     this.isConnected = true;
   }
 
-  public logout() {
+  public logout(): void {
     this.web3ModalInstance.clearCachedProvider();
 
     this.myAddress = null;
