@@ -1,7 +1,6 @@
 import { ethers, Signer } from 'ethers';
 import { Core } from 'web3modal/dist/core';
-import { CertificateCore } from "../nft/CertificateCore";
-import { InstitutionCore } from "../nft/InstitutionCore";
+import { CertificateCore } from '../nft/CertificateCore';
 
 export type UseWeb3Store = {
   myAddress: string | null;
@@ -11,8 +10,8 @@ export type UseWeb3Store = {
   isOwner: boolean;
   isConnected: boolean;
   isConnecting: boolean;
-  certificateContract: CertificateCore;
-  institutionContract: InstitutionCore;
+  proposalsContract: CertificateCore;
+  bidsContract: CertificateCore;
 
   setupDefaultContract(): void;
   connect(): Promise<void>;
