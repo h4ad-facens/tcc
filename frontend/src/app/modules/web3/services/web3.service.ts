@@ -1,15 +1,13 @@
 //#region Imports
 
-import { Injectable } from "@angular/core";
-import { Contract, ContractInterface, ethers } from "ethers";
-import Web3Modal from 'web3modal';
-import { environment } from "../../../../environments/environment";
-import { UseWeb3Store } from "../models/use-web3.interface";
-import { CertificateCore } from "../nft/CertificateCore";
-import { InstitutionCore } from "../nft/InstitutionCore";
-import CertificateCoreAbi from "../nft/CertificateCore.json";
-import InstitutionCoreAbi from "../nft/institutionCore.json";
+import { Injectable } from '@angular/core';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+import { ethers } from 'ethers';
+import Web3Modal from 'web3modal';
+import { environment } from '../../../../environments/environment';
+import { UseWeb3Store } from '../models/use-web3.interface';
+import { CertificateCore } from '../nft/CertificateCore';
+import { abi as CertificateCoreAbi } from '../nft/CertificateCore.json';
 
 //#endregion
 
@@ -24,11 +22,9 @@ export class Web3Service {
     return function () {
       const freeRpcProvider = new JsonRpcProvider(environment.ethers.freeRpcEndpoint);
 
-      const certificateContract = new ethers.Contract(environment.ethers.contractAddress.certificate, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
-      const institutionContract = new ethers.Contract(environment.ethers.contractAddress.institution, InstitutionCoreAbi, freeRpcProvider) as InstitutionCore;
+      const proposalContract = new ethers.Contract(environment.ethers.contractAddress.proposal, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
 
-      useWeb3.certificateContract = certificateContract;
-      useWeb3.institutionContract = institutionContract;
+      useWeb3.certificateContract = proposalContract;
     };
   }
 
@@ -36,12 +32,12 @@ export class Web3Service {
     if (!environment.ethers.network)
       return;
 
-    console.log(`Conectando com a rede: ${environment.ethers.network.chainName}`);
+    console.log(`Conectando com a rede: ${ environment.ethers.network.chainName }`);
 
     await provider.send('wallet_addEthereumChain', [
       environment.ethers.network,
     ]).catch(e => {
-      throw Error(`Ocorreu um erro ao adicionar a rede para se conectar com a aplicação: ${e.message}`);
+      throw Error(`Ocorreu um erro ao adicionar a rede para se conectar com a aplicação: ${ e.message }`);
     });
   }
 

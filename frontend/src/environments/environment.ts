@@ -17,15 +17,14 @@ export const environment = {
       },
     },
     explorer: {
-      contract: `${ import.meta.env.VITE_EXPLORER_URL }/token/{contractAddress}`,
-      token: `${ import.meta.env.VITE_EXPLORER_URL }/token/{contractAddress}?a={tokenId}`,
-      verify: import.meta.env.VITE_VERIFY_URL,
+      contract: `/token/{contractAddress}`,
+      token: `/token/{contractAddress}?a={tokenId}`,
+      verify: '',
     },
     metadataUrl: 'https://cloudflare-ipfs.com/ipfs/{tokenURI}',
     contractAddress: {
-      certificate: import.meta.env.VITE_ETHERS_CERTIFICATE_ADDRESS,
-      institution: import.meta.env.VITE_ETHERS_INSTITUTION_ADDRESS,
+      proposal: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
     },
-    freeRpcEndpoint: import.meta.env.VITE_FREE_RPC,
+    freeRpcEndpoint: '',
   },
 };
