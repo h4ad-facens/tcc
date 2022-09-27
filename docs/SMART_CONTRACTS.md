@@ -72,20 +72,10 @@ Dispute:
 Ações que poderão ser feitas com esse contrato:
 
 - `getCountOfProposals`: Retorna a contagem total de propostas.
-
-[//]: # (Talvez não seja necessário porque eu usarei a estrutura de dados https://docs.openzeppelin.com/contracts/4.x/api/utils#EnumerableMap)
-
-[//]: # (- `getIndexOfProposalByAddress`: Retorna o indice de uma proposta na lista pelo endereço da proposta.)
-
 - `getCountOfProposalsByUser`: Retorna a contagem de propostas de um usuário pelo endereço dele
 - `getProposalIdByUserAndIndex`: Retorna o ID de uma proposta pelo indice filtrado por usuário.
 - `getProposalById`: Retorna as informações de uma proposta.
 - `getStatusOfProposal`: Retorna o status de uma proposta.
-
-[//]: # (Talvez não seja necessário porque eu usarei a estrutura de dados https://docs.openzeppelin.com/contracts/4.x/api/utils#EnumerableMap)
-
-[//]: # (- `getIndexOfMyProposalByAddress`: Retorna o indice de uma proposta pelo endereço da proposta.)
-
 - `createProposal`: Cria uma nova proposta.
   - Ao criar, deve ser alterado o status da proposta para `WAITING_BID`.
   - Ao criar, deve garantir que o valor depositado na proposta seja maior que zero.
@@ -113,7 +103,7 @@ Ações que poderão ser feitas com esse contrato:
 - `getBidIdByProposalIdAndIndex`: Retorna as informações sobre um lance feito para uma proposta no index.
 - `getCountOfMyBids`: Retorna a contagem de lances que eu já fiz.
 - `getCountOfBidsByUser`: Retorna a quantidade de lances feitos por cada usuário.
-- `getBidIdByUserAndIndex`: Retorna um lance que um usuário fez pelo indice.
+- `getBidIdByUserAndIndex`: Retorna um lance que um usuário fez pelo índice.
 - `createBid`: Cria um novo lance para uma proposta.
   - Ao criar, se certificar que a proposta existe.
   - Ao criar, a proposta precisa estar com o status `WAITING_BID`.
@@ -140,10 +130,16 @@ Ações que poderão ser feitas com esse contrato:
 - `createDispute`: Cria uma disputa para uma proposta.
   - Ao criar, se certificar que a proposta existe.
   - Ao criar, deve ser alterado o status da proposta para `IN_DISPUTE`.
+  - Ao criar, associar essa disputa com o criador e com o bidder.
 - `selectMediator`: Seleciona um mediador para a proposta.
   - Ao selecionar, é necessário que ambos (contrante e freelancer) selecionem o mesmo mediador para passar para o status de `IN_DISPUTE_DISTRIBUTION`.
 - `setDistribution`: Define a distribuição dos valores para cada envolvido.
   - Ao definir, o status da proposta precisa estar como `IN_DISPUTE_DISTRIBUTION`.
   - Ao definir, deve ser alterado o status da proposta para `FINISHED`.
-  - Ao definir, realizar a transfêrencia dos valores de acordo com a distribuição no contrato de Lances.
-- `getDispute`: Retorna as informações da disputa, assim como, da distribuição.
+  - Ao definir, realizar a transferência dos valores de acordo com a distribuição no contrato de Lances.
+- `getDisputeById`: Retorna as informações da disputa, assim como, da distribuição.
+- `getSelectedMediatorForDisputeId`: Retorna o endereço do mediador selecionado para uma disputa.
+- `getCountOfDisputes`: Retorna a quantidade de disputas criadas.
+- `getCountOfDisputesByUser`: Retorna a contagem de disputas criadas por/para um usuário.
+- `getDisputeIdByUserAddressAndIndex`: Retorna a identificação de uma disputa pelo endereço do usuário e um índice.
+- `getDisputeIdByProposalId`: Retorna a identificação de uma disputa pela identificação da proposta.
