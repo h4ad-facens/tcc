@@ -2,14 +2,14 @@
 
   <img class="home-card--bg" [src]="proposal.description | boring : 'bauhaus'" onerror="this.src = 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/home-card-bg.png'; this.onerror=null" alt="Fundo">
   <img class="home-card--profile" [src]="proposal.description | boring : 'beam'" onerror="this.src = 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/profile-icon.png'; this.onerror=null" alt="Perfil">
-  <img class="home-card--more" src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/info-icon.svg" alt="Informação">
+  <img class="home-card--more" [src]="imageBaseUrl + '/info-icon.svg'" alt="Informação">
   <div class="home-card--gradient" [class.home-card--gradient__accepted]="proposal.shootAccepted"></div>
 
   <div class="home-card--info">
     <p>{{ proposal.title }}</p>
     <div class="home-card--info--price">
       <ng-container *ngIf="proposal.disputeStatus === possibleDisputeStatus.NONE && !proposal.shootAccepted">
-        <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
+        <img [src]="imageBaseUrl + '/price.png'" alt="Preço">
         <b>{{ proposal.price.toFixed(2) }}</b>
       </ng-container>
 

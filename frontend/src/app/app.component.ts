@@ -2,6 +2,7 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { environment } from '../environments/environment';
 import { NavbarStateEnum } from './models/enums/navbar-state.enum';
 import { NavbarService } from './services/navbar/navbar.service';
 
@@ -36,6 +37,8 @@ export class AppComponent implements OnDestroy {
   public navbarStates: typeof NavbarStateEnum = NavbarStateEnum;
 
   public navbarSubscription: Subscription;
+
+  public imageBaseUrl: string = environment.imageBaseUrl;
 
   //#endregion
 
