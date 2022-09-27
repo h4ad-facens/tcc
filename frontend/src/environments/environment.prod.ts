@@ -24,6 +24,8 @@ export const environment = {
     metadataUrl: 'https://cloudflare-ipfs.com/ipfs/{tokenURI}',
     contractAddress: {
       proposal: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      bids: '',
+      dispute: '',
     },
     freeRpcEndpoint: '',
   },

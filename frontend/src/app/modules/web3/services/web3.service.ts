@@ -22,9 +22,11 @@ export class Web3Service {
     return function () {
       const freeRpcProvider = new JsonRpcProvider(environment.ethers.freeRpcEndpoint);
 
-      const proposalContract = new ethers.Contract(environment.ethers.contractAddress.proposal, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
+      const proposalsContract = new ethers.Contract(environment.ethers.contractAddress.proposal, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
+      const bidsContract = new ethers.Contract(environment.ethers.contractAddress.bids, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
 
-      useWeb3.certificateContract = proposalContract;
+      useWeb3.proposalsContract = proposalsContract;
+      useWeb3.bidsContract = bidsContract;
     };
   }
 
@@ -53,7 +55,7 @@ export class Web3Service {
         throw new Error('Não foi possível se conectar com a sua conta.');
       }
 
-      const contract = useWeb3.certificateContract;
+      const contract = useWeb3.proposalsContract;
 
       if (!instance) {
         useWeb3.isConnected = false;
