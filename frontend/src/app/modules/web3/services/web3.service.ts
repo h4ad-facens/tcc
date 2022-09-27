@@ -6,8 +6,10 @@ import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { environment } from '../../../../environments/environment';
 import { UseWeb3Store } from '../models/use-web3.interface';
-import { CertificateCore } from '../nft/CertificateCore';
-import { abi as CertificateCoreAbi } from '../nft/CertificateCore.json';
+import { BidCore } from '../nft/BidCore';
+import { BidCoreAbi, ProposalCoreAbi } from '../nft/index';
+import { ProposalCore } from '../nft/ProposalCore';
+import { Signer } from '@ethersproject/abstract-signer';
 
 //#endregion
 
@@ -16,19 +18,30 @@ import { abi as CertificateCoreAbi } from '../nft/CertificateCore.json';
 })
 export class Web3Service {
 
-  //#region Public Functions
-
-  public setupDefaultContract(useWeb3: UseWeb3Store): UseWeb3Store['setupDefaultContract'] {
-    return function () {
-      const freeRpcProvider = new JsonRpcProvider(environment.ethers.freeRpcEndpoint);
-
-      const proposalsContract = new ethers.Contract(environment.ethers.contractAddress.proposal, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
-      const bidsContract = new ethers.Contract(environment.ethers.contractAddress.bids, CertificateCoreAbi, freeRpcProvider) as CertificateCore;
-
-      useWeb3.proposalsContract = proposalsContract;
-      useWeb3.bidsContract = bidsContract;
-    };
+  constructor() {
+    this.setupDefaultContract();
   }
+
+  public setupDefaultContract() {
+    const freeRpcProvider = new JsonRpcProvider(environment.ethers.freeRpcEndpoint);
+
+    this.proposalContract = new ethers.Contract(environment.ethers.contractAddress.proposal, ProposalCoreAbi, freeRpcProvider) as ProposalCore;
+    this.bidContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as BidCore;
+  }
+
+  private proposalContract!: ProposalCore;
+  private bidContract!: BidCore;
+
+  private web3Modal = new Web3Modal();
+
+  public myAddress: string | null = null;
+  public signer: Signer | null = null;
+  public isConnected: boolean = false;
+
+  private web3ModalInstance: any = null;
+  private web3Provider: Web3Provider | null = null;
+
+  //#region Public Functions
 
   public async addNetwork(provider: Web3Provider): Promise<void> {
     if (!environment.ethers.network)
@@ -43,104 +56,86 @@ export class Web3Service {
     });
   }
 
-  public connect(useWeb3: UseWeb3Store, get: UseWeb3Store, web3Modal: Web3Modal): UseWeb3Store['connect'] {
-    return async () => {
-      useWeb3.isConnected = true;
+  public async connect() {
+    const instance = await this.web3Modal.connect().catch(() => null);
 
-      const instance = await web3Modal.connect().catch(() => null);
+    if (!instance) {
+      throw new Error('Não foi possível se conectar com a sua conta.');
+    }
 
-      if (!instance) {
-        useWeb3.isConnected = false;
+    const provider = new ethers.providers.Web3Provider(instance);
 
-        throw new Error('Não foi possível se conectar com a sua conta.');
+    await this.addNetwork(provider);
+
+    provider.on('accountsChanged', async (accounts: string[]) => {
+      console.trace(accounts);
+
+      if (!accounts || accounts.length === 0) {
+        this.myAddress = null;
+        this.signer = null;
+        this.isConnected = false;
+        this.web3ModalInstance = null;
+        this.web3Provider = null;
+
+        return;
       }
 
-      const contract = useWeb3.proposalsContract;
+      const [defaultAccount] = accounts;
 
-      if (!instance) {
-        useWeb3.isConnected = false;
-
-        throw new Error('Não foi possível encontrar a instância do contrato do certificado.');
-      }
-
-      const provider = new ethers.providers.Web3Provider(instance);
-
-      await this.addNetwork(provider);
-
-      provider.on('accountsChanged', async (accounts: string[]) => {
-        console.trace(accounts);
-
-        if (!accounts || accounts.length === 0) {
-          useWeb3.myAddress = null;
-          useWeb3.signer = null;
-          useWeb3.isConnected = false;
-          useWeb3.instance = null;
-          useWeb3.provider = null;
-
-          return;
-        }
-
-        const [defaultAccount] = accounts;
-
-        const signer = provider.getSigner(defaultAccount);
-
-        const myAddress = await signer.getAddress();
-
-        useWeb3.signer = signer;
-        useWeb3.myAddress = myAddress;
-      });
-
-      // Subscribe to chainId change
-      provider.on('chainChanged', (chainId: number) => {
-        console.trace(chainId);
-      });
-
-      // Subscribe to provider connection
-      provider.on('connect', (info: { chainId: number }) => {
-        console.trace(info);
-      });
-
-      // Subscribe to provider disconnection
-      provider.on('disconnect', (error: { code: number; message: string }) => {
-        console.trace(error);
-
-        web3Modal.clearCachedProvider();
-
-        useWeb3.myAddress = null;
-        useWeb3.signer = null;
-        useWeb3.isConnected = false;
-        useWeb3.instance = null;
-        useWeb3.provider = null;
-      });
-
-      const signer = provider.getSigner();
+      const signer = provider.getSigner(defaultAccount);
 
       const myAddress = await signer.getAddress();
 
-      const isOwner = await contract.owner().then(ownerAddress => ownerAddress === myAddress);
+      this.signer = signer;
+      this.myAddress = myAddress;
+    });
 
-      useWeb3.myAddress = myAddress;
-      useWeb3.instance = instance;
-      useWeb3.provider = provider;
-      useWeb3.signer = signer;
-      useWeb3.isConnected = true;
-      useWeb3.isConnecting = false;
-      useWeb3.isOwner = isOwner;
-    };
+    // Subscribe to chainId change
+    provider.on('chainChanged', (chainId: number) => {
+      console.trace(chainId);
+    });
+
+    // Subscribe to provider connection
+    provider.on('connect', (info: { chainId: number }) => {
+      console.trace(info);
+    });
+
+    // Subscribe to provider disconnection
+    provider.on('disconnect', (error: { code: number; message: string }) => {
+      console.trace(error);
+
+      instance.clearCachedProvider();
+
+      this.myAddress = null;
+      this.signer = null;
+      this.isConnected = false;
+      this.web3ModalInstance = null;
+      this.web3Provider = null;
+
+    });
+
+    const signer = provider.getSigner();
+
+    const myAddress = await signer.getAddress();
+
+    this.myAddress = myAddress;
+    this.web3ModalInstance = instance;
+    this.web3Provider = provider;
+    this.signer = signer;
+    this.isConnected = true;
   }
 
-  public logout(useWeb3: UseWeb3Store, web3Modal: Web3Modal): UseWeb3Store['logout'] {
-    return function () {
-      web3Modal.clearCachedProvider();
+  public logout() {
+    this.web3ModalInstance.clearCachedProvider();
 
-      useWeb3.myAddress = null;
-      useWeb3.signer = null;
-      useWeb3.isConnected = false;
-      useWeb3.instance = null;
-      useWeb3.provider = null;
+    this.myAddress = null;
+    this.signer = null;
+    this.isConnected = false;
+    this.web3ModalInstance = null;
+    this.web3Provider = null;
 
-      useWeb3.setupDefaultContract();
-    };
+    this.setupDefaultContract();
+
   }
 
   //#endregion
