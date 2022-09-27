@@ -16,12 +16,14 @@ interface IDisputeBase {
     /// @dev As informações de uma disputa
     struct Dispute {
         uint256 proposalId;
+        uint256 bidId;
         uint64 createdAt;
         address proposalCreatorAddress;
         address bidderAddress;
         address mediatorAddress;
         uint8 splitBidderShare;
         bool createdByBidder;
+        uint64 distributedAt;
     }
 
     function getDisputeById(uint256 disputeId)
@@ -29,6 +31,7 @@ interface IDisputeBase {
         view
         returns (
             uint256 proposalId,
+            uint256 bidId,
             uint64 createdAt,
             address proposalCreatorAddress,
             address bidderAddress,

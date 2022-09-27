@@ -5,12 +5,8 @@ import "./IProposalBase.sol";
 
 interface IProposalCore is IProposalBase {
     error AmountTooLow();
-    error InvalidStatusToCancel(bytes32 currentStatus);
-    error InvalidStatusToUpdate(bytes32 currentStatus);
+    error InvalidProposalStatus(bytes32 currentStatus);
     error YouAreNotTheCreator();
-
-    error InvalidStatusToSelectBidder(bytes32 currentStatus);
-    error InvalidStatusToFinish(bytes32 currentStatus);
 
     function createProposal(
         string memory name,
@@ -23,7 +19,16 @@ interface IProposalCore is IProposalBase {
 
     function onBidderSelected(uint256 proposalId) external;
 
-    function nextDisputeStatus(uint256 proposalId, bytes32 status) external;
+    function onMediatorSelected(uint256 proposalId) external;
 
-    function finishProposal(uint256 proposalId, address bidderAddress) external;
+    function onPaymentTransfered(uint256 proposalId, address bidderAddress) external;
+
+    function onCreateDispute(uint256 proposalId) external;
+
+    function onSelectDistribution(
+        uint256 proposalId,
+        uint256 bidId,
+        address bidderAddress,
+        uint8 splitBidderShare
+    ) external;
 }

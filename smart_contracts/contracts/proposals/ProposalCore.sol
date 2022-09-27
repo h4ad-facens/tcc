@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
+import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "./IProposalCore.sol";
 import "./ProposalPermission.sol";
@@ -37,7 +38,7 @@ contract ProposalCore is IProposalCore, ProposalPermission {
 
         if (proposal.creator != _msgSender()) revert YouAreNotTheCreator();
 
-        if (proposal.status != WAITING_BID) revert InvalidStatusToCancel(proposal.status);
+        if (proposal.status != WAITING_BID) revert InvalidProposalStatus(proposal.status);
 
         _updateProposalStatus(proposalId, CANCELLED);
 
@@ -45,46 +46,84 @@ contract ProposalCore is IProposalCore, ProposalPermission {
         Address.sendValue(payable(proposal.creator), proposal.amount);
     }
 
-    function onBidderSelected(uint256 proposalId) external proposalExist(proposalId) onlyAllowedContract {
+    function onBidderSelected(uint256 proposalId) external proposalExist(proposalId) onlyAllowedBidContract {
         Proposal memory proposal = _proposals[proposalId];
 
         if (proposal.status != WAITING_BID) {
-            revert InvalidStatusToSelectBidder(proposal.status);
+            revert InvalidProposalStatus(proposal.status);
         }
 
         _updateProposalStatus(proposalId, IN_DEVELOPMENT);
     }
 
-    function nextDisputeStatus(uint256 proposalId, bytes32 status)
+    function onPaymentTransfered(uint256 proposalId, address bidderAddress)
         external
         proposalExist(proposalId)
-        onlyAllowedContract
+        onlyAllowedBidContract
     {
         Proposal memory proposal = _proposals[proposalId];
 
-        if (proposal.status == IN_DEVELOPMENT && status == IN_DISPUTE) {
-            _updateProposalStatus(proposalId, status);
-        } else if (proposal.status == IN_DISPUTE && status == IN_DISPUTE_DISTRIBUTION) {
-            _updateProposalStatus(proposalId, status);
-        } else {
-            revert InvalidStatusToUpdate(proposal.status);
-        }
+        if (proposal.status != IN_DEVELOPMENT) revert InvalidProposalStatus(proposal.status);
+
+        _updateProposalStatus(proposalId, FINISHED);
+
+        /// transfere o valor da proposta para o recebedor
+        Address.sendValue(payable(bidderAddress), proposal.amount);
     }
 
-    function finishProposal(uint256 proposalId, address bidderAddress)
-        external
-        proposalExist(proposalId)
-        onlyAllowedContract
-    {
+    function onMediatorSelected(uint256 proposalId) external proposalExist(proposalId) onlyAllowedDisputeContract {
         Proposal memory proposal = _proposals[proposalId];
 
-        if (proposal.status == IN_DEVELOPMENT || proposal.status == IN_DISPUTE_DISTRIBUTION) {
-            _updateProposalStatus(proposalId, FINISHED);
+        if (proposal.status != IN_DISPUTE) revert InvalidProposalStatus(proposal.status);
 
-            /// transfere o valor da proposta para o recebedor
-            Address.sendValue(payable(bidderAddress), proposal.amount);
-        } else {
-            revert InvalidStatusToFinish(proposal.status);
+        _updateProposalStatus(proposalId, IN_DISPUTE_DISTRIBUTION);
+    }
+
+    function onCreateDispute(uint256 proposalId) external proposalExist(proposalId) onlyAllowedDisputeContract {
+        Proposal memory proposal = _proposals[proposalId];
+
+        if (proposal.status != IN_DEVELOPMENT) revert InvalidProposalStatus(proposal.status);
+
+        _updateProposalStatus(proposalId, IN_DISPUTE);
+    }
+
+    function onSelectDistribution(
+        uint256 proposalId,
+        uint256 bidId,
+        address bidderAddress,
+        uint8 splitBidderShare
+    ) external proposalExist(proposalId) onlyAllowedDisputeContract {
+        Proposal memory proposal = _proposals[proposalId];
+
+        if (proposal.status != IN_DISPUTE_DISTRIBUTION) revert InvalidProposalStatus(proposal.status);
+
+        _updateProposalStatus(proposalId, FINISHED);
+
+        if (splitBidderShare > 0) {
+            uint256 bidderAmountToPay = Math.mulDiv(proposal.amount, splitBidderShare, 100, Math.Rounding.Zero);
+
+            if (bidderAmountToPay > 0) {
+                /// transfere o valor da proposta para o recebedor
+                Address.sendValue(payable(bidderAddress), bidderAmountToPay);
+            }
         }
+
+        uint8 splitProposalCreatorShare = 100 - splitBidderShare;
+
+        if (splitProposalCreatorShare > 0) {
+            uint256 proposalCreatorAmountToPay = Math.mulDiv(
+                proposal.amount,
+                splitProposalCreatorShare,
+                100,
+                Math.Rounding.Zero
+            );
+
+            if (proposalCreatorAmountToPay > 0) {
+                /// transfere o valor da proposta para o criador da proposta
+                Address.sendValue(payable(proposal.creator), proposalCreatorAmountToPay);
+            }
+        }
+
+        _rollbackBid(bidId);
     }
 }

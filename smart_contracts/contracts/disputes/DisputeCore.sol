@@ -28,12 +28,13 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
 
         uint256 bidId = _getSelectedBidIdByProposalId(proposalId);
         address bidder = _getBidderAddressByBidId(bidId);
+        address caller = _msgSender();
 
-        if (bidder != _msgSender() && proposalCreator != _msgSender()) revert YouAreNotTheBidderOrProposalCreator();
+        if (bidder != caller && proposalCreator != caller) revert YouAreNotTheBidderOrProposalCreator();
 
-        uint256 newDisputeId = _createDispute(proposalId, proposalCreator, bidder);
+        uint256 newDisputeId = _createDispute(proposalId, bidId, proposalCreator, bidder);
 
-        _nextDisputeStatus(proposalId, IN_DISPUTE);
+        _onCreateDispute(proposalId);
 
         return newDisputeId;
     }
@@ -50,18 +51,39 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         if (_selectedMediatorByDisputeId[disputeId] != address(0))
             revert MediatorAlreadySelected(_selectedMediatorByDisputeId[disputeId]);
 
+        address caller = _msgSender();
+
         Dispute storage dispute = _disputes[disputeId];
 
-        if (dispute.bidderAddress != _msgSender() && dispute.proposalCreatorAddress != _msgSender())
+        if (dispute.bidderAddress != caller && dispute.proposalCreatorAddress != caller)
             revert YouAreNotTheBidderOrProposalCreator();
 
-        _pendingSelectedMediatorByUserAndDisputeId[disputeId][_msgSender()] = mediator;
+        _pendingSelectedMediatorByUserAndDisputeId[disputeId][caller] = mediator;
 
-        address otherAddressToLook = _msgSender() == dispute.bidderAddress
+        address otherAddressToLook = caller == dispute.bidderAddress
             ? dispute.proposalCreatorAddress
             : dispute.bidderAddress;
 
-        if (_pendingSelectedMediatorByUserAndDisputeId[disputeId][otherAddressToLook] == mediator)
-            _nextDisputeStatus(dispute.proposalId, IN_DISPUTE_DISTRIBUTION);
+        if (_pendingSelectedMediatorByUserAndDisputeId[disputeId][otherAddressToLook] == mediator) {
+            _selectedMediatorByDisputeId[disputeId] = mediator;
+
+            _onMediatorSelected(dispute.proposalId);
+        }
+    }
+
+    function selectDistribuition(uint256 disputeId, uint8 splitBidderShare) external disputeExist(disputeId) {
+        if (_selectedMediatorByDisputeId[disputeId] != _msgSender())
+            revert YouAreNotTheMediator(_selectedMediatorByDisputeId[disputeId]);
+
+        if (splitBidderShare > 100) revert InvalidAmountOfShare();
+
+        Dispute storage dispute = _disputes[disputeId];
+
+        if (dispute.distributedAt > 0) revert DisputeAlreadyDistributted(dispute.distributedAt);
+
+        dispute.distributedAt = uint64(block.timestamp);
+        dispute.splitBidderShare = splitBidderShare;
+
+        _onSelectDistribution(dispute.proposalId, dispute.bidId, dispute.bidderAddress, splitBidderShare);
     }
 }

@@ -50,6 +50,7 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
         disputeExist(disputeId)
         returns (
             uint256 proposalId,
+            uint256 bidId,
             uint64 createdAt,
             address proposalCreatorAddress,
             address bidderAddress,
@@ -61,6 +62,7 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
         Dispute memory dispute = _disputes[disputeId];
 
         proposalId = dispute.proposalId;
+        bidId = dispute.bidId;
         createdAt = dispute.createdAt;
         proposalCreatorAddress = dispute.proposalCreatorAddress;
         bidderAddress = dispute.bidderAddress;
@@ -91,6 +93,7 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
 
     function _createDispute(
         uint256 proposalId,
+        uint256 bidId,
         address proposalCreator,
         address bidder
     ) internal returns (uint256) {
@@ -102,12 +105,14 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
 
         Dispute memory dispute = Dispute(
             proposalId,
+            bidId,
             uint64(block.timestamp),
             proposalCreator,
             bidder,
             address(0),
             0,
-            bidder == _msgSender()
+            bidder == _msgSender(),
+            0
         );
 
         _disputes[newDisputeId] = dispute;

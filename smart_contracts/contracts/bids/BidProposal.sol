@@ -11,15 +11,30 @@ import "../common/EnumerateIdByAddress.sol";
 import "../common/EnumerateIdByUint256.sol";
 
 abstract contract BidProposal {
+    error ForbiddenAccessToMethod();
+
     constructor(address proposalContractAddress) {
-        proposalBaseContract = IProposalCore(proposalContractAddress);
+        proposalContract = proposalContractAddress;
+
+        proposalCoreContract = IProposalCore(proposalContract);
     }
 
     /// @dev A taxa básica para pagar para participar de um lance de uma proposta
     uint32 public constant BID_SHARE_TO_PARTICIPATE = 20; // igual a 5%
 
     /// @dev A referência para o contrato de propostas
-    IProposalCore private proposalBaseContract;
+    IProposalCore private proposalCoreContract;
+
+    /// @dev O endereço do contrato de proposta
+    address proposalContract;
+
+    modifier onlyAllowedProposalContract() {
+        address sender = msg.sender;
+
+        if (sender != proposalContract) revert ForbiddenAccessToMethod();
+
+        _;
+    }
 
     function _getStatusAndAmountToPayForBidByProposalId(uint256 proposalId)
         internal
@@ -28,7 +43,7 @@ abstract contract BidProposal {
     {
         uint256 amount;
 
-        (, , , , , amount, status, ) = proposalBaseContract.getProposalById(proposalId);
+        (, , , , , amount, status, ) = proposalCoreContract.getProposalById(proposalId);
 
         amountToPayForBid = Math.ceilDiv(amount, BID_SHARE_TO_PARTICIPATE);
     }
@@ -38,14 +53,14 @@ abstract contract BidProposal {
         view
         returns (bytes32 status, address proposalCreator)
     {
-        (, , , , proposalCreator, , status, ) = proposalBaseContract.getProposalById(proposalId);
+        (, , , , proposalCreator, , status, ) = proposalCoreContract.getProposalById(proposalId);
     }
 
     function _onBidderSelected(uint256 proposalId) internal {
-        proposalBaseContract.onBidderSelected(proposalId);
+        proposalCoreContract.onBidderSelected(proposalId);
     }
 
-    function _finishProposal(uint256 proposalId, address bidderAddress) internal {
-        proposalBaseContract.finishProposal(proposalId, bidderAddress);
+    function _onPaymentTransfered(uint256 proposalId, address bidderAddress) internal {
+        proposalCoreContract.onPaymentTransfered(proposalId, bidderAddress);
     }
 }

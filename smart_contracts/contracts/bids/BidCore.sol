@@ -35,7 +35,14 @@ contract BidCore is IBidCore, BidBase {
         uint256 selectedBid = _selectedBidIdByProposalId[proposalId];
         Bid memory bid = _bids[selectedBid];
 
-        _finishProposal(proposalId, bid.bidderAddress);
+        _onPaymentTransfered(proposalId, bid.bidderAddress);
+
+        // devolve o valor pago no lance
+        Address.sendValue(payable(bid.bidderAddress), bid.bidPaidAmount);
+    }
+
+    function rollbackBid(uint256 bidId) external onlyAllowedProposalContract {
+        Bid memory bid = _bids[bidId];
 
         // devolve o valor pago no lance
         Address.sendValue(payable(bid.bidderAddress), bid.bidPaidAmount);

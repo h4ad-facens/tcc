@@ -19,7 +19,20 @@ abstract contract DisputeProposal {
         (, , , , proposalCreator, , status, ) = proposalBaseContract.getProposalById(proposalId);
     }
 
-    function _nextDisputeStatus(uint256 proposalId, bytes32 status) internal {
-        proposalBaseContract.nextDisputeStatus(proposalId, status);
+    function _onCreateDispute(uint256 proposalId) internal {
+        proposalBaseContract.onCreateDispute(proposalId);
+    }
+
+    function _onMediatorSelected(uint256 proposalId) internal {
+        proposalBaseContract.onMediatorSelected(proposalId);
+    }
+
+    function _onSelectDistribution(
+        uint256 proposalId,
+        uint256 bidId,
+        address bidder,
+        uint8 splitBidderShare
+    ) internal {
+        proposalBaseContract.onSelectDistribution(proposalId, bidId, bidder, splitBidderShare);
     }
 }
