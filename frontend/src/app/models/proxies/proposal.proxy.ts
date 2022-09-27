@@ -7,7 +7,7 @@ export interface ProposalProxy {
   price: number;
   category?: string;
   contact?: string;
-  imageUrl: string;
+  imageUrl?: string;
   shootAccepted?: boolean;
   disputeStatus?: DisputeStatusEnum;
 }

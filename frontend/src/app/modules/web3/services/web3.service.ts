@@ -33,8 +33,8 @@ export class Web3Service {
     this.bidContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as BidCore;
   }
 
-  private proposalContract!: ProposalCore;
-  private bidContract!: BidCore;
+  public proposalContract!: ProposalCore;
+  public bidContract!: BidCore;
 
   private web3Modal = new Web3Modal();
 

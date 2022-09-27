@@ -30,7 +30,6 @@ export class AppComponent implements OnDestroy {
     });
 
     this.isWalletConnectedSubscription = this.homeService.isWalletConnected$().subscribe(value => {
-      console.log(value);
       this.isWalletConnected = value;
     })
   }
