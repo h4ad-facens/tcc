@@ -1,15 +1,14 @@
 //#region Imports
 
 import { Injectable } from '@angular/core';
+import { Signer } from '@ethersproject/abstract-signer';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { environment } from '../../../../environments/environment';
-import { UseWeb3Store } from '../models/use-web3.interface';
 import { BidCore } from '../nft/BidCore';
 import { BidCoreAbi, ProposalCoreAbi } from '../nft/index';
 import { ProposalCore } from '../nft/ProposalCore';
-import { Signer } from '@ethersproject/abstract-signer';
 
 //#endregion
 
@@ -20,6 +19,11 @@ export class Web3Service {
 
   constructor() {
     this.setupDefaultContract();
+
+    // this.proposalContract.createProposal('', '', '', '', {
+    //   value: ethers.utils.parseEther('1eth'),
+    // }); // método para passar o valor do Ether
+    // this.proposalContract.connect(this.signer!).createProposal(); // método que precisam estar logados (assinados)
   }
 
   public setupDefaultContract() {
@@ -29,8 +33,8 @@ export class Web3Service {
     this.bidContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as BidCore;
   }
 
-  private proposalContract!: ProposalCore;
-  private bidContract!: BidCore;
+  public proposalContract!: ProposalCore;
+  public bidContract!: BidCore;
 
   private web3Modal = new Web3Modal();
 
@@ -56,7 +60,7 @@ export class Web3Service {
     });
   }
 
-  public async connect() {
+  public async connect(): Promise<void> {
     const instance = await this.web3Modal.connect().catch(() => null);
 
     if (!instance) {
@@ -125,7 +129,7 @@ export class Web3Service {
     this.isConnected = true;
   }
 
-  public logout() {
+  public logout(): void {
     this.web3ModalInstance.clearCachedProvider();
 
     this.myAddress = null;
@@ -135,7 +139,6 @@ export class Web3Service {
     this.web3Provider = null;
 
     this.setupDefaultContract();
-
   }
 
   //#endregion

@@ -2,12 +2,12 @@
 
 <div class="header">
   <div class="header--logo" routerLink="/home">
-    <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/logo.svg" alt="Logo">
+    <img [src]="imageBaseUrl + '/logo.svg'" alt="Logo">
     <h1>Freedapp</h1>
   </div>
 
-  <button *ngIf="currentNavbar === navbarStates.HOME"><strong>+</strong> Entrar com a Wallet</button>
-  <img *ngIf="currentNavbar !== navbarStates.HOME" src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/yellow-face.png">
+  <button *ngIf="currentNavbar === navbarStates.HOME && !isWalletConnected" (click)="enterWithWallet()"><strong>+</strong> Entrar com a Wallet</button>
+  <img *ngIf="currentNavbar !== navbarStates.HOME || isWalletConnected" [src]="imageBaseUrl + '/yellow-face.png'">
 </div>
 
 <!--navbar-->
