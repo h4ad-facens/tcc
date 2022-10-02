@@ -28,7 +28,7 @@ contract BidCore is IBidCore, BidBase {
 
         (proposalStatus, proposalCreator) = _getStatusAndProposalCreator(proposalId);
 
-        if (proposalStatus != IN_DEVELOPMENT) revert InvalidStatusToTransferProposal(proposalStatus);
+        if (proposalStatus != IN_DEVELOPMENT) revert InvalidProposalStatus(proposalStatus);
 
         if (_msgSender() != proposalCreator) revert YouAreNotTheProposalCreator(proposalCreator);
 
@@ -37,14 +37,23 @@ contract BidCore is IBidCore, BidBase {
 
         _onPaymentTransfered(proposalId, bid.bidderAddress);
 
-        // devolve o valor pago no lance
-        Address.sendValue(payable(bid.bidderAddress), bid.bidPaidAmount);
+        _onFinishProposal(bid.bidderAddress, bid.bidPaidAmount);
     }
 
-    function rollbackBid(uint256 bidId) external onlyAllowedProposalContract {
+    function onSelectDistribution(uint256 bidId) external bidExist(bidId) onlyAllowedProposalContract {
         Bid memory bid = _bids[bidId];
 
+        bytes32 proposalStatus;
+
+        (proposalStatus, ) = _getStatusAndProposalCreator(bid.proposalId);
+
+        if (proposalStatus != FINISHED) revert InvalidProposalStatus(proposalStatus);
+
+        _onFinishProposal(bid.bidderAddress, bid.bidPaidAmount);
+    }
+
+    function _onFinishProposal(address bidderAddress, uint256 bidPaidAmount) private {
         // devolve o valor pago no lance
-        Address.sendValue(payable(bid.bidderAddress), bid.bidPaidAmount);
+        Address.sendValue(payable(bidderAddress), bidPaidAmount);
     }
 }

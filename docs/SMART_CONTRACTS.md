@@ -86,11 +86,17 @@ Ações que poderão ser feitas com esse contrato:
   - Ao ser chamado, verificar se o status está em `WAITING_BID`.
   - Apenas os contratos de Lances e Disputas podem realizar essa ação.
   - Após chamar, o status irá para `IN_DEVELOPMENT`.
-- `nextDisputeStatus`: Move o status de uma proposta no ciclo de disputa.
-  - Apenas os contratos de Lances e Disputas podem realizar essa ação.
+- `onCreateDispute`: Move o status de uma proposta no ciclo de disputa.
+  - Apenas os contratos de Disputas pode realizar essa ação.
   - Ao ser chamado em `IN_DEVELOPMENT`, o status vai para `IN_DISPUTE`.
+- `onMediatorSelected`: Move o status para aguardando distribuição.
+  - Apenas os contratos de Disputas pode realizar essa ação.
   - Ao ser chamado em `IN_DISPUTE`, o status vai para `IN_DISPUTE_DISTRIBUTION`.
-- `finishProposal`: Finaliza uma proposta.
+- `onSelectDistribution`: É chamado quando uma distribuição é feita.
+  - Apenas os contratos de Disputas pode realizar essa ação.
+  - Envia os pagamentos corretos para os endereços certos.
+  - Ao finalizar, o status vai para `FINISHED`.
+- `onPaymentTransferred`: Finaliza uma proposta.
   - Apenas os contratos de Lances e Disputas podem realizar essa ação.
   - Ao finalizar, o status vai para `FINISHED`.
   - Ao finalizar, o valor da proposta depositado é enviado para quem ganhou o lance.
@@ -118,10 +124,9 @@ Ações que poderão ser feitas com esse contrato:
   - Ao transferir, o status da proposta deve ser `IN_DEVELOPMENT`.
   - Ao transferir, se certificar que quem está chamando é o dono da proposta (contrante).
   - Ao transferir, o status da proposta deve ser marcado como `FINISHED`.
-- `transferPaymentByDistribution`: Realiza o pagamento por distribuição.
-  - Ao transferir, o status da proposta deve ser `IN_DISPUTE_DISTRIBUTION`.
-  - Ao transferir, olhar o contrato de disputas para obter a distribuição.
-  - Ao transferir, o status da proposta deve ser marcado como `FINISHED`.
+- `onSelectDistribution`: Ao terminar de distribuir, retornar o lance do usuário.
+  - Apenas o contrato de proposta pode chamar esse método.
+  - Ao transferir, o status da proposta deve estar como `FINISHED`.
 
 ### Disputas
 
@@ -133,7 +138,7 @@ Ações que poderão ser feitas com esse contrato:
   - Ao criar, associar essa disputa com o criador e com o bidder.
 - `selectMediator`: Seleciona um mediador para a proposta.
   - Ao selecionar, é necessário que ambos (contrante e freelancer) selecionem o mesmo mediador para passar para o status de `IN_DISPUTE_DISTRIBUTION`.
-- `setDistribution`: Define a distribuição dos valores para cada envolvido.
+- `selectDistribution`: Define a distribuição dos valores para cada envolvido.
   - Ao definir, o status da proposta precisa estar como `IN_DISPUTE_DISTRIBUTION`.
   - Ao definir, deve ser alterado o status da proposta para `FINISHED`.
   - Ao definir, realizar a transferência dos valores de acordo com a distribuição no contrato de Lances.

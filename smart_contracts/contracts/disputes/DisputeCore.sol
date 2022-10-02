@@ -19,6 +19,8 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
     mapping(uint256 => address) internal _selectedMediatorByDisputeId;
 
     function createDispute(uint256 proposalId) external returns (uint256) {
+        if (_selectedDisputeIdByProposalId[proposalId] != 0) revert DisputeAlreadyExist();
+
         bytes32 proposalStatus;
         address proposalCreator;
 
@@ -39,7 +41,12 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         return newDisputeId;
     }
 
-    function getSelectedMediatorForDisputeId(uint256 disputeId) external view returns (address) {
+    function getSelectedMediatorForDisputeId(uint256 disputeId)
+        external
+        view
+        disputeExist(disputeId)
+        returns (address)
+    {
         address selectedMediator = _selectedMediatorByDisputeId[disputeId];
 
         if (selectedMediator == address(0)) revert MediatorNotSelected();
@@ -71,7 +78,7 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         }
     }
 
-    function selectDistribuition(uint256 disputeId, uint8 splitBidderShare) external disputeExist(disputeId) {
+    function selectDistribution(uint256 disputeId, uint8 splitBidderShare) external disputeExist(disputeId) {
         if (_selectedMediatorByDisputeId[disputeId] != _msgSender())
             revert YouAreNotTheMediator(_selectedMediatorByDisputeId[disputeId]);
 
@@ -79,7 +86,7 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
 
         Dispute storage dispute = _disputes[disputeId];
 
-        if (dispute.distributedAt > 0) revert DisputeAlreadyDistributted(dispute.distributedAt);
+        if (dispute.distributedAt > 0) revert DisputeAlreadyDistributed(dispute.distributedAt);
 
         dispute.distributedAt = uint64(block.timestamp);
         dispute.splitBidderShare = splitBidderShare;

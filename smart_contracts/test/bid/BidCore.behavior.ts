@@ -1,5 +1,9 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import Signer from "ethers";
 import { ethers } from "hardhat";
+
+import { impersonate } from "../utils";
 
 export function shouldBehaveLikeBid(): void {
   let currentProposalId: number;
@@ -65,7 +69,7 @@ export function shouldBehaveLikeBid(): void {
         })
         .catch(err => err);
 
-      expect(invalidStatus.message).to.contains("InvalidStatusToCreateBid");
+      expect(invalidStatus.message).to.contains("InvalidProposalStatus");
     });
   });
 
@@ -273,7 +277,7 @@ export function shouldBehaveLikeBid(): void {
         .selectBid(currentProposalId, 1)
         .catch(err => err);
 
-      expect(error.message).to.contains("InvalidStatusToSelectBid");
+      expect(error.message).to.contains("InvalidProposalStatus");
     });
 
     it("should not select bid when user is not the proposal creator", async function () {
@@ -313,18 +317,16 @@ export function shouldBehaveLikeBid(): void {
     });
 
     it("should throw error when proposal is in wrong status", async function () {
-      await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.other.address);
+      await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
 
-      await this.proposalCore
-        .connect(this.signers.other)
-        .nextDisputeStatus(currentProposalId, await this.proposalCore.IN_DISPUTE());
+      await this.proposalCore.connect(this.signers.other).onCreateDispute(currentProposalId);
 
       const error = await this.bidCore
         .connect(this.signers.admin)
         .transferPayment(currentProposalId)
         .catch(err => err);
 
-      expect(error.message).to.contains("InvalidStatusToTransferProposal");
+      expect(error.message).to.contains("InvalidProposalStatus");
     });
 
     it("should throw error when user is not the proposal creator", async function () {
@@ -334,6 +336,76 @@ export function shouldBehaveLikeBid(): void {
         .catch(err => err);
 
       expect(error.message).to.contains("YouAreNotTheProposalCreator");
+    });
+  });
+
+  describe("onSelectDistribution", function () {
+    beforeEach(async function () {
+      await this.bidCore.connect(this.signers.third).createBid(currentProposalId, {
+        value: 5,
+      });
+
+      await this.bidCore.connect(this.signers.admin).selectBid(currentProposalId, 1);
+
+      const bidSigner = await impersonate(this.bidCore.address);
+      const proposalSigner = await impersonate(this.proposalCore.address);
+
+      await this.signers.admin.sendTransaction({
+        value: ethers.utils.parseEther("1.0"),
+        to: await proposalSigner.getAddress(),
+      });
+
+      await this.signers.admin.sendTransaction({
+        value: ethers.utils.parseEther("1.0"),
+        to: await bidSigner.getAddress(),
+      });
+    });
+
+    it("should onDistributeDispute", async function () {
+      await this.bidCore.connect(this.signers.admin).transferPayment(currentProposalId);
+
+      const balance = await this.signers.third.getBalance();
+
+      const proposalSigner = await impersonate(this.proposalCore.address);
+
+      await this.bidCore.connect(proposalSigner).onSelectDistribution(1);
+
+      const newBalance = await this.signers.third.getBalance();
+
+      expect(newBalance.eq(balance.add(5)), `${balance.toString()} = ${newBalance.toString()}`).to.eq(true);
+    });
+
+    it("should throw error when bidId not exist", async function () {
+      await this.bidCore.connect(this.signers.admin).transferPayment(currentProposalId);
+
+      const proposalSigner = await impersonate(this.proposalCore.address);
+
+      const error = await this.bidCore
+        .connect(proposalSigner)
+        .onSelectDistribution(10000)
+        .catch(err => err);
+
+      expect(error.message).to.contains("BidNotFound");
+    });
+
+    it("should throw error when invalid status", async function () {
+      const proposalSigner = await impersonate(this.proposalCore.address);
+
+      const error = await this.bidCore
+        .connect(proposalSigner)
+        .onSelectDistribution(1)
+        .catch(err => err);
+
+      expect(error.message).to.contains("InvalidProposalStatus");
+    });
+
+    it("should throw error when signer is not valid", async function () {
+      const error = await this.bidCore
+        .connect(this.signers.admin)
+        .onSelectDistribution(1)
+        .catch(err => err);
+
+      expect(error.message).to.contains("ForbiddenAccessToMethod");
     });
   });
 }

@@ -11,7 +11,7 @@ import "../common/EnumerateIdByAddress.sol";
 import "../common/EnumerateIdByUint256.sol";
 
 abstract contract BidProposal {
-    error ForbiddenAccessToMethod();
+    error ForbiddenAccessToMethod(address proposalContract);
 
     constructor(address proposalContractAddress) {
         proposalContract = proposalContractAddress;
@@ -31,7 +31,7 @@ abstract contract BidProposal {
     modifier onlyAllowedProposalContract() {
         address sender = msg.sender;
 
-        if (sender != proposalContract) revert ForbiddenAccessToMethod();
+        if (sender != proposalContract) revert ForbiddenAccessToMethod(proposalContract);
 
         _;
     }
@@ -61,6 +61,6 @@ abstract contract BidProposal {
     }
 
     function _onPaymentTransfered(uint256 proposalId, address bidderAddress) internal {
-        proposalCoreContract.onPaymentTransfered(proposalId, bidderAddress);
+        proposalCoreContract.onPaymentTransferred(proposalId, bidderAddress);
     }
 }

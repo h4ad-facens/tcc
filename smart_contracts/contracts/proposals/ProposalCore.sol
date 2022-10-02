@@ -56,7 +56,7 @@ contract ProposalCore is IProposalCore, ProposalPermission {
         _updateProposalStatus(proposalId, IN_DEVELOPMENT);
     }
 
-    function onPaymentTransfered(uint256 proposalId, address bidderAddress)
+    function onPaymentTransferred(uint256 proposalId, address bidderAddress)
         external
         proposalExist(proposalId)
         onlyAllowedBidContract
@@ -71,14 +71,6 @@ contract ProposalCore is IProposalCore, ProposalPermission {
         Address.sendValue(payable(bidderAddress), proposal.amount);
     }
 
-    function onMediatorSelected(uint256 proposalId) external proposalExist(proposalId) onlyAllowedDisputeContract {
-        Proposal memory proposal = _proposals[proposalId];
-
-        if (proposal.status != IN_DISPUTE) revert InvalidProposalStatus(proposal.status);
-
-        _updateProposalStatus(proposalId, IN_DISPUTE_DISTRIBUTION);
-    }
-
     function onCreateDispute(uint256 proposalId) external proposalExist(proposalId) onlyAllowedDisputeContract {
         Proposal memory proposal = _proposals[proposalId];
 
@@ -87,12 +79,22 @@ contract ProposalCore is IProposalCore, ProposalPermission {
         _updateProposalStatus(proposalId, IN_DISPUTE);
     }
 
+    function onMediatorSelected(uint256 proposalId) external proposalExist(proposalId) onlyAllowedDisputeContract {
+        Proposal memory proposal = _proposals[proposalId];
+
+        if (proposal.status != IN_DISPUTE) revert InvalidProposalStatus(proposal.status);
+
+        _updateProposalStatus(proposalId, IN_DISPUTE_DISTRIBUTION);
+    }
+
     function onSelectDistribution(
         uint256 proposalId,
         uint256 bidId,
         address bidderAddress,
         uint8 splitBidderShare
     ) external proposalExist(proposalId) onlyAllowedDisputeContract {
+        if (splitBidderShare > 100) revert InvalidSplitBidderShare();
+
         Proposal memory proposal = _proposals[proposalId];
 
         if (proposal.status != IN_DISPUTE_DISTRIBUTION) revert InvalidProposalStatus(proposal.status);
@@ -124,6 +126,6 @@ contract ProposalCore is IProposalCore, ProposalPermission {
             }
         }
 
-        _rollbackBid(bidId);
+        _onSelectDistribution(bidId);
     }
 }

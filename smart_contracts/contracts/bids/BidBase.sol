@@ -106,7 +106,7 @@ abstract contract BidBase is
 
         (proposalStatus, amountToPayForBid) = _getStatusAndAmountToPayForBidByProposalId(proposalId);
 
-        if (proposalStatus != WAITING_BID) revert InvalidStatusToCreateBid(proposalStatus);
+        if (proposalStatus != WAITING_BID) revert InvalidProposalStatus(proposalStatus);
 
         if (amountToPayForBid != bidPaidAmount) revert InvalidPaymentToCreateBid(amountToPayForBid);
 
@@ -139,7 +139,7 @@ abstract contract BidBase is
 
         (proposalStatus, proposalCreator) = _getStatusAndProposalCreator(proposalId);
 
-        if (proposalStatus != WAITING_BID) revert InvalidStatusToSelectBid(proposalStatus);
+        if (proposalStatus != WAITING_BID) revert InvalidProposalStatus(proposalStatus);
 
         if (_msgSender() != proposalCreator) revert YouAreNotTheProposalCreator(proposalCreator);
 

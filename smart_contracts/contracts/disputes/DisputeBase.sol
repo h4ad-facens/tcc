@@ -56,7 +56,8 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
             address bidderAddress,
             address mediatorAddress,
             uint8 splitBidderShare,
-            bool createdByBidder
+            bool createdByBidder,
+            uint64 distributedAt
         )
     {
         Dispute memory dispute = _disputes[disputeId];
@@ -69,6 +70,7 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
         mediatorAddress = dispute.mediatorAddress;
         splitBidderShare = dispute.splitBidderShare;
         createdByBidder = dispute.createdByBidder;
+        distributedAt = dispute.distributedAt;
     }
 
     function getCountOfDisputes() external view returns (uint256) {
@@ -97,8 +99,6 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
         address proposalCreator,
         address bidder
     ) internal returns (uint256) {
-        if (_selectedDisputeIdByProposalId[proposalId] != 0) revert DisputeAlreadyExist();
-
         _disputeIds.increment();
 
         uint256 newDisputeId = _disputeIds.current();

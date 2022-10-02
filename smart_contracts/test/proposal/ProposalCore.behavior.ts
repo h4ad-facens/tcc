@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 export function shouldBehaveLikeProposal(): void {
-  it("should create correctly an proposal", async function () {
+  it("should create correctly a proposal", async function () {
     const creatorAddress = this.signers.admin.address;
 
     const createdAtMock = +new Date();
@@ -101,7 +101,7 @@ export function shouldBehaveLikeProposal(): void {
       .cancelProposal(1)
       .catch(error => error);
 
-    expect(cannotCancelTwice.message).to.contains("InvalidStatusToCancel");
+    expect(cannotCancelTwice.message).to.contains("InvalidProposalStatus");
   });
 
   it("should not cancel proposal without being owner", async function () {
@@ -117,7 +117,7 @@ export function shouldBehaveLikeProposal(): void {
     expect(result.message).to.contains("YouAreNotTheCreator");
   });
 
-  it("should can call on bidder selected", async function () {
+  it("should can call onBidderSelected", async function () {
     await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
     await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
 
@@ -127,7 +127,7 @@ export function shouldBehaveLikeProposal(): void {
 
     expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
 
-    await this.proposalCore.connect(this.signers.other).onBidderSelected(1);
+    await this.proposalCore.connect(this.signers.admin).onBidderSelected(1);
 
     expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
 
@@ -136,7 +136,7 @@ export function shouldBehaveLikeProposal(): void {
       .onBidderSelected(1)
       .catch(error => error);
 
-    expect(error.message).to.contains("InvalidStatusToSelectBidder");
+    expect(error.message).to.contains("InvalidProposalStatus");
 
     const errorAboutPermission = await this.proposalCore
       .connect(this.signers.third)
@@ -153,49 +153,7 @@ export function shouldBehaveLikeProposal(): void {
     expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
   });
 
-  it("should can call next dispute status", async function () {
-    await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
-    await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
-
-    await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
-      value: 10,
-    });
-
-    await this.proposalCore.connect(this.signers.other).onBidderSelected(1);
-
-    await this.proposalCore.connect(this.signers.admin).nextDisputeStatus(1, await this.proposalCore.IN_DISPUTE());
-
-    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE());
-
-    await this.proposalCore
-      .connect(this.signers.admin)
-      .nextDisputeStatus(1, await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
-
-    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
-
-    const error = await this.proposalCore
-      .connect(this.signers.admin)
-      .nextDisputeStatus(1, await this.proposalCore.WAITING_BID())
-      .catch(error => error);
-
-    expect(error.message).to.contains("InvalidStatusToUpdate");
-
-    const errorAboutPermission = await this.proposalCore
-      .connect(this.signers.third)
-      .nextDisputeStatus(1, await this.proposalCore.WAITING_BID())
-      .catch(error => error);
-
-    expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
-
-    const errorAboutNotFound = await this.proposalCore
-      .connect(this.signers.admin)
-      .nextDisputeStatus(1000, await this.proposalCore.WAITING_BID())
-      .catch(error => error);
-
-    expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
-  });
-
-  it("should can call on finish proposal", async function () {
+  it("should can call onPaymentTransferred", async function () {
     await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
     await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
 
@@ -205,32 +163,227 @@ export function shouldBehaveLikeProposal(): void {
 
     expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
 
-    await this.proposalCore.connect(this.signers.other).onBidderSelected(1);
+    await this.proposalCore.connect(this.signers.admin).onBidderSelected(1);
 
     expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
 
-    await this.proposalCore.connect(this.signers.other).finishProposal(1, this.signers.other.address);
+    await this.proposalCore.connect(this.signers.admin).onPaymentTransferred(1, this.signers.other.address);
 
     const error = await this.proposalCore
       .connect(this.signers.admin)
-      .finishProposal(1, this.signers.other.address)
+      .onPaymentTransferred(1, this.signers.other.address)
       .catch(error => error);
 
-    expect(error.message).to.contains("InvalidStatusToFinish");
+    expect(error.message).to.contains("InvalidProposalStatus");
 
     const errorAboutPermission = await this.proposalCore
       .connect(this.signers.third)
-      .finishProposal(1, this.signers.other.address)
+      .onPaymentTransferred(1, this.signers.other.address)
       .catch(error => error);
 
     expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
 
     const errorAboutNotFound = await this.proposalCore
       .connect(this.signers.admin)
-      .finishProposal(1000, this.signers.other.address)
+      .onPaymentTransferred(1000, this.signers.other.address)
       .catch(error => error);
 
     expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
+  });
+
+  it("should can call onCreateDispute", async function () {
+    await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
+    await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
+
+    await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
+      value: 10,
+    });
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
+
+    await this.proposalCore.connect(this.signers.admin).onBidderSelected(1);
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
+
+    await this.proposalCore.connect(this.signers.other).onCreateDispute(1);
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE());
+
+    const error = await this.proposalCore
+      .connect(this.signers.other)
+      .onCreateDispute(1)
+      .catch(error => error);
+
+    expect(error.message).to.contains("InvalidProposalStatus");
+
+    const errorAboutPermission = await this.proposalCore
+      .connect(this.signers.third)
+      .onCreateDispute(1)
+      .catch(error => error);
+
+    expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
+
+    const errorAboutNotFound = await this.proposalCore
+      .connect(this.signers.admin)
+      .onCreateDispute(1000)
+      .catch(error => error);
+
+    expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
+  });
+
+  it("should can call onMediatorSelected", async function () {
+    await this.proposalCore.connect(this.signers.admin).setBidContractAddress(this.signers.admin.address);
+    await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
+
+    await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
+      value: 10,
+    });
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
+
+    await this.proposalCore.connect(this.signers.admin).onBidderSelected(1);
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
+
+    await this.proposalCore.connect(this.signers.other).onCreateDispute(1);
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE());
+
+    await this.proposalCore.connect(this.signers.other).onMediatorSelected(1);
+
+    expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE_DISTRIBUTION());
+
+    const error = await this.proposalCore
+      .connect(this.signers.other)
+      .onMediatorSelected(1)
+      .catch(error => error);
+
+    expect(error.message).to.contains("InvalidProposalStatus");
+
+    const errorAboutPermission = await this.proposalCore
+      .connect(this.signers.third)
+      .onMediatorSelected(1)
+      .catch(error => error);
+
+    expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
+
+    const errorAboutNotFound = await this.proposalCore
+      .connect(this.signers.admin)
+      .onMediatorSelected(1000)
+      .catch(error => error);
+
+    expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
+  });
+
+  describe("onSelectDistribution", function () {
+    beforeEach(async function () {
+      await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
+
+      await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
+        value: 20,
+      });
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
+
+      await this.bidCore.connect(this.signers.third).createBid(1, {
+        value: 1,
+      });
+      await this.bidCore.connect(this.signers.admin).selectBid(1, 1);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DEVELOPMENT());
+
+      await this.proposalCore.connect(this.signers.other).onCreateDispute(1);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.IN_DISPUTE());
+
+      await this.proposalCore.connect(this.signers.other).onMediatorSelected(1);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(
+        await this.proposalCore.IN_DISPUTE_DISTRIBUTION(),
+      );
+    });
+
+    it("should can call correctly and transfer the values", async function () {
+      const balance = await this.signers.third.getBalance();
+
+      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 50);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
+
+      const newBalance = await this.signers.third.getBalance();
+
+      const valueToRestore = 10 + 1; // 10 (proposta) + 1 (lance)
+      expect(newBalance.eq(balance.add(valueToRestore)), `${balance.toString()} = ${newBalance.toString()}`).to.equal(
+        true,
+      );
+
+      const error = await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(1, 1, this.signers.third.address, 50)
+        .catch(error => error);
+
+      expect(error.message).to.contains("InvalidProposalStatus");
+    });
+
+    it("should transfer ok with splitShare in 0", async function () {
+      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 0);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
+    });
+
+    it("should transfer ok with splitShare in 100", async function () {
+      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 100);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
+    });
+
+    it("should transfer not transfer when splitShare result in low amount for bidder", async function () {
+      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 1);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
+    });
+
+    it("should transfer not transfer when splitShare result in low amount for creator", async function () {
+      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 99);
+
+      expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
+    });
+
+    it("should throw error when bidId is wrong", async function () {
+      const errorAboutBidNotFound = await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(1, 100, this.signers.third.address, 50)
+        .catch(error => error);
+
+      expect(errorAboutBidNotFound.message, JSON.stringify(errorAboutBidNotFound)).to.contains("BidNotFound");
+    });
+
+    it("should throw if dont have access", async function () {
+      const errorAboutPermission = await this.proposalCore
+        .connect(this.signers.third)
+        .onSelectDistribution(1, 1, this.signers.third.address, 50)
+        .catch(error => error);
+
+      expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
+    });
+
+    it("should throw if proposal dont exist", async function () {
+      const errorAboutNotFound = await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(1000, 1, this.signers.third.address, 50)
+        .catch(error => error);
+
+      expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
+    });
+
+    it("should throw if split share is wrong", async function () {
+      const errorInvalidSplitBidderShare = await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(1, 1, this.signers.third.address, 200)
+        .catch(error => error);
+
+      expect(errorInvalidSplitBidderShare.message).to.contains("InvalidSplitBidderShare");
+    });
   });
 
   it("should user is not owner cannot update bid or dispute address", async function () {

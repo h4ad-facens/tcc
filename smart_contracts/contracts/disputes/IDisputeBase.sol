@@ -5,7 +5,6 @@ interface IDisputeBase {
     error DisputeNotFound();
     error NoDisputeCreatedForProposal();
 
-    error DisputeAlreadyExist();
     error InvalidStatusToCreateDispute(bytes32 currentProposalStatus);
 
     error YouAreNotTheBidderOrProposalCreator();
@@ -37,7 +36,8 @@ interface IDisputeBase {
             address bidderAddress,
             address mediatorAddress,
             uint8 splitBidderShare,
-            bool createdByBidder
+            bool createdByBidder,
+            uint64 distributedAt
         );
 
     function getCountOfDisputes() external view returns (uint256);

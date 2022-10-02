@@ -12,5 +12,5 @@ interface IBidCore is IBidBase {
 
     function transferPayment(uint256 proposalId) external;
 
-    function rollbackBid(uint256 bidId) external;
+    function onSelectDistribution(uint256 bidId) external;
 }

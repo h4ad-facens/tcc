@@ -4,12 +4,11 @@ pragma solidity >=0.8.4;
 interface IBidBase {
     error BidNotFound();
     error NoBidSelectedForProposal();
-    error InvalidStatusToCreateBid(bytes32 currentStatus);
+    error InvalidProposalStatus(bytes32 currentStatus);
     error InvalidPaymentToCreateBid(uint256 correctAmountToPay);
 
     error ProposalAlreadySelectedBid(uint256 selectedBidId);
     error CannotSelectCancelledBid();
-    error InvalidStatusToSelectBid(bytes32 currentProposalStatus);
 
     error YouAreNotTheProposalCreator(address correctProposalCreatorAddress);
     error YouAreNotTheBidCreator(address correctBidCreatorAddress);
@@ -17,10 +16,6 @@ interface IBidBase {
     error BidAlreadyCancelled();
     error BidNotBelongsToProposal(uint256 correctProposalId);
     error CannotCancelBidWhenSelected();
-
-    error InvalidStatusToTransferProposal(bytes32 currentProposalStatus);
-
-    error InvalidStatusToFinish(bytes32 currentProposalStatus);
 
     /// @dev As informações de um lance
     struct Bid {

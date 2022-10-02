@@ -4,9 +4,9 @@ import { ethers } from "hardhat";
 
 import { deployFixture } from "../deploy.fixture";
 import type { Signers } from "../types";
-import { shouldBehaveLikeBid } from "./BidCore.behavior";
+import { shouldBehaveLikeDispute } from "./DisputeCore.behavior";
 
-describe("BidCore", function () {
+describe("DisputeCore", function () {
   before(async function () {
     this.signers = {} as Signers;
 
@@ -18,7 +18,7 @@ describe("BidCore", function () {
     this.loadFixture = loadFixture;
   });
 
-  describe("Bid", function () {
+  describe("Dispute", function () {
     beforeEach(async function () {
       const { proposal, bid, dispute } = await this.loadFixture(deployFixture);
 
@@ -27,6 +27,6 @@ describe("BidCore", function () {
       this.disputeCore = dispute;
     });
 
-    shouldBehaveLikeBid();
+    shouldBehaveLikeDispute();
   });
 });

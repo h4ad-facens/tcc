@@ -7,6 +7,7 @@ interface IProposalCore is IProposalBase {
     error AmountTooLow();
     error InvalidProposalStatus(bytes32 currentStatus);
     error YouAreNotTheCreator();
+    error InvalidSplitBidderShare();
 
     function createProposal(
         string memory name,
@@ -19,11 +20,11 @@ interface IProposalCore is IProposalBase {
 
     function onBidderSelected(uint256 proposalId) external;
 
-    function onMediatorSelected(uint256 proposalId) external;
-
-    function onPaymentTransfered(uint256 proposalId, address bidderAddress) external;
+    function onPaymentTransferred(uint256 proposalId, address bidderAddress) external;
 
     function onCreateDispute(uint256 proposalId) external;
+
+    function onMediatorSelected(uint256 proposalId) external;
 
     function onSelectDistribution(
         uint256 proposalId,

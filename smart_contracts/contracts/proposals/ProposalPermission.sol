@@ -2,7 +2,6 @@
 pragma solidity >=0.8.4;
 
 import "../bids/IBidCore.sol";
-
 import "./IProposalPermission.sol";
 import "./ProposalBase.sol";
 
@@ -20,7 +19,7 @@ abstract contract ProposalPermission is IProposalPermission, ProposalBase {
 
         bidCoreContract = IBidCore(bidContractAddress);
 
-        emit OnChangeBidAddress(oldAddress, contractAddress);
+        emit OnChangeBidAddress(oldAddress, bidContractAddress);
     }
 
     function setDisputeContractAddress(address contractAddress) external onlyOwner {
@@ -29,11 +28,11 @@ abstract contract ProposalPermission is IProposalPermission, ProposalBase {
         address oldAddress = disputeContractAddress;
         disputeContractAddress = contractAddress;
 
-        emit OnChangeBidAddress(oldAddress, contractAddress);
+        emit OnChangeBidAddress(oldAddress, disputeContractAddress);
     }
 
-    function _rollbackBid(uint256 bidId) internal {
-        bidCoreContract.rollbackBid(bidId);
+    function _onSelectDistribution(uint256 bidId) internal {
+        bidCoreContract.onSelectDistribution(bidId);
     }
 
     modifier onlyAllowedBidContract() {
