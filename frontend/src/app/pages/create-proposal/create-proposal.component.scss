@@ -51,6 +51,11 @@
       letter-spacing: 0.05rem;
       font-size: 1.1rem;
       border: 3px solid #1F50FF;
+
+      &:disabled {
+        cursor: not-allowed;
+        background-color: rgba(31, 80, 255, 0.59);
+      }
     }
 
     .btn-back {

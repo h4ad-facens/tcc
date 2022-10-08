@@ -6,7 +6,7 @@ export const environment = {
   },
   ethers: {
     network: {
-      chainId: `0x${ (1337).toString(16) }`,
+      chainId: `0x${ (31337).toString(16) }`,
       chainName: 'Local Network',
       rpcUrls: ['http://localhost:8545'],
       blockExplorerUrls: ['http://localhost:8545'],

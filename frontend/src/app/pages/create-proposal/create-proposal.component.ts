@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
@@ -20,24 +21,30 @@ export class CreateProposalComponent {
   //#region Constructors
 
   constructor(
-    private readonly navbarService: NavbarService,
-    private readonly router: Router,
-    private readonly proposalService: ProposalService,
+    protected readonly navbarService: NavbarService,
+    protected readonly router: Router,
+    protected readonly proposalService: ProposalService,
+    protected readonly fb: FormBuilder,
   ) {
     this.navbarService.setCurrentNavbar(NavbarStateEnum.PROPOSAL);
+
+    this.formGroup = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      amount: [undefined, [Validators.required, Validators.min(0)]],
+      description: ['', [Validators.required, Validators.minLength(3)]],
+      category: ['', [Validators.required, Validators.minLength(3)]],
+      contactInfo: ['', [Validators.required, Validators.minLength(3)]],
+    });
   }
 
   //#endregion
 
   //#region Public Properties
 
-  public proposal: ProposalPayload = {
-    title: '',
-    description: '',
-    category: '',
-    contact: '',
-    imageUrl: '',
-  };
+  public readonly formGroup: FormGroup;
+
+  public isLoading: boolean = false;
+  public errorMessage?: string;
 
   public imageBaseUrl: string = environment.imageBaseUrl;
 
@@ -46,8 +53,19 @@ export class CreateProposalComponent {
   //#region Public Functions
 
   public async createProposal(): Promise<void> {
-    localStorage.setItem(environment.keys.proposal, JSON.stringify(this.proposal));
-    await this.proposalService.createProposal(this.proposal);
+    this.errorMessage = void 0;
+    this.isLoading = true;
+
+    const payload = this.formGroup.getRawValue();
+    const [isSuccess, error] = await this.proposalService.createProposal(payload);
+
+    this.isLoading = false;
+
+    this.errorMessage = error;
+
+    if (!isSuccess)
+      return;
+
     await this.router.navigateByUrl('/proposal');
   }
 

@@ -2,8 +2,8 @@
 
 import { Component } from '@angular/core';
 import { randPhrase } from '@ngneat/falso';
-import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
+import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
 
 //#endregion
@@ -27,50 +27,52 @@ export class DisputeComponent {
 
   //#region Public Properties
 
-  public disputeEnum: typeof DisputeStatusEnum = DisputeStatusEnum;
-
-  public choosingProposal = {
+  public choosingProposal: ProposalProxy = {
     id: 1,
-    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
     description: randPhrase(),
     category: '',
-    contact: '',
-    price: 400,
+    contactInfo: '',
+    amount: 400,
     imageUrl: '',
-    disputeStatus: DisputeStatusEnum.CHOOSING,
+    creator: '',
+    status: ProposalStatus.WAITING_BID,
   };
 
-  public awaitingProposal = {
+  public awaitingProposal: ProposalProxy = {
     id: 2,
-    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
     description: randPhrase(),
     category: '',
-    contact: '',
-    price: 400,
+    contactInfo: '',
+    amount: 400,
     imageUrl: '',
-    disputeStatus: DisputeStatusEnum.AWAITING,
+    creator: '',
+    status: ProposalStatus.IN_DEVELOPMENT,
   };
 
-  public finishedProposal = {
+  public finishedProposal: ProposalProxy = {
     id: 3,
-    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
     description: randPhrase(),
     category: '',
-    contact: '',
-    price: 400,
+    contactInfo: '',
+    amount: 400,
     imageUrl: '',
-    disputeStatus: DisputeStatusEnum.FINISHED,
+    creator: '',
+    status: ProposalStatus.FINISHED,
   };
 
-  public distributeProposal = {
+  public distributeProposal: ProposalProxy = {
     id: 3,
-    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
     description: randPhrase(),
     category: '',
-    contact: '',
-    price: 400,
+    contactInfo: '',
+    amount: 400,
     imageUrl: '',
-    disputeStatus: DisputeStatusEnum.DISTRIBUTE,
+    creator: '',
+    status: ProposalStatus.IN_DISPUTE,
   };
 
   //#endregion

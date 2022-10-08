@@ -2,14 +2,15 @@
 
 import { Injectable } from '@angular/core';
 import { Signer } from '@ethersproject/abstract-signer';
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+import { JsonRpcProvider, Provider, Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
+import { BehaviorSubject } from 'rxjs';
 import Web3Modal from 'web3modal';
 import { environment } from '../../../../environments/environment';
-import { BidCore } from '../contracts/BidCore';
 import { BidCoreAbi, ProposalCoreAbi } from '../contracts';
-import { ProposalCore } from '../contracts/ProposalCore';
+import { BidCore } from '../contracts/BidCore';
 import { DisputeCore } from '../contracts/DisputeCore';
+import { ProposalCore } from '../contracts/ProposalCore';
 
 //#endregion
 
@@ -41,9 +42,9 @@ export class Web3Service {
 
   private web3Modal = new Web3Modal();
 
-  public myAddress: string | null = null;
-  public signer: Signer | null = null;
-  public isConnected: boolean = false;
+  public myAddress$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  public signer$: BehaviorSubject<Signer | null> = new BehaviorSubject<Signer | null>(null);
+  public isConnected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private web3ModalInstance: any = null;
   private web3Provider: Web3Provider | null = null;
@@ -74,17 +75,13 @@ export class Web3Service {
       throw new Error('Não foi possível se conectar com a sua conta.');
     }
 
-    const provider = new ethers.providers.Web3Provider(instance);
-
-    await this.addNetwork(provider);
-
-    provider.on('accountsChanged', async (accounts: string[]) => {
+    instance.on('accountsChanged', async (accounts: string[]) => {
       console.trace(accounts);
 
       if (!accounts || accounts.length === 0) {
-        this.myAddress = null;
-        this.signer = null;
-        this.isConnected = false;
+        this.myAddress$.next(null);
+        this.signer$.next(null);
+        this.isConnected$.next(false);
         this.web3ModalInstance = null;
         this.web3Provider = null;
 
@@ -93,55 +90,58 @@ export class Web3Service {
 
       const [defaultAccount] = accounts;
 
-      const signer = provider.getSigner(defaultAccount);
+      const signer = this.web3Provider!.getSigner(defaultAccount);
 
       const myAddress = await signer.getAddress();
 
-      this.signer = signer;
-      this.myAddress = myAddress;
+      this.myAddress$.next(myAddress);
+      this.signer$.next(signer);
     });
 
     // Subscribe to chainId change
-    provider.on('chainChanged', (chainId: number) => {
+    instance.on('chainChanged', async (chainId: number) => {
       console.trace(chainId);
+
+      await this.connectWithChain(instance);
     });
 
     // Subscribe to provider connection
-    provider.on('connect', (info: { chainId: number }) => {
+    instance.on('connect', (info: { chainId: number }) => {
       console.trace(info);
     });
 
     // Subscribe to provider disconnection
-    provider.on('disconnect', (error: { code: number; message: string }) => {
+    instance.on('disconnect', (error: { code: number; message: string }) => {
       console.trace(error);
 
-      instance.clearCachedProvider();
-
-      this.myAddress = null;
-      this.signer = null;
-      this.isConnected = false;
-      this.web3ModalInstance = null;
-      this.web3Provider = null;
-
+      this.logout();
     });
+
+    await this.connectWithChain(instance);
+  }
+
+  private async connectWithChain(instance: any): Promise<void> {
+    const provider = new ethers.providers.Web3Provider(instance);
+
+    await this.addNetwork(provider);
 
     const signer = provider.getSigner();
 
     const myAddress = await signer.getAddress();
 
-    this.myAddress = myAddress;
     this.web3ModalInstance = instance;
     this.web3Provider = provider;
-    this.signer = signer;
-    this.isConnected = true;
+    this.myAddress$.next(myAddress);
+    this.signer$.next(signer);
+    this.isConnected$.next(true);
   }
 
   public logout(): void {
     this.web3ModalInstance.clearCachedProvider();
 
-    this.myAddress = null;
-    this.signer = null;
-    this.isConnected = false;
+    this.myAddress$.next(null);
+    this.signer$.next(null);
+    this.isConnected$.next(false);
     this.web3ModalInstance = null;
     this.web3Provider = null;
 

@@ -12,6 +12,11 @@ $header-height: 3rem;
     cursor: pointer;
   }
 
+  &--profile {
+    height: 3rem;
+    width: 3rem;
+  }
+
   &--logo {
     display: flex;
     align-items: center;

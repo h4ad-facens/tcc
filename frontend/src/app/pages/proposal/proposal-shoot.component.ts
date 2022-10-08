@@ -30,20 +30,20 @@ export class ProposalShootComponent implements OnInit {
   public listProposal: ProposalProxy[] = [
     {
       id: 1,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
-      contact: '',
-      price: 400,
+      contactInfo: '',
+      amount: 400,
       imageUrl: '',
     },
     {
       id: 2,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: '',
       category: '',
-      contact: '',
-      price: 400,
+      contactInfo: '',
+      amount: 400,
       imageUrl: '',
     },
   ];

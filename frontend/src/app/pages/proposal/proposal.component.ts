@@ -1,10 +1,10 @@
 //#region Imports
 
 import { Component, OnInit } from '@angular/core';
-import { randPhrase } from '@ngneat/falso';
+import { randEthereumAddress, randPhrase } from '@ngneat/falso';
 import { environment } from '../../../environments/environment';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
-import { ProposalProxy } from '../../models/proxies/proposal.proxy';
+import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
 
 //#endregion
@@ -31,22 +31,26 @@ export class ProposalComponent implements OnInit {
   public listProposal: ProposalProxy[] = [
     {
       id: 1,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: randPhrase(),
       category: '',
-      contact: '',
-      price: 400,
+      contactInfo: '',
+      amount: 400,
       imageUrl: '',
+      status: ProposalStatus.IN_DEVELOPMENT,
+      creator: randEthereumAddress(),
     },
     {
       id: 2,
-      title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+      name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
       description: randPhrase(),
       category: '',
-      contact: '',
-      price: 400,
+      contactInfo: '',
+      amount: 400,
       imageUrl: '',
       shootAccepted: true,
+      status: ProposalStatus.WAITING_BID,
+      creator: randEthereumAddress(),
     },
   ];
 

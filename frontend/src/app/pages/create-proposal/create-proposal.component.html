@@ -3,17 +3,19 @@
 
   <div class="create-proposal--forms">
     <img [src]="undefined | boring : 'bauhaus'" onerror="this.src = imageBaseUrl + '/home-card-bg.png'; this.onerror=null" alt="Imagem">
-    <div class="create-proposal--forms--inputs">
-      <input class="free--input" type="text" placeholder="Digite o título dessa proposta" [(ngModel)]="proposal.title">
-      <textarea class="free--input" placeholder="Digite uma descrição para essa proposta" [(ngModel)]="proposal.description"></textarea>
-      <input class="free--input" type="number" placeholder="Valor dessa proposta" [(ngModel)]="proposal.price">
-      <input class="free--input" type="text" placeholder="Categoria dessa proposta" [(ngModel)]="proposal.category">
-      <input class="free--input" type="text" placeholder="Informação de contato (eg. cabal.chat)" [(ngModel)]="proposal.contact">
-    </div>
+    <form [formGroup]="formGroup" class="create-proposal--forms--inputs">
+      <input class="free--input" type="text" placeholder="Digite o título dessa proposta" formControlName="name">
+      <textarea class="free--input" placeholder="Digite uma descrição para essa proposta" formControlName="description"></textarea>
+      <input class="free--input" type="number" placeholder="Valor dessa proposta (MATIC)" formControlName="amount">
+      <input class="free--input" type="text" placeholder="Categoria dessa proposta" formControlName="category">
+      <input class="free--input" type="text" placeholder="Informação de contato (eg. cabal.chat)" formControlName="contactInfo">
+
+      <app-error-message *ngIf="errorMessage" [message]="errorMessage"></app-error-message>
+    </form>
   </div>
 
   <div class="create-proposal--buttons">
     <button routerLink="/proposal" class="btn-back">Voltar</button>
-    <button (click)="createProposal()" class="btn-create">Criar proposta!</button>
+    <button (click)="createProposal()" class="btn-create" [disabled]="formGroup.invalid || isLoading">Criar proposta!</button>
   </div>
 </div>

@@ -6,8 +6,13 @@
     <h1>Freedapp</h1>
   </div>
 
-  <button *ngIf="currentNavbar === navbarStates.HOME && !isWalletConnected" (click)="enterWithWallet()"><strong>+</strong> Entrar com a Wallet</button>
-  <img *ngIf="currentNavbar !== navbarStates.HOME || isWalletConnected" [src]="imageBaseUrl + '/yellow-face.png'">
+  <ng-container *ngIf="myAddress$ | async as myAddress; else connectWallet">
+    <img class="header--profile" *ngIf="currentNavbar !== navbarStates.HOME" [src]="myAddress | boring : 'beam'" [alt]="myAddress">
+  </ng-container>
+
+  <ng-template #connectWallet>
+    <button (click)="enterWithWallet()"><strong>+</strong> Entrar com a Wallet</button>
+  </ng-template>
 </div>
 
 <!--navbar-->

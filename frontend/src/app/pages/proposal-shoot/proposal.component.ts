@@ -12,20 +12,20 @@ import { NavbarService } from '../../services/navbar/navbar.service';
 const proposals = [
   {
     id: 1,
-    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
     description: randPhrase(),
     category: '',
-    contact: '',
-    price: 400,
+    contactInfo: '',
+    amount: 400,
     imageUrl: '',
   },
   {
     id: 2,
-    title: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
+    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
     description: randPhrase(),
     category: '',
-    contact: '',
-    price: 400,
+    contactInfo: '',
+    amount: 400,
     imageUrl: '',
   },
 ];

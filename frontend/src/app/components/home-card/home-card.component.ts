@@ -1,39 +1,37 @@
 //#region Imports
 
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { DisputeStatusEnum } from '../../models/enums/dispute-status.enum';
-import { ProposalProxy } from '../../models/proxies/proposal.proxy';
+import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 
 //#endregion
 
-export type DisputeStatusSettings = { text: string, color?: string }
+export type ProposalStatusSettings = { text: string, color?: string }
 
 @Component({
   selector: 'app-home-card',
   templateUrl: './home-card.component.html',
   styleUrls: ['./home-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeCardComponent {
 
   //#region Public Properties
 
-  @Input('proposal')
-  public set _proposal(value: ProposalProxy) {
-    this.proposal = value;
-    this.proposal.disputeStatus = value.disputeStatus || DisputeStatusEnum.NONE;
-  };
-
+  @Input()
   public proposal!: ProposalProxy;
 
-  public possibleDisputeStatus: typeof DisputeStatusEnum = DisputeStatusEnum;
+  public get proposalStatus(): ProposalStatusSettings {
+    return this.formatProposalStatus[this.proposal.status as keyof typeof ProposalStatus] || { text: 'Desconhecido', color: '#FFF' };
+  }
 
-  public formatDisputeStatus: Record<DisputeStatusEnum, DisputeStatusSettings> = {
-    [DisputeStatusEnum.NONE]: { text: '' },
-    [DisputeStatusEnum.CHOOSING]: { text: 'Escolher mediador', color: '#FFFFFF' },
-    [DisputeStatusEnum.AWAITING]: { text: 'Aguardando mediador', color: '#FFD130' },
-    [DisputeStatusEnum.FINISHED]: { text: 'Reinvidicar ganhos', color: '#00FF29' },
-    [DisputeStatusEnum.DISTRIBUTE]: { text: 'Distribuir valores', color: '#d20f0f' },
+  public formatProposalStatus: Record<keyof typeof ProposalStatus, ProposalStatusSettings> = {
+    IN_DISPUTE: { text: 'Escolher mediador', color: '#FFFFFF' },
+    CANCELLED: { text: 'Cancelada', color: '#490700' },
+    FINISHED: { text: 'Finalizada', color: '#00a123' },
+    IN_DISPUTE_DISTRIBUTION: { text: 'Distribuir valores', color: '#d20f0f' },
+    IN_DEVELOPMENT: { text: 'Em desenvolvimento', color: '#009fe5' },
+    WAITING_BID: { text: 'Aguardando lances', color: '#b7b402' },
   };
 
   public imageBaseUrl: string = environment.imageBaseUrl;

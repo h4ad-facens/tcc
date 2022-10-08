@@ -1,8 +1,8 @@
 export interface ProposalPayload {
-  title: string;
+  name: string;
   description: string;
-  price?: number;
+  amount: number;
   category: string;
-  contact: string;
+  contactInfo: string;
   imageUrl: string;
 }
