@@ -1,10 +1,11 @@
 //#region Imports
 
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
-import { createMockProposal, ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
+import { ProposalService } from '../../services/proposal/proposal.service';
 
 //#endregion
 
@@ -13,37 +14,29 @@ import { NavbarService } from '../../services/navbar/navbar.service';
   templateUrl: './proposal.component.html',
   styleUrls: ['./proposal.component.scss'],
 })
-export class ProposalComponent implements OnInit {
+export class ProposalComponent {
 
   //#region Constructors
 
   constructor(
-    private readonly navbarService: NavbarService,
+    protected readonly navbarService: NavbarService,
+    protected readonly proposal: ProposalService,
   ) {
     this.navbarService.setCurrentNavbar(NavbarStateEnum.PROPOSAL);
+
+    [this.proposals$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.proposal.getPaginatedMyProposals(8, 'ASC');
   }
 
   //#endregion
 
   //#region Public Properties
 
-  public listProposal: ProposalProxy[] = [
-    createMockProposal(1, ProposalStatus.IN_DEVELOPMENT),
-    createMockProposal(2, ProposalStatus.WAITING_BID),
-  ];
+  public isLoading$: Observable<boolean>;
+  public proposals$: Observable<ProposalProxy[]>;
+  public loadMore: () => void;
+  public hasMoreData$: Observable<boolean>;
 
-  //#endregion
-
-  //#region Public Functions
-
-  public ngOnInit(): void {
-    const proposal = localStorage.getItem(environment.keys.proposal);
-
-    if (proposal) {
-      this.listProposal.push(JSON.parse(proposal));
-      localStorage.removeItem(environment.keys.proposal);
-    }
-  }
+  public trackById = (index: number, proposal: ProposalProxy) => proposal.id;
 
   //#endregion
 

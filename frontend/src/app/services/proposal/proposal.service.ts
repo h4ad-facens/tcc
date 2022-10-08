@@ -1,12 +1,13 @@
 //#region Imports
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from as fromPromise, mergeMap, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ProposalPayload } from '../../models/payloads/proposal.payload';
 import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
 import { BoringPipe } from '../../pipes/boring.pipe';
 import { parseEtherToBigNumber } from '../../utils/ether';
+import { getPaginatedClosure } from '../../utils/paginated';
 
 //#endregion
 
@@ -52,66 +53,43 @@ export class ProposalService {
     return this.web3Service.proposalContract.getCountOfProposals().then(count => count.toNumber());
   }
 
+  public async getCountOfMyProposals(): Promise<number> {
+    const myAddress = this.web3Service.myAddress$.getValue();
+
+    if (!myAddress)
+      return 0;
+
+    return this.web3Service.proposalContract.getCountOfProposalsByUser(myAddress).then(count => count.toNumber());
+  }
+
+  public async getProposalIdCreatedByMeByIndex(index: number): Promise<number> {
+    const myAddress = this.web3Service.myAddress$.getValue();
+
+    if (!myAddress)
+      return 0;
+
+    return this.web3Service.proposalContract.getProposalIdByUserAndIndex(myAddress, index).then(count => count.toNumber());
+  }
+
   public getPaginatedProposals(itemsPerPage: number, order: 'ASC' | 'DESC'): [data: Observable<ProposalProxy[]>, isLoading$: Observable<boolean>, loadMore: () => void, hasMoreData$: Observable<boolean>] {
-    const isLoadingSource = new BehaviorSubject<boolean>(false);
-    const hasMoreData = new BehaviorSubject<boolean>(false);
-    const currentPageSource = new BehaviorSubject<number>(0);
-    const accumulatedData: ProposalProxy[] = [];
+    return getPaginatedClosure(
+      proposalId => this.getProposalById(proposalId),
+      () => this.getCountOfProposals(),
+      itemsPerPage,
+      order,
+    );
+  }
 
-    const getByPageAndAccumulate = async (page: number) => {
-      const count = await this.web3Service.proposalContract.getCountOfProposals().then(n => n.toNumber());
-
-      if (count === 0) {
-        hasMoreData.next(false);
-
-        return accumulatedData;
-      }
-
-      const to = order === 'ASC'
-        ? (page + 1) * itemsPerPage - 1
-        : count - (page + 1) * itemsPerPage;
-
-      const from = order === 'ASC'
-        ? page * itemsPerPage
-        : count - (page) * itemsPerPage - 1;
-
-      hasMoreData.next(from < count);
-
-      if (to === from)
-        return accumulatedData;
-
-      const proposalIds: number[] = [];
-
-      for (let proposalId = from; order === 'ASC' ? proposalId <= to : proposalId >= to; order === 'ASC' ? proposalId++ : proposalId--) {
-        if (proposalId < 0 || proposalId >= count)
-          continue;
-
-        proposalIds.push(proposalId);
-      }
-
-      if (proposalIds.length === 0)
-        return accumulatedData;
-
-      const newData = await Promise.all(
-        proposalIds.map(proposalId => this.getProposalById(proposalId)),
-      );
-
-      accumulatedData.push(...newData);
-
-      return accumulatedData;
-    };
-
-    return [
-      currentPageSource
-        .pipe(
-          tap(() => isLoadingSource.next(true)),
-          mergeMap(page => fromPromise(getByPageAndAccumulate(page))),
-          tap(() => isLoadingSource.next(false)),
-        ),
-      isLoadingSource.asObservable(),
-      () => currentPageSource.next(currentPageSource.getValue() + 1),
-      hasMoreData.asObservable(),
-    ];
+  public getPaginatedMyProposals(itemsPerPage: number, order: 'ASC' | 'DESC'): [data: Observable<ProposalProxy[]>, isLoading$: Observable<boolean>, loadMore: () => void, hasMoreData$: Observable<boolean>] {
+    return getPaginatedClosure(
+      index => this.getProposalIdCreatedByMeByIndex(index - 1).then(proposalId => this.getProposalById(proposalId)),
+      () => this.getCountOfMyProposals(),
+      itemsPerPage,
+      order,
+      // basicamente escuta qualquer mudança, e ao logar ou deslogar
+      // ele busca novamente os dados.
+      this.web3Service.myAddress$.asObservable(),
+    );
   }
 
   public async getProposalById(id: number): Promise<ProposalProxy> {

@@ -5,8 +5,12 @@
   </div>
 
   <div class="proposal--cards">
-    <ng-container *ngFor="let proposal of listProposal">
-      <app-home-card [proposal]="proposal" [routerLink]="'/proposal/' + proposal.id + (proposal.shootAccepted ? '/accepted/creator' : '')"></app-home-card>
+    <ng-container *ngFor="let proposal of proposals$ | async; trackBy: trackById">
+      <app-home-card [proposal]="proposal" [routerLink]="'/proposal/' + proposal.id"></app-home-card>
     </ng-container>
   </div>
+
+  <ng-container *ngIf="hasMoreData$ | async">
+    <button class="free--btn" [disabled]="isLoading$ | async" (click)="loadMore()">Carregar mais</button>
+  </ng-container>
 </div>

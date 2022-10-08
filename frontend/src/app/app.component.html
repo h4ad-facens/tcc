@@ -7,7 +7,7 @@
   </div>
 
   <ng-container *ngIf="myAddress$ | async as myAddress; else connectWallet">
-    <img class="header--profile" *ngIf="currentNavbar !== navbarStates.HOME" [src]="myAddress | boring : 'beam'" [alt]="myAddress">
+    <img class="header--profile" [src]="myAddress | boring : 'beam'" [alt]="myAddress">
   </ng-container>
 
   <ng-template #connectWallet>

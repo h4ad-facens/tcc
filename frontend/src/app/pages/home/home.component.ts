@@ -24,7 +24,7 @@ export class HomeComponent {
   ) {
     this.navbarService.setCurrentNavbar(NavbarStateEnum.HOME);
 
-    [this.proposals$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.proposal.getPaginatedProposals(2, 'ASC');
+    [this.proposals$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.proposal.getPaginatedProposals(8, 'ASC');
   }
 
   //#endregion
