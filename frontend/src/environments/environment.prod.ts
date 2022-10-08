@@ -7,9 +7,9 @@ export const environment = {
   ethers: {
     network: {
       chainId: `0x${ (137).toString(16) }`,
-      chainName: 'CNFT Polygon Mainnet',
-      rpcUrls: ['https://polygon-mainnet.g.alchemy.com/v2/UKL_WfZUEqVgrfSe7-yHpgi-ma-ViuXm'],
-      blockExplorerUrls: ['https://polygonscan.com'],
+      chainName: 'Freedapp Polygon Mainnet',
+      rpcUrls: [],
+      blockExplorerUrls: ['https://mumbai.polygonscan.com'],
       nativeCurrency: {
         name: 'MATIC',
         symbol: 'MATIC',
@@ -27,7 +27,7 @@ export const environment = {
       bids: '',
       dispute: '',
     },
-    freeRpcEndpoint: '',
+    freeRpcEndpoint: 'https://rpc-mumbai.maticvigil.com',
   },
 
 };

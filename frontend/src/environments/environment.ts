@@ -6,13 +6,13 @@ export const environment = {
   },
   ethers: {
     network: {
-      chainId: `0x${ (137).toString(16) }`,
-      chainName: 'CNFT Polygon Mainnet',
-      rpcUrls: ['https://polygon-mainnet.g.alchemy.com/v2/UKL_WfZUEqVgrfSe7-yHpgi-ma-ViuXm'],
-      blockExplorerUrls: ['https://polygonscan.com'],
+      chainId: `0x${ (1337).toString(16) }`,
+      chainName: 'Local Network',
+      rpcUrls: ['http://localhost:8545'],
+      blockExplorerUrls: ['http://localhost:8545'],
       nativeCurrency: {
-        name: 'MATIC',
-        symbol: 'MATIC',
+        name: 'ETHER',
+        symbol: 'ETH',
         decimals: 18,
       },
     },
@@ -23,10 +23,10 @@ export const environment = {
     },
     metadataUrl: 'https://cloudflare-ipfs.com/ipfs/{tokenURI}',
     contractAddress: {
-      proposal: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
-      bids: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
-      dispute: '',
+      proposal: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      bids: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+      dispute: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
     },
-    freeRpcEndpoint: '',
+    freeRpcEndpoint: 'http://localhost:8545',
   },
 };
