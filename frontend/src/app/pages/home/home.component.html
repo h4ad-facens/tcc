@@ -2,8 +2,12 @@
   <h3>Propostas que você pode se interessar</h3>
 
   <div class="home--cards">
-    <ng-container *ngFor="let proposal of listProposal">
-      <app-home-card [proposal]="proposal"  [routerLink]="'/proposal/' + proposal.id"></app-home-card>
+    <ng-container *ngFor="let proposal of proposals$ | async; trackBy: trackById">
+      <app-home-card [proposal]="proposal" [routerLink]="'/proposal/' + proposal.id"></app-home-card>
     </ng-container>
   </div>
+
+  <ng-container *ngIf="hasMoreData$ | async">
+    <button class="free--btn" [disabled]="isLoading$ | async" (click)="loadMore()">Carregar mais</button>
+  </ng-container>
 </div>

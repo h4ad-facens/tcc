@@ -9,7 +9,7 @@ export class BoringPipe implements PipeTransform {
   }
 
   public static getSvg(seed: string | undefined, type: 'bauhaus' | 'beam'): string {
-    const rand = btoa(encodeURIComponent(seed || Math.random().toString(16).slice(2))).slice(32);
+    const rand = btoa(encodeURIComponent(seed || Math.random().toString(16).slice(2)));
     const url = `https://source.boringavatars.com/bauhaus/512/${ rand }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51${ type === 'bauhaus' ? '&square=bauhaus' : '' }`;
 
     return url;

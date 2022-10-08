@@ -2,9 +2,9 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { randEthereumAddress, randNumber, randParagraph, randPastDate } from '@ngneat/falso';
+import { randNumber } from '@ngneat/falso';
 import { ResultsInterface } from '../../models/interfaces/results.interface';
-import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { createMockProposal, ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 
 //#endregion
 
@@ -33,17 +33,7 @@ export class ProposalDetailChallengeClaimComponent {
     total: 200,
   }
 
-  public proposal: ProposalProxy = {
-    id: 15,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randParagraph(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.FINISHED,
-    creator: randEthereumAddress(),
-  }
+  public proposal: ProposalProxy = createMockProposal(15, ProposalStatus.FINISHED)
 
   public total: number = randNumber({ min: 0, max: 200, precision: 1 });
 

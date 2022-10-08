@@ -35,34 +35,8 @@
     width: calc(80% + 2rem);
     padding-left: 2rem;
 
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 1rem;
-      outline: 0;
-      border-radius: 100px;
-      background-color: #1F50FF;
-      cursor: pointer;
-
-      padding: 1.1rem 1rem;
-      color: white;
-      font-weight: 300;
-      letter-spacing: 0.05rem;
-      font-size: 1.1rem;
-      border: 3px solid #1F50FF;
-
-      &:disabled {
-        cursor: not-allowed;
-        background-color: rgba(31, 80, 255, 0.59);
-      }
-    }
-
     .btn-back {
       width: 25%;
-      background-color: transparent;
-      color: #1F50FF;
-      font-weight: bold;
     }
 
     .btn-create {

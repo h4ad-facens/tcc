@@ -1,70 +1,13 @@
 //#region Imports
 
 import { Component } from '@angular/core';
-import { randEthereumAddress, randPhrase } from '@ngneat/falso';
+import { Observable } from 'rxjs';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
-import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { ProposalProxy } from '../../models/proxies/proposal.proxy';
 import { NavbarService } from '../../services/navbar/navbar.service';
+import { ProposalService } from '../../services/proposal/proposal.service';
 
 //#endregion
-
-const proposals: ProposalProxy[] = [
-  {
-    id: 1,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randPhrase(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.WAITING_BID,
-    creator: randEthereumAddress(),
-  },
-  {
-    id: 2,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randPhrase(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.WAITING_BID,
-    creator: randEthereumAddress(),
-  },
-  {
-    id: 3,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randPhrase(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.WAITING_BID,
-    creator: randEthereumAddress(),
-  },
-  {
-    id: 4,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randPhrase(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.WAITING_BID,
-    creator: randEthereumAddress(),
-  },
-  {
-    id: 5,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randPhrase(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.WAITING_BID,
-    creator: randEthereumAddress(),
-  },
-];
 
 @Component({
   selector: 'app-home',
@@ -76,16 +19,24 @@ export class HomeComponent {
   //#region Constructors
 
   constructor(
-    private readonly navbarService: NavbarService,
+    protected readonly navbarService: NavbarService,
+    protected readonly proposal: ProposalService,
   ) {
     this.navbarService.setCurrentNavbar(NavbarStateEnum.HOME);
+
+    [this.proposals$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.proposal.getPaginatedProposals(2, 'ASC');
   }
 
   //#endregion
 
   //#region Public Properties
 
-  public listProposal: ProposalProxy[] = proposals;
+  public isLoading$: Observable<boolean>;
+  public proposals$: Observable<ProposalProxy[]>;
+  public loadMore: () => void;
+  public hasMoreData$: Observable<boolean>;
+
+  public trackById = (index: number, proposal: ProposalProxy) => proposal.id;
 
   //#endregion
 

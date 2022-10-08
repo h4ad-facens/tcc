@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeCardModule } from '../../components/home-card/home-card.module';
 import { BoringPipeModule } from '../../pipes/boring.pipe';
+import { FormatEtherModule } from '../../pipes/format-ether.pipe';
 import { ProposalDetailComponent } from './proposal-detail.component';
 
 //#endregion
@@ -19,6 +20,7 @@ const routes: Routes = [{ path: '', component: ProposalDetailComponent }];
     HomeCardModule,
     FormsModule,
     BoringPipeModule,
+    FormatEtherModule,
   ],
   declarations: [
     ProposalDetailComponent,

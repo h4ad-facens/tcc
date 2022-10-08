@@ -1,0 +1,40 @@
+.free--btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1rem;
+  border: 0;
+  outline: 0;
+  border-radius: 100px;
+  background-color: #1F50FF;
+  cursor: pointer;
+
+  padding: 1.1rem 1rem;
+  color: white;
+  font-weight: 300;
+  letter-spacing: 0.05rem;
+  font-size: 1.1rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgba(31, 80, 255, 0.59);
+  }
+
+  strong {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    font-weight: 300;
+  }
+
+  &.free--btn__outline {
+    background-color: transparent;
+    color: #1F50FF;
+    font-weight: bold;
+
+    &:disabled {
+      cursor: not-allowed;
+      color: rgba(31, 80, 255, 0.68);
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}

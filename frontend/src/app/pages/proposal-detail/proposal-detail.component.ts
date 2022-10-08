@@ -2,9 +2,9 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { randEthereumAddress, randNumber, randParagraph, randPastDate } from '@ngneat/falso';
+import { randEthereumAddress, randNumber, randPastDate } from '@ngneat/falso';
 import { ShootProposalStepEnum } from '../../models/enums/shoot-proposal-step.enum';
-import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { createMockProposal, ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 
 //#endregion
 
@@ -27,17 +27,7 @@ export class ProposalDetailComponent {
 
   //#region Public Properties
 
-  public proposal: ProposalProxy = {
-    id: 15,
-    name: 'Freeelancer C#/ReactJs - Projeto de Landing Page',
-    description: randParagraph(),
-    category: '',
-    contactInfo: '',
-    amount: 400,
-    imageUrl: '',
-    status: ProposalStatus.IN_DEVELOPMENT,
-    creator: randEthereumAddress(),
-  }
+  public proposal: ProposalProxy = createMockProposal(1, ProposalStatus.IN_DEVELOPMENT);
 
   public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.INFO;
 

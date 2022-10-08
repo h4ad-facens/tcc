@@ -22,7 +22,7 @@
         <h4>Valor da proposta</h4>
         <div class="price--info">
           <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
-          <b>{{ proposal.amount.toFixed(2) }}</b>
+          <b>{{ proposal.amount | formatEther }}</b>
         </div>
         <button *ngIf="shootProposalStep === possibleShootProposalStep.INFO" (click)="changeStep(possibleShootProposalStep.EDIT_SHOOT)">Dar um lance</button>
 
