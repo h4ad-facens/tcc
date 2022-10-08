@@ -4,18 +4,10 @@
 
 /* eslint-disable */
 import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from "./common";
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+  EventFragment, FunctionFragment,
+  Result
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   BaseContract,
   BigNumber,
@@ -27,207 +19,221 @@ import type {
   PayableOverrides,
   PopulatedTransaction,
   Signer,
-  utils,
-} from "ethers";
+  utils
+} from 'ethers';
+import type {
+  OnEvent,
+  PromiseOrValue, TypedEvent, TypedEventFilter, TypedListener
+} from './common';
 
 export interface BidCoreInterface extends utils.Interface {
   functions: {
-    "BID_SHARE_TO_PARTICIPATE()": FunctionFragment;
-    "CANCELLED()": FunctionFragment;
-    "FINISHED()": FunctionFragment;
-    "IN_DEVELOPMENT()": FunctionFragment;
-    "IN_DISPUTE()": FunctionFragment;
-    "IN_DISPUTE_DISTRIBUTION()": FunctionFragment;
-    "WAITING_BID()": FunctionFragment;
-    "cancelBid(uint256,uint256)": FunctionFragment;
-    "createBid(uint256)": FunctionFragment;
-    "getBidById(uint256)": FunctionFragment;
-    "getBidIdByProposalIdAndIndex(uint256,uint256)": FunctionFragment;
-    "getBidIdByUserAndIndex(address,uint256)": FunctionFragment;
-    "getCountOfBids()": FunctionFragment;
-    "getCountOfBidsByProposalId(uint256)": FunctionFragment;
-    "getCountOfBidsByUser(address)": FunctionFragment;
-    "getSelectedBidIdByProposalId(uint256)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "selectBid(uint256,uint256)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "transferPayment(uint256)": FunctionFragment;
+    'BID_SHARE_TO_PARTICIPATE()': FunctionFragment;
+    'CANCELLED()': FunctionFragment;
+    'FINISHED()': FunctionFragment;
+    'IN_DEVELOPMENT()': FunctionFragment;
+    'IN_DISPUTE()': FunctionFragment;
+    'IN_DISPUTE_DISTRIBUTION()': FunctionFragment;
+    'WAITING_BID()': FunctionFragment;
+    'cancelBid(uint256,uint256)': FunctionFragment;
+    'createBid(uint256)': FunctionFragment;
+    'getBidById(uint256)': FunctionFragment;
+    'getBidIdByProposalIdAndIndex(uint256,uint256)': FunctionFragment;
+    'getBidIdByUserAndIndex(address,uint256)': FunctionFragment;
+    'getCountOfBids()': FunctionFragment;
+    'getCountOfBidsByProposalId(uint256)': FunctionFragment;
+    'getCountOfBidsByUser(address)': FunctionFragment;
+    'getSelectedBidIdByProposalId(uint256)': FunctionFragment;
+    'onSelectDistribution(uint256)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'selectBid(uint256,uint256)': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
+    'transferPayment(uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "BID_SHARE_TO_PARTICIPATE"
-      | "CANCELLED"
-      | "FINISHED"
-      | "IN_DEVELOPMENT"
-      | "IN_DISPUTE"
-      | "IN_DISPUTE_DISTRIBUTION"
-      | "WAITING_BID"
-      | "cancelBid"
-      | "createBid"
-      | "getBidById"
-      | "getBidIdByProposalIdAndIndex"
-      | "getBidIdByUserAndIndex"
-      | "getCountOfBids"
-      | "getCountOfBidsByProposalId"
-      | "getCountOfBidsByUser"
-      | "getSelectedBidIdByProposalId"
-      | "owner"
-      | "renounceOwnership"
-      | "selectBid"
-      | "transferOwnership"
-      | "transferPayment"
+      | 'BID_SHARE_TO_PARTICIPATE'
+      | 'CANCELLED'
+      | 'FINISHED'
+      | 'IN_DEVELOPMENT'
+      | 'IN_DISPUTE'
+      | 'IN_DISPUTE_DISTRIBUTION'
+      | 'WAITING_BID'
+      | 'cancelBid'
+      | 'createBid'
+      | 'getBidById'
+      | 'getBidIdByProposalIdAndIndex'
+      | 'getBidIdByUserAndIndex'
+      | 'getCountOfBids'
+      | 'getCountOfBidsByProposalId'
+      | 'getCountOfBidsByUser'
+      | 'getSelectedBidIdByProposalId'
+      | 'onSelectDistribution'
+      | 'owner'
+      | 'renounceOwnership'
+      | 'selectBid'
+      | 'transferOwnership'
+      | 'transferPayment'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "BID_SHARE_TO_PARTICIPATE",
+    functionFragment: 'BID_SHARE_TO_PARTICIPATE',
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "CANCELLED", values?: undefined): string;
-  encodeFunctionData(functionFragment: "FINISHED", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'CANCELLED', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'FINISHED', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "IN_DEVELOPMENT",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "IN_DISPUTE",
+    functionFragment: 'IN_DEVELOPMENT',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "IN_DISPUTE_DISTRIBUTION",
+    functionFragment: 'IN_DISPUTE',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "WAITING_BID",
+    functionFragment: 'IN_DISPUTE_DISTRIBUTION',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "cancelBid",
+    functionFragment: 'WAITING_BID',
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'cancelBid',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "createBid",
+    functionFragment: 'createBid',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getBidById",
+    functionFragment: 'getBidById',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getBidIdByProposalIdAndIndex",
+    functionFragment: 'getBidIdByProposalIdAndIndex',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getBidIdByUserAndIndex",
+    functionFragment: 'getBidIdByUserAndIndex',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCountOfBids",
+    functionFragment: 'getCountOfBids',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getCountOfBidsByProposalId",
+    functionFragment: 'getCountOfBidsByProposalId',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCountOfBidsByUser",
+    functionFragment: 'getCountOfBidsByUser',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getSelectedBidIdByProposalId",
+    functionFragment: 'getSelectedBidIdByProposalId',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'onSelectDistribution',
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: 'renounceOwnership',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "selectBid",
+    functionFragment: 'selectBid',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferPayment",
+    functionFragment: 'transferPayment',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "BID_SHARE_TO_PARTICIPATE",
+    functionFragment: 'BID_SHARE_TO_PARTICIPATE',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "CANCELLED", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "FINISHED", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'CANCELLED', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'FINISHED', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "IN_DEVELOPMENT",
+    functionFragment: 'IN_DEVELOPMENT',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "IN_DISPUTE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'IN_DISPUTE', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "IN_DISPUTE_DISTRIBUTION",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "WAITING_BID",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "cancelBid", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "createBid", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getBidById", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getBidIdByProposalIdAndIndex",
+    functionFragment: 'IN_DISPUTE_DISTRIBUTION',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getBidIdByUserAndIndex",
+    functionFragment: 'WAITING_BID',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'cancelBid', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'createBid', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getBidById', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'getBidIdByProposalIdAndIndex',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCountOfBids",
+    functionFragment: 'getBidIdByUserAndIndex',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCountOfBidsByProposalId",
+    functionFragment: 'getCountOfBids',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCountOfBidsByUser",
+    functionFragment: 'getCountOfBidsByProposalId',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getSelectedBidIdByProposalId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "selectBid", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: 'getCountOfBidsByUser',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferPayment",
+    functionFragment: 'getSelectedBidIdByProposalId',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'onSelectDistribution',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'renounceOwnership',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'selectBid', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'transferOwnership',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'transferPayment',
     data: BytesLike
   ): Result;
 
   events: {
-    "Cancelled(uint256,uint256,address)": EventFragment;
-    "Created(uint256,uint256,address)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
-    "Selected(uint256,uint256,address)": EventFragment;
+    'Cancelled(uint256,uint256,address)': EventFragment;
+    'Created(uint256,uint256,address)': EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
+    'Selected(uint256,uint256,address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Cancelled"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Created"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Selected"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Cancelled'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Created'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Selected'): EventFragment;
 }
 
 export interface CancelledEventObject {
@@ -372,6 +378,11 @@ export interface BidCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    onSelectDistribution(
+      bidId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
@@ -461,6 +472,11 @@ export interface BidCore extends BaseContract {
     proposalId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  onSelectDistribution(
+    bidId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -552,6 +568,11 @@ export interface BidCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    onSelectDistribution(
+      bidId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
@@ -574,7 +595,7 @@ export interface BidCore extends BaseContract {
   };
 
   filters: {
-    "Cancelled(uint256,uint256,address)"(
+    'Cancelled(uint256,uint256,address)'(
       id?: null,
       proposalId?: PromiseOrValue<BigNumberish> | null,
       bidderAddress?: PromiseOrValue<string> | null
@@ -585,7 +606,7 @@ export interface BidCore extends BaseContract {
       bidderAddress?: PromiseOrValue<string> | null
     ): CancelledEventFilter;
 
-    "Created(uint256,uint256,address)"(
+    'Created(uint256,uint256,address)'(
       id?: null,
       proposalId?: PromiseOrValue<BigNumberish> | null,
       bidderAddress?: PromiseOrValue<string> | null
@@ -596,7 +617,7 @@ export interface BidCore extends BaseContract {
       bidderAddress?: PromiseOrValue<string> | null
     ): CreatedEventFilter;
 
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
@@ -605,7 +626,7 @@ export interface BidCore extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "Selected(uint256,uint256,address)"(
+    'Selected(uint256,uint256,address)'(
       id?: null,
       proposalId?: PromiseOrValue<BigNumberish> | null,
       bidderAddress?: PromiseOrValue<string> | null
@@ -675,6 +696,11 @@ export interface BidCore extends BaseContract {
     getSelectedBidIdByProposalId(
       proposalId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    onSelectDistribution(
+      bidId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -762,6 +788,11 @@ export interface BidCore extends BaseContract {
     getSelectedBidIdByProposalId(
       proposalId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    onSelectDistribution(
+      bidId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;

@@ -6,9 +6,10 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { environment } from '../../../../environments/environment';
-import { BidCore } from '../nft/BidCore';
-import { BidCoreAbi, ProposalCoreAbi } from '../nft/index';
-import { ProposalCore } from '../nft/ProposalCore';
+import { BidCore } from '../contracts/BidCore';
+import { BidCoreAbi, ProposalCoreAbi } from '../contracts';
+import { ProposalCore } from '../contracts/ProposalCore';
+import { DisputeCore } from '../contracts/DisputeCore';
 
 //#endregion
 
@@ -31,10 +32,12 @@ export class Web3Service {
 
     this.proposalContract = new ethers.Contract(environment.ethers.contractAddress.proposal, ProposalCoreAbi, freeRpcProvider) as ProposalCore;
     this.bidContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as BidCore;
+    this.disputeContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as DisputeCore;
   }
 
   public proposalContract!: ProposalCore;
   public bidContract!: BidCore;
+  public disputeContract!: DisputeCore;
 
   private web3Modal = new Web3Modal();
 
@@ -55,8 +58,12 @@ export class Web3Service {
 
     await provider.send('wallet_addEthereumChain', [
       environment.ethers.network,
-    ]).catch(e => {
-      throw Error(`Ocorreu um erro ao adicionar a rede para se conectar com a aplicação: ${ e.message }`);
+    ]).catch(async e => {
+      await provider.send('wallet_switchEthereumChain', [
+        { chainId: environment.ethers.network.chainId },
+      ]).catch(() => {
+        throw Error(`Ocorreu um erro ao adicionar a rede para se conectar com a aplicação: ${ e.message }`);
+      });
     });
   }
 

@@ -1,11 +1,54 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "proposalContractAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "inputs": [],
-    "name": "AmountTooLow",
+    "name": "BidAlreadyCancelled",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "correctProposalId",
+        "type": "uint256"
+      }
+    ],
+    "name": "BidNotBelongsToProposal",
     "type": "error"
   },
   {
     "inputs": [],
+    "name": "BidNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CannotCancelBidWhenSelected",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CannotSelectCancelledBid",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "proposalContract",
+        "type": "address"
+      }
+    ],
     "name": "ForbiddenAccessToMethod",
     "type": "error"
   },
@@ -16,7 +59,18 @@
   },
   {
     "inputs": [],
-    "name": "InvalidAddress",
+    "name": "IndexOfUintOutOfBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "correctAmountToPay",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidPaymentToCreateBid",
     "type": "error"
   },
   {
@@ -27,50 +81,45 @@
         "type": "bytes32"
       }
     ],
-    "name": "InvalidStatusToCancel",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "currentStatus",
-        "type": "bytes32"
-      }
-    ],
-    "name": "InvalidStatusToFinish",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "currentStatus",
-        "type": "bytes32"
-      }
-    ],
-    "name": "InvalidStatusToSelectBidder",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "currentStatus",
-        "type": "bytes32"
-      }
-    ],
-    "name": "InvalidStatusToUpdate",
+    "name": "InvalidProposalStatus",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ProposalNotFound",
+    "name": "NoBidSelectedForProposal",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "YouAreNotTheCreator",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "selectedBidId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProposalAlreadySelectedBid",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "correctBidCreatorAddress",
+        "type": "address"
+      }
+    ],
+    "name": "YouAreNotTheBidCreator",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "correctProposalCreatorAddress",
+        "type": "address"
+      }
+    ],
+    "name": "YouAreNotTheProposalCreator",
     "type": "error"
   },
   {
@@ -84,56 +133,43 @@
       },
       {
         "indexed": true,
-        "internalType": "string",
-        "name": "category",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "proposalId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bidderAddress",
+        "type": "address"
+      }
+    ],
+    "name": "Cancelled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
       },
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "amount",
+        "name": "proposalId",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bidderAddress",
+        "type": "address"
       }
     ],
     "name": "Created",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "oldAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAddress",
-        "type": "address"
-      }
-    ],
-    "name": "OnChangeBidAddress",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "oldAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAddress",
-        "type": "address"
-      }
-    ],
-    "name": "OnChangeDisputeAddress",
     "type": "event"
   },
   {
@@ -159,26 +195,39 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
         "indexed": true,
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
       },
       {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "oldStatus",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "newStatus",
-        "type": "bytes32"
+        "indexed": true,
+        "internalType": "address",
+        "name": "bidderAddress",
+        "type": "address"
       }
     ],
-    "name": "StatusChanged",
+    "name": "Selected",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "BID_SHARE_TO_PARTICIPATE",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -264,9 +313,14 @@
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
       }
     ],
-    "name": "cancelProposal",
+    "name": "cancelBid",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -274,39 +328,26 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "description",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "category",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "contactInfo",
-        "type": "string"
-      }
-    ],
-    "name": "createProposal",
-    "outputs": [
-      {
         "internalType": "uint256",
-        "name": "",
+        "name": "proposalId",
         "type": "uint256"
       }
     ],
+    "name": "createBid",
+    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
     "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBidById",
+    "outputs": [
       {
         "internalType": "uint256",
         "name": "proposalId",
@@ -316,40 +357,21 @@
         "internalType": "address",
         "name": "bidderAddress",
         "type": "address"
-      }
-    ],
-    "name": "finishProposal",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getCountOfProposals",
-    "outputs": [
+      },
+      {
+        "internalType": "bool",
+        "name": "isCancelled",
+        "type": "bool"
+      },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "bidPaidAmount",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
-        "internalType": "address",
-        "name": "userAddress",
-        "type": "address"
-      }
-    ],
-    "name": "getCountOfProposalsByUser",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "uint64",
+        "name": "createdAt",
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -361,49 +383,19 @@
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
-      }
-    ],
-    "name": "getProposalById",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "description",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "category",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "contactInfo",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "index",
         "type": "uint256"
-      },
+      }
+    ],
+    "name": "getBidIdByProposalIdAndIndex",
+    "outputs": [
       {
-        "internalType": "bytes32",
-        "name": "status",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint64",
-        "name": "createdAt",
-        "type": "uint64"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -422,7 +414,20 @@
         "type": "uint256"
       }
     ],
-    "name": "getProposalIdByUserAndIndex",
+    "name": "getBidIdByUserAndIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCountOfBids",
     "outputs": [
       {
         "internalType": "uint256",
@@ -441,12 +446,31 @@
         "type": "uint256"
       }
     ],
-    "name": "getStatusOfProposal",
+    "name": "getCountOfBidsByProposalId",
     "outputs": [
       {
-        "internalType": "bytes32",
+        "internalType": "uint256",
         "name": "",
-        "type": "bytes32"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getCountOfBidsByUser",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -458,27 +482,28 @@
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "status",
-        "type": "bytes32"
       }
     ],
-    "name": "nextDisputeStatus",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "getSelectedBidIdByProposalId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "proposalId",
+        "name": "bidId",
         "type": "uint256"
       }
     ],
-    "name": "onBidderSelected",
+    "name": "onSelectDistribution",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -506,25 +531,17 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "contractAddress",
-        "type": "address"
-      }
-    ],
-    "name": "setBidContractAddress",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+        "internalType": "uint256",
+        "name": "proposalId",
+        "type": "uint256"
+      },
       {
-        "internalType": "address",
-        "name": "contractAddress",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
       }
     ],
-    "name": "setDisputeContractAddress",
+    "name": "selectBid",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -538,6 +555,19 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "proposalId",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferPayment",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

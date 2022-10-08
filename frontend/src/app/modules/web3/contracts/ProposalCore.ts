@@ -9,13 +9,13 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "./common";
+} from './common';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   BaseContract,
   BigNumber,
@@ -28,82 +28,86 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 
 export interface ProposalCoreInterface extends utils.Interface {
   functions: {
-    "CANCELLED()": FunctionFragment;
-    "FINISHED()": FunctionFragment;
-    "IN_DEVELOPMENT()": FunctionFragment;
-    "IN_DISPUTE()": FunctionFragment;
-    "IN_DISPUTE_DISTRIBUTION()": FunctionFragment;
-    "WAITING_BID()": FunctionFragment;
-    "cancelProposal(uint256)": FunctionFragment;
-    "createProposal(string,string,string,string)": FunctionFragment;
-    "finishProposal(uint256,address)": FunctionFragment;
-    "getCountOfProposals()": FunctionFragment;
-    "getCountOfProposalsByUser(address)": FunctionFragment;
-    "getProposalById(uint256)": FunctionFragment;
-    "getProposalIdByUserAndIndex(address,uint256)": FunctionFragment;
-    "getStatusOfProposal(uint256)": FunctionFragment;
-    "nextDisputeStatus(uint256,bytes32)": FunctionFragment;
-    "onBidderSelected(uint256)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "setBidContractAddress(address)": FunctionFragment;
-    "setDisputeContractAddress(address)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
+    'CANCELLED()': FunctionFragment;
+    'FINISHED()': FunctionFragment;
+    'IN_DEVELOPMENT()': FunctionFragment;
+    'IN_DISPUTE()': FunctionFragment;
+    'IN_DISPUTE_DISTRIBUTION()': FunctionFragment;
+    'WAITING_BID()': FunctionFragment;
+    'cancelProposal(uint256)': FunctionFragment;
+    'createProposal(string,string,string,string)': FunctionFragment;
+    'getCountOfProposals()': FunctionFragment;
+    'getCountOfProposalsByUser(address)': FunctionFragment;
+    'getProposalById(uint256)': FunctionFragment;
+    'getProposalIdByUserAndIndex(address,uint256)': FunctionFragment;
+    'getStatusOfProposal(uint256)': FunctionFragment;
+    'onBidderSelected(uint256)': FunctionFragment;
+    'onCreateDispute(uint256)': FunctionFragment;
+    'onMediatorSelected(uint256)': FunctionFragment;
+    'onPaymentTransferred(uint256,address)': FunctionFragment;
+    'onSelectDistribution(uint256,uint256,address,uint8)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'setBidContractAddress(address)': FunctionFragment;
+    'setDisputeContractAddress(address)': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "CANCELLED"
-      | "FINISHED"
-      | "IN_DEVELOPMENT"
-      | "IN_DISPUTE"
-      | "IN_DISPUTE_DISTRIBUTION"
-      | "WAITING_BID"
-      | "cancelProposal"
-      | "createProposal"
-      | "finishProposal"
-      | "getCountOfProposals"
-      | "getCountOfProposalsByUser"
-      | "getProposalById"
-      | "getProposalIdByUserAndIndex"
-      | "getStatusOfProposal"
-      | "nextDisputeStatus"
-      | "onBidderSelected"
-      | "owner"
-      | "renounceOwnership"
-      | "setBidContractAddress"
-      | "setDisputeContractAddress"
-      | "transferOwnership"
+      | 'CANCELLED'
+      | 'FINISHED'
+      | 'IN_DEVELOPMENT'
+      | 'IN_DISPUTE'
+      | 'IN_DISPUTE_DISTRIBUTION'
+      | 'WAITING_BID'
+      | 'cancelProposal'
+      | 'createProposal'
+      | 'getCountOfProposals'
+      | 'getCountOfProposalsByUser'
+      | 'getProposalById'
+      | 'getProposalIdByUserAndIndex'
+      | 'getStatusOfProposal'
+      | 'onBidderSelected'
+      | 'onCreateDispute'
+      | 'onMediatorSelected'
+      | 'onPaymentTransferred'
+      | 'onSelectDistribution'
+      | 'owner'
+      | 'renounceOwnership'
+      | 'setBidContractAddress'
+      | 'setDisputeContractAddress'
+      | 'transferOwnership'
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "CANCELLED", values?: undefined): string;
-  encodeFunctionData(functionFragment: "FINISHED", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'CANCELLED', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'FINISHED', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "IN_DEVELOPMENT",
+    functionFragment: 'IN_DEVELOPMENT',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "IN_DISPUTE",
+    functionFragment: 'IN_DISPUTE',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "IN_DISPUTE_DISTRIBUTION",
+    functionFragment: 'IN_DISPUTE_DISTRIBUTION',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "WAITING_BID",
+    functionFragment: 'WAITING_BID',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "cancelProposal",
+    functionFragment: 'cancelProposal',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "createProposal",
+    functionFragment: 'createProposal',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -112,141 +116,162 @@ export interface ProposalCoreInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "finishProposal",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCountOfProposals",
+    functionFragment: 'getCountOfProposals',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getCountOfProposalsByUser",
+    functionFragment: 'getCountOfProposalsByUser',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getProposalById",
+    functionFragment: 'getProposalById',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getProposalIdByUserAndIndex",
+    functionFragment: 'getProposalIdByUserAndIndex',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getStatusOfProposal",
+    functionFragment: 'getStatusOfProposal',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "nextDisputeStatus",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "onBidderSelected",
+    functionFragment: 'onBidderSelected',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'onCreateDispute',
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'onMediatorSelected',
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'onPaymentTransferred',
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'onSelectDistribution',
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: 'renounceOwnership',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setBidContractAddress",
+    functionFragment: 'setBidContractAddress',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setDisputeContractAddress",
+    functionFragment: 'setDisputeContractAddress',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     values: [PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "CANCELLED", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "FINISHED", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'CANCELLED', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'FINISHED', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "IN_DEVELOPMENT",
+    functionFragment: 'IN_DEVELOPMENT',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "IN_DISPUTE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'IN_DISPUTE', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "IN_DISPUTE_DISTRIBUTION",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "WAITING_BID",
+    functionFragment: 'IN_DISPUTE_DISTRIBUTION',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "cancelProposal",
+    functionFragment: 'WAITING_BID',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createProposal",
+    functionFragment: 'cancelProposal',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "finishProposal",
+    functionFragment: 'createProposal',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCountOfProposals",
+    functionFragment: 'getCountOfProposals',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCountOfProposalsByUser",
+    functionFragment: 'getCountOfProposalsByUser',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getProposalById",
+    functionFragment: 'getProposalById',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getProposalIdByUserAndIndex",
+    functionFragment: 'getProposalIdByUserAndIndex',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getStatusOfProposal",
+    functionFragment: 'getStatusOfProposal',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "nextDisputeStatus",
+    functionFragment: 'onBidderSelected',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "onBidderSelected",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'onCreateDispute',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setBidContractAddress",
+    functionFragment: 'onMediatorSelected',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setDisputeContractAddress",
+    functionFragment: 'onPaymentTransferred',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: 'onSelectDistribution',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'renounceOwnership',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'setBidContractAddress',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'setDisputeContractAddress',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'transferOwnership',
     data: BytesLike
   ): Result;
 
   events: {
-    "Created(uint256,string,uint256)": EventFragment;
-    "OnChangeBidAddress(address,address)": EventFragment;
-    "OnChangeDisputeAddress(address,address)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
-    "StatusChanged(uint256,bytes32,bytes32)": EventFragment;
+    'Created(uint256,string,uint256)': EventFragment;
+    'OnChangeBidAddress(address,address)': EventFragment;
+    'OnChangeDisputeAddress(address,address)': EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
+    'StatusChanged(uint256,bytes32,bytes32)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Created"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OnChangeBidAddress"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OnChangeDisputeAddress"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StatusChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Created'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OnChangeBidAddress'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OnChangeDisputeAddress'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StatusChanged'): EventFragment;
 }
 
 export interface CreatedEventObject {
@@ -361,12 +386,6 @@ export interface ProposalCore extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    finishProposal(
-      proposalId: PromiseOrValue<BigNumberish>,
-      bidderAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     getCountOfProposals(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getCountOfProposalsByUser(
@@ -401,14 +420,32 @@ export interface ProposalCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    nextDisputeStatus(
+    onBidderSelected(
       proposalId: PromiseOrValue<BigNumberish>,
-      status: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    onBidderSelected(
+    onCreateDispute(
       proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    onMediatorSelected(
+      proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    onPaymentTransferred(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    onSelectDistribution(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      splitBidderShare: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -459,12 +496,6 @@ export interface ProposalCore extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  finishProposal(
-    proposalId: PromiseOrValue<BigNumberish>,
-    bidderAddress: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   getCountOfProposals(overrides?: CallOverrides): Promise<BigNumber>;
 
   getCountOfProposalsByUser(
@@ -499,14 +530,32 @@ export interface ProposalCore extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  nextDisputeStatus(
+  onBidderSelected(
     proposalId: PromiseOrValue<BigNumberish>,
-    status: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  onBidderSelected(
+  onCreateDispute(
     proposalId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  onMediatorSelected(
+    proposalId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  onPaymentTransferred(
+    proposalId: PromiseOrValue<BigNumberish>,
+    bidderAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  onSelectDistribution(
+    proposalId: PromiseOrValue<BigNumberish>,
+    bidId: PromiseOrValue<BigNumberish>,
+    bidderAddress: PromiseOrValue<string>,
+    splitBidderShare: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -557,12 +606,6 @@ export interface ProposalCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    finishProposal(
-      proposalId: PromiseOrValue<BigNumberish>,
-      bidderAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     getCountOfProposals(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCountOfProposalsByUser(
@@ -597,14 +640,32 @@ export interface ProposalCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    nextDisputeStatus(
+    onBidderSelected(
       proposalId: PromiseOrValue<BigNumberish>,
-      status: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    onBidderSelected(
+    onCreateDispute(
       proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    onMediatorSelected(
+      proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    onPaymentTransferred(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    onSelectDistribution(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      splitBidderShare: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -629,7 +690,7 @@ export interface ProposalCore extends BaseContract {
   };
 
   filters: {
-    "Created(uint256,string,uint256)"(
+    'Created(uint256,string,uint256)'(
       id?: null,
       category?: PromiseOrValue<string> | null,
       amount?: PromiseOrValue<BigNumberish> | null
@@ -640,7 +701,7 @@ export interface ProposalCore extends BaseContract {
       amount?: PromiseOrValue<BigNumberish> | null
     ): CreatedEventFilter;
 
-    "OnChangeBidAddress(address,address)"(
+    'OnChangeBidAddress(address,address)'(
       oldAddress?: null,
       newAddress?: null
     ): OnChangeBidAddressEventFilter;
@@ -649,7 +710,7 @@ export interface ProposalCore extends BaseContract {
       newAddress?: null
     ): OnChangeBidAddressEventFilter;
 
-    "OnChangeDisputeAddress(address,address)"(
+    'OnChangeDisputeAddress(address,address)'(
       oldAddress?: null,
       newAddress?: null
     ): OnChangeDisputeAddressEventFilter;
@@ -658,7 +719,7 @@ export interface ProposalCore extends BaseContract {
       newAddress?: null
     ): OnChangeDisputeAddressEventFilter;
 
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
@@ -667,7 +728,7 @@ export interface ProposalCore extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "StatusChanged(uint256,bytes32,bytes32)"(
+    'StatusChanged(uint256,bytes32,bytes32)'(
       proposalId?: PromiseOrValue<BigNumberish> | null,
       oldStatus?: null,
       newStatus?: null
@@ -705,12 +766,6 @@ export interface ProposalCore extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    finishProposal(
-      proposalId: PromiseOrValue<BigNumberish>,
-      bidderAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     getCountOfProposals(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCountOfProposalsByUser(
@@ -734,14 +789,32 @@ export interface ProposalCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    nextDisputeStatus(
+    onBidderSelected(
       proposalId: PromiseOrValue<BigNumberish>,
-      status: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    onBidderSelected(
+    onCreateDispute(
       proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    onMediatorSelected(
+      proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    onPaymentTransferred(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    onSelectDistribution(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      splitBidderShare: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -795,12 +868,6 @@ export interface ProposalCore extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    finishProposal(
-      proposalId: PromiseOrValue<BigNumberish>,
-      bidderAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     getCountOfProposals(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -826,14 +893,32 @@ export interface ProposalCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    nextDisputeStatus(
+    onBidderSelected(
       proposalId: PromiseOrValue<BigNumberish>,
-      status: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    onBidderSelected(
+    onCreateDispute(
       proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onMediatorSelected(
+      proposalId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onPaymentTransferred(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onSelectDistribution(
+      proposalId: PromiseOrValue<BigNumberish>,
+      bidId: PromiseOrValue<BigNumberish>,
+      bidderAddress: PromiseOrValue<string>,
+      splitBidderShare: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
