@@ -21,6 +21,8 @@ export class HomeCardComponent {
   @Input()
   public proposal!: ProposalProxy;
 
+  public readonly boringAvatarColors: string[] = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
+
   public get proposalStatus(): ProposalStatusSettings {
     return this.formatProposalStatus[this.proposal.status] || { text: 'Desconhecido', color: '#FFF' };
   }
