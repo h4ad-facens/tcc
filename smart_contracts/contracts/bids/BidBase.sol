@@ -171,5 +171,7 @@ abstract contract BidBase is
 
         refundAddress = bid.bidderAddress;
         refundAmount = bid.bidPaidAmount;
+
+        emit Cancelled(bidId, proposalId, bid.bidderAddress);
     }
 }
