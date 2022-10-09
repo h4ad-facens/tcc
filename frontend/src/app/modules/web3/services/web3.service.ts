@@ -2,12 +2,12 @@
 
 import { Injectable } from '@angular/core';
 import { Signer } from '@ethersproject/abstract-signer';
-import { JsonRpcProvider, Provider, Web3Provider } from '@ethersproject/providers';
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
 import Web3Modal from 'web3modal';
 import { environment } from '../../../../environments/environment';
-import { BidCoreAbi, ProposalCoreAbi } from '../contracts';
+import { BidCoreAbi, DisputeCoreAbi, ProposalCoreAbi } from '../contracts';
 import { BidCore } from '../contracts/BidCore';
 import { DisputeCore } from '../contracts/DisputeCore';
 import { ProposalCore } from '../contracts/ProposalCore';
@@ -21,11 +21,6 @@ export class Web3Service {
 
   constructor() {
     this.setupDefaultContract();
-
-    // this.proposalContract.createProposal('', '', '', '', {
-    //   value: ethers.utils.parseEther('1eth'),
-    // }); // método para passar o valor do Ether
-    // this.proposalContract.connect(this.signer!).createProposal(); // método que precisam estar logados (assinados)
   }
 
   public setupDefaultContract() {
@@ -33,7 +28,7 @@ export class Web3Service {
 
     this.proposalContract = new ethers.Contract(environment.ethers.contractAddress.proposal, ProposalCoreAbi, freeRpcProvider) as ProposalCore;
     this.bidContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as BidCore;
-    this.disputeContract = new ethers.Contract(environment.ethers.contractAddress.bids, BidCoreAbi, freeRpcProvider) as DisputeCore;
+    this.disputeContract = new ethers.Contract(environment.ethers.contractAddress.dispute, DisputeCoreAbi, freeRpcProvider) as DisputeCore;
   }
 
   public proposalContract!: ProposalCore;

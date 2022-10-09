@@ -1,20 +1,41 @@
 <div class="bid">
-  <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
+  <ng-container *ngIf="proposal$ | async as proposal">
+    <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
 
-  {{ bid.bidPaidAmount | formatEther }}
-  <ng-container *ngIf="(myAddress$ | async) !== bid.bidderAddress">
-    | {{ bid.bidderAddress.slice(0, 8) }}...
-  </ng-container>
-  | {{ bid.createdAt | date: 'dd/MM/yyyy' }}
-
-  <ng-container *ngIf="bid.isCancelled; else cancelBidTemplate">
-    |
-    <strong class="bid--cancelled">Cancelado</strong>
-  </ng-container>
-
-  <ng-template #cancelBidTemplate>
-    <ng-container *ngIf="(myAddress$ | async) === bid.bidderAddress && !disableCancel">
-      | <button #btnDelete class="free--btn free--btn__small" (click)="cancelBid(bid, btnDelete)">Cancelar</button>
+    {{ bid.bidPaidAmount | formatEther }}
+    <ng-container *ngIf="(myAddress$ | async) !== bid.bidderAddress">
+      | {{ bid.bidderAddress.slice(0, 8) }}...
     </ng-container>
-  </ng-template>
+    | {{ bid.createdAt | date: 'dd/MM/yyyy' }}
+    |
+    <strong class="bid--status">
+      <ng-container *ngIf="selectedBid; else cancelledStatus">
+        Selecionado
+      </ng-container>
+
+      <ng-template #cancelledStatus>
+        {{ bid.isCancelled ? 'Cancelado' : 'Válido' }}
+      </ng-template>
+    </strong>
+
+    <div class="bid--buttons" *ngIf="!disableButtons && !bid.isCancelled">
+      <ng-container *ngIf="(myAddress$ | async) === proposal.creator && proposal.status === proposalStatus.WAITING_BID">
+        <button #btnSelect class="bid--buttons--select" (click)="selectBid(bid, btnSelect)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+            <path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M416 128 192 384l-96-96" />
+          </svg>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="(myAddress$ | async) === bid.bidderAddress && proposal.status === proposalStatus.WAITING_BID">
+        <button #btnDelete class="bid--buttons--cancel" (click)="cancelBid(bid, btnDelete)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+            <path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="m112 112 20 320c.95 18.49 14.4 32 32 32h184c17.67 0 30.87-13.51 32-32l20-320" />
+            <path stroke="#FFF" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 112h352" />
+            <path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M192 112V72h0a23.93 23.93 0 0 1 24-24h80a23.93 23.93 0 0 1 24 24h0v40m-64 64v224m-72-224 8 224m136-224-8 224" />
+          </svg>
+        </button>
+      </ng-container>
+    </div>
+  </ng-container>
 </div>

@@ -7,6 +7,7 @@ import { BidProxy } from '../../models/proxies/bid.proxy';
 import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
 import { BidService } from '../../services/bid/bid.service';
+import { DisputeService } from '../../services/dispute/dispute.service';
 import { ProposalService } from '../../services/proposal/proposal.service';
 
 //#endregion
@@ -25,13 +26,14 @@ export class ProposalDetailComponent {
     protected readonly web3: Web3Service,
     protected readonly proposalService: ProposalService,
     protected readonly bidService: BidService,
+    protected readonly disputeService: DisputeService,
   ) {
     this.proposalId = Number(this.route.snapshot.params['id'] || 0);
     this.proposal$ = this.proposalService.getProposalById$(this.proposalId);
 
     [this.bids$, this.isLoadingBids$, this.loadMoreBids, this.hasMoreBids$] = this.bidService.getPaginatedBidsByProposalId(this.proposalId, 12, 'DESC');
 
-    this.myBids$ = this.bidService.getMyBidsForProposal$(this.proposalId);
+    this.myBids$ = this.bidService.getMyBidsByProposalId$(this.proposalId);
 
     this.cannotCreateBid$ = this.myBids$.pipe(
       map(bids => bids.length > 0 && bids.some(bid => !bid.isCancelled)),
@@ -45,6 +47,18 @@ export class ProposalDetailComponent {
       .pipe(
         map(([proposal, myAddress]) => proposal.creator === myAddress && proposal.status === ProposalStatus.WAITING_BID),
       );
+
+    this.selectedBid$ = this.bidService.getSelectedBidByProposalId$(this.proposalId);
+
+    this.canSendPayment$ = combineLatest([this.selectedBid$, this.proposal$, this.web3.myAddress$])
+      .pipe(
+        map(([selectedBid, proposal, myAddress]) => selectedBid && proposal.status === ProposalStatus.IN_DEVELOPMENT && proposal.creator === myAddress),
+      );
+
+    this.canEnterInDispute$ = combineLatest([this.selectedBid$, this.proposal$, this.web3.myAddress$])
+      .pipe(
+        map(([selectedBid, proposal, myAddress]) => selectedBid && !!myAddress && proposal.status === ProposalStatus.IN_DEVELOPMENT),
+      );
   }
 
   //#endregion
@@ -53,6 +67,7 @@ export class ProposalDetailComponent {
 
   public readonly proposalId: number;
   public readonly proposal$: Observable<ProposalProxy>;
+  public readonly selectedBid$?: Observable<BidProxy>;
 
   public readonly isWaitingBid$: Observable<boolean>;
 
@@ -66,9 +81,10 @@ export class ProposalDetailComponent {
   public readonly hasMoreBids$: Observable<boolean>;
 
   public readonly canCancelProposal$: Observable<boolean>;
+  public readonly canSendPayment$: Observable<boolean>;
+  public readonly canEnterInDispute$: Observable<boolean>;
 
-  public isCreatingBid: boolean = false;
-  public isCancellingProposal: boolean = false;
+  public isPerformingActionOnButtons: boolean = false;
 
   public errorMessageOnButtons?: string;
   public errorMessageOnCancelBid?: string;
@@ -78,20 +94,38 @@ export class ProposalDetailComponent {
   //#region Public Functions
 
   public async createBid(): Promise<void> {
-    this.isCreatingBid = true;
+    this.isPerformingActionOnButtons = true;
 
     const [, errorMessage] = await this.bidService.createBidForProposalId(this.proposalId);
 
-    this.isCreatingBid = false;
+    this.isPerformingActionOnButtons = false;
     this.errorMessageOnButtons = errorMessage;
   }
 
   public async cancelProposal(): Promise<void> {
-    this.isCancellingProposal = true;
+    this.isPerformingActionOnButtons = true;
 
     const [, errorMessage] = await this.proposalService.cancelProposal(this.proposalId);
 
-    this.isCancellingProposal = false;
+    this.isPerformingActionOnButtons = false;
+    this.errorMessageOnButtons = errorMessage;
+  }
+
+  public async sendPayment(): Promise<void> {
+    this.isPerformingActionOnButtons = true;
+
+    const [, errorMessage] = await this.bidService.sendPayment(this.proposalId);
+
+    this.isPerformingActionOnButtons = false;
+    this.errorMessageOnButtons = errorMessage;
+  }
+
+  public async enterInDispute(): Promise<void> {
+    this.isPerformingActionOnButtons = true;
+
+    const [, errorMessage] = await this.disputeService.enterInDispute(this.proposalId);
+
+    this.isPerformingActionOnButtons = false;
     this.errorMessageOnButtons = errorMessage;
   }
 

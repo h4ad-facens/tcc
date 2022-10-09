@@ -36,11 +36,7 @@ export class ProposalService {
         this.web3.proposalContract.on(this.web3.proposalContract.filters.StatusChanged(), (id) => {
           this.getProposalById(id.toNumber()).then(
             proposal => {
-              switch (proposal.status) {
-                case ProposalStatus.CANCELLED:
-                  this.onCancelProposal.next(proposal);
-                  break;
-              }
+              this.onStatusChanged.next(proposal);
             },
           );
         });
@@ -54,7 +50,7 @@ export class ProposalService {
 
   protected readonly onCreateProposal: Subject<ProposalProxy> = new Subject<ProposalProxy>();
 
-  protected readonly onCancelProposal: Subject<ProposalProxy> = new Subject<ProposalProxy>();
+  protected readonly onStatusChanged: Subject<ProposalProxy> = new Subject<ProposalProxy>();
 
   //#endregion
 
@@ -119,7 +115,7 @@ export class ProposalService {
       itemsPerPage,
       order,
       onAddData: this.onCreateProposal.asObservable(),
-      onUpdateData: this.onCancelProposal.asObservable(),
+      onUpdateData: this.onStatusChanged.asObservable(),
     });
   }
 
@@ -137,7 +133,7 @@ export class ProposalService {
           filter(([proposal, myAddress]) => proposal.creator === myAddress),
           map(([proposal]) => proposal),
         ),
-      onUpdateData: combineLatest([this.onCancelProposal, this.web3.myAddress$])
+      onUpdateData: combineLatest([this.onStatusChanged, this.web3.myAddress$])
         .pipe(
           filter(([proposal, myAddress]) => proposal.creator === myAddress),
           map(([proposal]) => proposal),
@@ -149,7 +145,7 @@ export class ProposalService {
     return of(null)
       .pipe(
         repeat({
-          delay: () => combineLatest([this.onCancelProposal]),
+          delay: () => combineLatest([this.onStatusChanged]),
         }),
         switchMap(() => from(this.getProposalById(id))),
       );

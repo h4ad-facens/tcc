@@ -27,14 +27,15 @@
   }
 
   &__outline {
-    background-color: transparent;
+    background-color: #FFF;
     color: #1F50FF;
+    border: 2px solid #1F50FF;
     font-weight: bold;
 
     &:disabled {
       cursor: not-allowed;
       color: rgba(31, 80, 255, 0.68);
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: #c2c2c2;
     }
   }
 

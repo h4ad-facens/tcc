@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BigNumber } from 'ethers';
-import { BehaviorSubject, filter, finalize, firstValueFrom, from, mergeMap, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, concatAll, filter, finalize, firstValueFrom, from, map, merge, mergeMap, Observable, Subject, switchMap } from 'rxjs';
 import { BidProxy } from '../../models/proxies/bid.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
 import { getPaginatedClosure, PaginatedOrder } from '../../utils/paginated';
@@ -33,6 +32,12 @@ export class BidService {
             bid => this.onCancelBid.next(bid),
           );
         });
+
+        this.web3.bidContract.on(this.web3.bidContract.filters.Selected(), (id) => {
+          this.getBidById(id.toNumber()).then(
+            bid => this.onSelectBid.next(bid),
+          );
+        });
       });
     });
   }
@@ -43,6 +48,7 @@ export class BidService {
 
   protected readonly onCreateBid: Subject<BidProxy> = new Subject();
   protected readonly onCancelBid: Subject<BidProxy> = new Subject();
+  protected readonly onSelectBid: Subject<BidProxy> = new Subject();
 
   //#endregion
 
@@ -55,7 +61,10 @@ export class BidService {
       itemsPerPage,
       order,
       onAddData: this.onCreateBid.asObservable(),
-      onUpdateData: this.onCancelBid.asObservable(),
+      onUpdateData: merge([this.onCancelBid.asObservable(), this.onSelectBid.asObservable()])
+        .pipe(
+          concatAll(),
+        ),
     });
   }
 
@@ -66,10 +75,31 @@ export class BidService {
       itemsPerPage,
       order,
       refreshAllWhen: this.web3.myAddress$.asObservable(),
+      onAddData: this.onCreateBid
+        .pipe(
+          filter(bid => bid.bidderAddress === this.web3.myAddress$.getValue()),
+        ),
+      onUpdateData: merge([
+        this.onCancelBid
+          .pipe(
+            filter(bid => bid.bidderAddress === this.web3.myAddress$.getValue()),
+          ),
+        this.onSelectBid
+          .pipe(
+            filter(bid => bid.bidderAddress === this.web3.myAddress$.getValue()),
+          ),
+        this.onSelectBid
+          .pipe(
+            filter(bid => bid.bidderAddress === this.web3.myAddress$.getValue()),
+          ),
+      ])
+        .pipe(
+          concatAll(),
+        ),
     });
   }
 
-  public getMyBidsForProposal$(proposalId: number): Observable<BidProxy[]> {
+  public getMyBidsByProposalId$(proposalId: number): Observable<BidProxy[]> {
     const myBids = new BehaviorSubject<BidProxy[]>([]);
 
     const onAddBidSubscription = this.onCreateBid.pipe(
@@ -78,19 +108,22 @@ export class BidService {
       myBids.next([...myBids.getValue(), bid]);
     });
 
-    const onCancelBidSubscription = this.onCancelBid.pipe(
-      filter(bid => bid.proposalId === proposalId && bid.bidderAddress === this.web3.myAddress$.getValue()),
-    ).subscribe((bid) => {
-      const currentBids = myBids.getValue();
-      const oldDataIndex = currentBids.findIndex(old => old.id === bid.id);
+    const onChangeBidSubscription =
+      merge([this.onCancelBid, this.onSelectBid])
+        .pipe(
+          concatAll(),
+          filter(bid => bid.proposalId === proposalId && bid.bidderAddress === this.web3.myAddress$.getValue()),
+        ).subscribe((bid) => {
+        const currentBids = myBids.getValue();
+        const oldDataIndex = currentBids.findIndex(old => old.id === bid.id);
 
-      if (oldDataIndex === -1)
-        return;
+        if (oldDataIndex === -1)
+          return;
 
-      currentBids[oldDataIndex] = bid;
+        currentBids[oldDataIndex] = bid;
 
-      myBids.next([...currentBids]);
-    });
+        myBids.next([...currentBids]);
+      });
 
     const onGetMyAddressSubscription = this.web3.myAddress$
       .pipe(
@@ -116,7 +149,7 @@ export class BidService {
           onGetMyAddressSubscription.unsubscribe();
 
           onAddBidSubscription.unsubscribe();
-          onCancelBidSubscription.unsubscribe();
+          onChangeBidSubscription.unsubscribe();
         }),
       );
   }
@@ -125,6 +158,24 @@ export class BidService {
     return from(
       this.getBidById(id),
     );
+  }
+
+  public getSelectedBidByProposalId$(proposalId: number): Observable<BidProxy> {
+    const selectedBidId$ = from(
+      this.getSelectedBidIdByProposalId(proposalId),
+    );
+
+    const onSelectBid$ = this.onSelectBid.pipe(
+      filter(bid => bid.proposalId === proposalId),
+      map(bid => bid.id),
+    );
+
+    return merge([selectedBidId$, onSelectBid$])
+      .pipe(
+        concatAll(),
+        filter(id => id > 0),
+        switchMap(id => this.getBidById$(id)),
+      );
   }
 
   public async createBidForProposalId(proposalId: number): Promise<[boolean, string?]> {
@@ -170,13 +221,55 @@ export class BidService {
       console.log(receipt);
       console.log(transaction);
 
-      // await this.getBidById(bidId).then(bid => {
-      //   this.onCancelBid.next(bid);
-      // });
+      return [true];
+    } catch (e: any) {
+      return [false, e.message];
+    }
+  }
+
+  public async selectBidForProposal(bidId: number, proposalId: number): Promise<[boolean, string?]> {
+    try {
+      const signer = this.web3.signer$.getValue();
+
+      if (!signer)
+        throw new Error('Você precisa estar conectado com a sua carteira para dar um lance.');
+
+      const transaction = await this.web3.bidContract
+        .connect(signer)
+        .selectBid(proposalId, bidId);
+
+      const receipt = await transaction.wait();
+
+      console.log(receipt);
+      console.log(transaction);
 
       return [true];
     } catch (e: any) {
       return [false, e.message];
+    }
+  }
+
+  public async sendPayment(proposalId: number): Promise<[boolean, string?]> {
+    try {
+      const currentSigner = this.web3.signer$.getValue();
+
+      if (!currentSigner)
+        throw new Error('Você precisa primeiro se conectar com a sua carteira antes de tentar enviar o pagamento de uma proposta.');
+
+      const transaction = await this.web3.bidContract
+        .connect(currentSigner)
+        .transferPayment(
+          proposalId,
+        );
+
+      const receipt = await transaction.wait();
+
+      console.log(receipt);
+      console.log(transaction);
+
+      return [true];
+    } catch (e: any) {
+      return [false, `Ocorreu um erro ao enviar o pagametno para a proposta: ${ e.message }`];
     }
   }
 
@@ -193,6 +286,10 @@ export class BidService {
       createdAt: new Date(bid.createdAt.toNumber() * 1000),
       isCancelled: bid.isCancelled,
     }));
+  }
+
+  protected async getSelectedBidIdByProposalId(proposalId: number): Promise<number> {
+    return this.web3.bidContract.getSelectedBidIdByProposalId(proposalId).then(n => n.toNumber()).catch(() => 0);
   }
 
   protected async getBidIdByProposalIdAndIndex(proposalId: number, index: number): Promise<number> {

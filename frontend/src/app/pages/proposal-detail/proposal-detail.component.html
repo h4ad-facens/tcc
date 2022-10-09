@@ -18,7 +18,7 @@
           <div class="header--info">
             <h4>{{ proposal.name }}</h4>
             <span>Criador: {{ proposal.creator }}</span><br>
-            <span>Status: <strong [style.color]="(proposal.status | proposalStatus).color">{{ (proposal.status | proposalStatus).text }}</strong></span>
+            <span>Status: <strong [style.color]="(proposal.status | proposalStatus).bgColor">{{ (proposal.status | proposalStatus).text }}</strong></span>
           </div>
         </div>
 
@@ -30,13 +30,28 @@
           </div>
 
           <div class="price--buttons">
-            <button class="free--btn" (click)="createBid()"
+            <button class="free--btn"
+                    (click)="createBid()"
                     *ngIf="isWaitingBid$ | async"
-                    [disabled]="cannotCreateBid$ | async">Dar um lance
+                    [disabled]="(cannotCreateBid$ | async) || isPerformingActionOnButtons">Dar um lance
             </button>
 
-            <button class="free--btn" (click)="cancelProposal()"
+            <button class="free--btn"
+                    (click)="cancelProposal()"
+                    [disabled]="isPerformingActionOnButtons"
                     *ngIf="canCancelProposal$ | async">Cancelar proposta
+            </button>
+
+            <button class="free--btn free--btn__outline"
+                    (click)="sendPayment()"
+                    [disabled]="isPerformingActionOnButtons"
+                    *ngIf="canSendPayment$ | async">Enviar pagamento
+            </button>
+
+            <button class="free--btn free--btn__outline"
+                    (click)="enterInDispute()"
+                    [disabled]="isPerformingActionOnButtons"
+                    *ngIf="canEnterInDispute$ | async">Entrar em disputa
             </button>
           </div>
 
@@ -51,7 +66,7 @@
           <div class="shoots--list">
             <ng-container *ngFor="let bid of myBids$ | async">
               <div class="shoots--list--item">
-                <app-bid-item [bid]="bid" [proposalId]="proposalId" (onErrorOnCancel)="errorMessageOnCancelBid = $event"></app-bid-item>
+                <app-bid-item [bid]="bid" [selectedBid]="(selectedBid$ | async)?.id === bid.id" (onError)="errorMessageOnCancelBid = $event"></app-bid-item>
               </div>
             </ng-container>
           </div>
@@ -67,7 +82,7 @@
           <div class="shoots--list">
             <ng-container *ngFor="let bid of bids$ | async ">
               <div class="shoots--list--item">
-                <app-bid-item [bid]="bid" [proposalId]="proposalId" [disableCancel]="true"></app-bid-item>
+                <app-bid-item [bid]="bid" [selectedBid]="(selectedBid$ | async)?.id === bid.id" [disableButtons]="true"></app-bid-item>
               </div>
             </ng-container>
           </div>
