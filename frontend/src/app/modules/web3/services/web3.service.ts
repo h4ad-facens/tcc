@@ -42,12 +42,12 @@ export class Web3Service {
 
   private web3Modal = new Web3Modal();
 
+  public web3Provider$: BehaviorSubject<Web3Provider | null> = new BehaviorSubject<Web3Provider | null>(null);
   public myAddress$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   public signer$: BehaviorSubject<Signer | null> = new BehaviorSubject<Signer | null>(null);
   public isConnected$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private web3ModalInstance: any = null;
-  private web3Provider: Web3Provider | null = null;
 
   //#region Public Functions
 
@@ -83,14 +83,14 @@ export class Web3Service {
         this.signer$.next(null);
         this.isConnected$.next(false);
         this.web3ModalInstance = null;
-        this.web3Provider = null;
+        this.web3Provider$.next(null);
 
         return;
       }
 
       const [defaultAccount] = accounts;
 
-      const signer = this.web3Provider!.getSigner(defaultAccount);
+      const signer = this.web3Provider$.getValue()!.getSigner(defaultAccount);
 
       const myAddress = await signer.getAddress();
 
@@ -130,7 +130,7 @@ export class Web3Service {
     const myAddress = await signer.getAddress();
 
     this.web3ModalInstance = instance;
-    this.web3Provider = provider;
+    this.web3Provider$.next(provider);
     this.myAddress$.next(myAddress);
     this.signer$.next(signer);
     this.isConnected$.next(true);
@@ -143,7 +143,7 @@ export class Web3Service {
     this.signer$.next(null);
     this.isConnected$.next(false);
     this.web3ModalInstance = null;
-    this.web3Provider = null;
+    this.web3Provider$.next(null)
 
     this.setupDefaultContract();
   }

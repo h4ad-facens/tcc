@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.bid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #FFFFFF;
+  color: #1F50FF;
+  border: 2px solid #1F50FF;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.7rem;
+
+  img {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-right: 0.5rem;
+    background-color: white;
+    border-radius: 50%;
+  }
+
+  button {
+    margin-left: .5rem;
+  }
+
+  &--cancelled {
+    border: 1px solid #C21F39;
+    border-radius: 8px;
+    margin-left: 0.5rem;
+    padding: .25rem .5rem;
+    color: #C21F39;
+    display: block;
+    font-size: .8rem;
+  }
+}

@@ -2,66 +2,77 @@
   <h3>Visualizar proposta</h3>
 
   <div class="proposal-detail--container">
-    <div class="proposal-detail--container--left">
-      <img [src]="proposal.description | boring : 'bauhaus'" onerror="this.src = 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/home-card-bg.png'; this.onerror=null" alt="Imagem">
-      <div class="about card">
-        <h4>Sobre</h4>
-        <p>{{ proposal.description }}</p>
-      </div>
-    </div>
-    <div class="proposal-detail--container--right">
-      <div class="header">
-        <img [src]="proposal.description | boring : 'beam'" onerror="this.src = 'https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/profile-icon.png'; this.onerror=null" alt="Pessoa">
-        <div class="header--info">
-          <h4>{{ proposal.name }}</h4>
-          <span>Criador: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</span>
+    <ng-container *ngIf="proposal$ | async as proposal; else loadingTemplate">
+      <div class="proposal-detail--container--left">
+        <ng-bauhaus-avatar [name]="'proposals_' + proposal.id" [square]="true" [fillBackground]="true" inputSize="100%"></ng-bauhaus-avatar>
+
+        <div class="about card">
+          <h4>Sobre</h4>
+          <p>{{ proposal.description }}</p>
         </div>
       </div>
+      <div class="proposal-detail--container--right">
+        <div class="header">
+          <ng-beam-avatar [name]="'proposals_' + proposal.id" inputSize="100%"></ng-beam-avatar>
 
-      <div class="price card">
-        <h4>Valor da proposta</h4>
-        <div class="price--info">
-          <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
-          <b>{{ proposal.amount | formatEther }}</b>
+          <div class="header--info">
+            <h4>{{ proposal.name }}</h4>
+            <span>Criador: {{ proposal.creator }}</span>
+          </div>
         </div>
-        <button *ngIf="shootProposalStep === possibleShootProposalStep.INFO" (click)="changeStep(possibleShootProposalStep.EDIT_SHOOT)">Dar um lance</button>
 
-        <ng-container *ngIf="shootProposalStep === possibleShootProposalStep.EDIT_SHOOT">
-          <input [(ngModel)]="shootValue" class="free--input" type="number" placeholder="Digite o valor da sua proposta">
+        <div class="price card">
+          <h4>Valor da proposta</h4>
+          <div class="price--info">
+            <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
+            <b>{{ proposal.amount | formatEther }}</b>
+          </div>
 
-          <br />
-          <br />
+          <button class="free--btn" (click)="createBid()"
+                  [disabled]="cannotCreateBid$ | async">Dar um lance
+          </button>
 
-          <button (click)="changeStep(possibleShootProposalStep.SHOOT)">Enviar lance</button>
-        </ng-container>
-      </div>
-
-      <div *ngIf="shootProposalStep === possibleShootProposalStep.SHOOT" class="shoots card">
-        <h4>Seu lance</h4>
-        <div class="shoots--list--item cancel" (click)="changeStep(possibleShootProposalStep.INFO)">
-          <strong>Retirar meu lance</strong>
+          <ng-container *ngIf="errorMessageOnCreateBid">
+            <app-error-message [message]="errorMessageOnCreateBid"></app-error-message>
+          </ng-container>
         </div>
-        <div class="shoots--list">
-          <ng-container *ngFor="let item of [1]">
-            <div class="shoots--list--item">
-              <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
-              <strong>{{ shootValue | number: '1.2-2' }} | 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 | {{ today | date: 'dd/MM/yyyy' }}</strong>
-            </div>
+
+        <div class="shoots card">
+          <h4>Seus lances</h4>
+
+          <div class="shoots--list">
+            <ng-container *ngFor="let bid of myBids$ | async">
+              <div class="shoots--list--item">
+                <app-bid-item [bid]="bid" [proposalId]="proposalId" (onErrorOnCancel)="errorMessageOnCancelBid = $event"></app-bid-item>
+              </div>
+            </ng-container>
+          </div>
+
+          <ng-container *ngIf="errorMessageOnCancelBid">
+            <app-error-message [message]="errorMessageOnCancelBid"></app-error-message>
+          </ng-container>
+        </div>
+
+        <div class="shoots card">
+          <h4>Lances atuais</h4>
+
+          <div class="shoots--list">
+            <ng-container *ngFor="let bid of bids$ | async ">
+              <div class="shoots--list--item">
+                <app-bid-item [bid]="bid" [proposalId]="proposalId" [disableCancel]="true"></app-bid-item>
+              </div>
+            </ng-container>
+          </div>
+
+          <ng-container *ngIf="hasMoreBids$ | async">
+            <button class="free--btn" [disabled]="isLoadingBids$ | async">Carregar mais</button>
           </ng-container>
         </div>
       </div>
-
-      <div class="shoots card">
-        <h4>Lances atuais</h4>
-        <div class="shoots--list">
-          <ng-container *ngFor="let item of shoots">
-            <div class="shoots--list--item">
-              <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
-              <strong>{{ item.shootValue | number: '1.2-2' }} | {{ item.address }} | {{ item.date | date: 'dd/MM/yyyy' }}</strong>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </div>
+
+<ng-template #loadingTemplate>
+  <p>Carregando...</p>
+</ng-template>

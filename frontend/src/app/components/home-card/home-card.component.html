@@ -1,6 +1,6 @@
 <div class="home-card">
-  <ng-bauhaus-avatar class="home-card--bg" [name]="'proposals_' + proposal.id" [square]="true" [fillBackground]="true" inputSize="100%" [colors]="boringAvatarColors"></ng-bauhaus-avatar>
-  <ng-beam-avatar class="home-card--profile" [name]="proposal.creator" inputSize="100%" [colors]="boringAvatarColors"></ng-beam-avatar>
+  <ng-bauhaus-avatar class="home-card--bg" [name]="'proposals_' + proposal.id" [square]="true" [fillBackground]="true" inputSize="100%"></ng-bauhaus-avatar>
+  <ng-beam-avatar class="home-card--profile" [name]="proposal.creator" inputSize="100%"></ng-beam-avatar>
 
   <img class="home-card--more" [src]="imageBaseUrl + '/info-icon.svg'" alt="Informação">
   <div class="home-card--gradient" [class.home-card--gradient__accepted]="proposal.shootAccepted"></div>

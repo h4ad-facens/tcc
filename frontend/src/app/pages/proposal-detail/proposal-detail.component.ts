@@ -2,9 +2,12 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { randEthereumAddress, randNumber, randPastDate } from '@ngneat/falso';
+import { filter, map, Observable } from 'rxjs';
 import { ShootProposalStepEnum } from '../../models/enums/shoot-proposal-step.enum';
-import { createMockProposal, ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { BidProxy } from '../../models/proxies/bid.proxy';
+import { ProposalProxy } from '../../models/proxies/proposal.proxy';
+import { BidService } from '../../services/bid/bid.service';
+import { ProposalService } from '../../services/proposal/proposal.service';
 
 //#endregion
 
@@ -18,38 +21,53 @@ export class ProposalDetailComponent {
   //#region Constructor
 
   constructor(
-    private readonly route: ActivatedRoute,
+    protected readonly route: ActivatedRoute,
+    protected readonly proposalService: ProposalService,
+    protected readonly bidService: BidService,
   ) {
-    this.proposal.id = this.route.snapshot.params['id'] || 0;
+    this.proposalId = Number(this.route.snapshot.params['id'] || 0);
+    this.proposal$ = this.proposalService.getProposalById$(this.proposalId);
+
+    [this.bids$, this.isLoadingBids$, this.loadMoreBids, this.hasMoreBids$] = this.bidService.getPaginatedBidsByProposalId(this.proposalId, 12, 'DESC');
+
+    this.myBids$ = this.bidService.getMyBidsForProposal$(this.proposalId);
+
+    this.cannotCreateBid$ = this.myBids$.pipe(
+      map(bids => bids.length > 0 && bids.some(bid => !bid.isCancelled)),
+    );
   }
 
   //#endregion
 
   //#region Public Properties
 
-  public proposal: ProposalProxy = createMockProposal(1, ProposalStatus.IN_DEVELOPMENT);
+  public readonly proposalId: number;
+  public readonly proposal$: Observable<ProposalProxy>;
 
-  public shootProposalStep: ShootProposalStepEnum = ShootProposalStepEnum.INFO;
+  public readonly cannotCreateBid$: Observable<boolean>;
 
-  public possibleShootProposalStep: typeof ShootProposalStepEnum = ShootProposalStepEnum;
+  public readonly myBids$: Observable<BidProxy[]>;
 
-  public shootValue: number = 0;
+  public readonly bids$: Observable<BidProxy[]>;
+  public readonly isLoadingBids$: Observable<boolean>;
+  public readonly loadMoreBids: () => void;
+  public readonly hasMoreBids$: Observable<boolean>;
 
-  public today = new Date();
-
-  public shoots = [
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-    { shootValue: randNumber({ min: 200, max: 400, precision: 2 }), address: randEthereumAddress(), date: randPastDate() },
-  ].sort((a, b) => a.shootValue > b.shootValue ? -1 : 1);
+  public isCreatingBid: boolean = false;
+  public errorMessageOnCreateBid?: string;
+  public errorMessageOnCancelBid?: string;
 
   //#endregion
 
   //#region Public Functions
 
-  public changeStep(newStep: ShootProposalStepEnum): void {
-    this.shootProposalStep = newStep;
+  public async createBid(): Promise<void> {
+    this.isCreatingBid = true;
+
+    const [, errorMessage] = await this.bidService.createBidForProposalId(this.proposalId);
+
+    this.isCreatingBid = false;
+    this.errorMessageOnCreateBid = errorMessage;
   }
 
   //#endregion

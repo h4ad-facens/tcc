@@ -24,7 +24,7 @@ export class ProposalComponent {
   ) {
     this.navbarService.setCurrentNavbar(NavbarStateEnum.PROPOSAL);
 
-    [this.proposals$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.proposal.getPaginatedMyProposals(8, 'ASC');
+    [this.proposals$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.proposal.getPaginatedMyProposals(8, 'DESC');
   }
 
   //#endregion

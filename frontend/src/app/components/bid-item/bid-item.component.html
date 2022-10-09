@@ -1,0 +1,20 @@
+<div class="bid">
+  <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
+
+  {{ bid.bidPaidAmount | formatEther }}
+  <ng-container *ngIf="(myAddress$ | async) !== bid.bidderAddress">
+    | {{ bid.bidderAddress.slice(0, 8) }}...
+  </ng-container>
+  | {{ bid.createdAt | date: 'dd/MM/yyyy' }}
+
+  <ng-container *ngIf="bid.isCancelled; else cancelBidTemplate">
+    |
+    <strong class="bid--cancelled">Cancelado</strong>
+  </ng-container>
+
+  <ng-template #cancelBidTemplate>
+    <ng-container *ngIf="(myAddress$ | async) === bid.bidderAddress && !disableCancel">
+      | <button #btnDelete class="free--btn free--btn__small" (click)="cancelBid(bid, btnDelete)">Cancelar</button>
+    </ng-container>
+  </ng-template>
+</div>

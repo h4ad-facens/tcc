@@ -162,25 +162,8 @@ h4 {
           }
 
           &--item {
-            display: flex;
-            justify-content: center;
-            background: #FFFFFF;
-            border: 2px solid #1F50FF;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.7rem;
-
-            img {
-              width: 1.2rem;
-              height: 1.2rem;
-              margin-right: 0.5rem;
-              background-color: white;
-              border-radius: 50%;
-            }
-
-            strong {
-              color: #1F50FF;
-              font-weight: 300;
+            app-bid-item {
+              width: 100%;
             }
           }
         }

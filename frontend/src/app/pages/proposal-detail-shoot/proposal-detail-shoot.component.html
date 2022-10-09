@@ -24,16 +24,7 @@
           <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
           <b>{{ proposal.amount | formatEther }}</b>
         </div>
-        <button *ngIf="shootProposalStep === possibleShootProposalStep.INFO" (click)="changeStep(possibleShootProposalStep.EDIT_SHOOT)">Dar um lance</button>
-
-        <ng-container *ngIf="shootProposalStep === possibleShootProposalStep.EDIT_SHOOT">
-          <input [(ngModel)]="shootValue" class="free--input" type="number" placeholder="Digite o valor da sua proposta">
-
-          <br />
-          <br />
-
-          <button (click)="changeStep(possibleShootProposalStep.SHOOT)">Enviar lance</button>
-        </ng-container>
+        <button *ngIf="shootProposalStep === possibleShootProposalStep.INFO" (click)="changeStep(possibleShootProposalStep.SHOOT)">Dar um lance</button>
       </div>
 
       <div *ngIf="shootProposalStep === possibleShootProposalStep.SHOOT" class="shoots card">

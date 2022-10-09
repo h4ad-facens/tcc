@@ -69,9 +69,16 @@ interface IBauhausElementProperties {
       </svg>
     </ng-container>
   `,
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class AvatarBauhausComponent implements OnInit {
-  @Input() colors: Array<string> | undefined;
+  @Input() colors: Array<string> | undefined = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
   @Input() name: string | undefined;
   @Input() inputSize: number | string | undefined;
   @Input() square: boolean = false;

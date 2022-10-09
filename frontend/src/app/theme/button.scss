@@ -26,7 +26,7 @@
     font-weight: 300;
   }
 
-  &.free--btn__outline {
+  &__outline {
     background-color: transparent;
     color: #1F50FF;
     font-weight: bold;
@@ -36,5 +36,11 @@
       color: rgba(31, 80, 255, 0.68);
       background-color: rgba(255, 255, 255, 0.2);
     }
+  }
+
+  &__small {
+    height: 1.6rem;
+    padding: .8rem .5rem;
+    font-size: .8rem;
   }
 }
