@@ -143,7 +143,7 @@
         "type": "bytes32"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "bytes32",
         "name": "newStatus",
         "type": "bytes32"
