@@ -19,7 +19,6 @@ export interface ProposalProxy {
   category: string;
   contactInfo: string;
   imageUrl: string;
-  shootAccepted?: boolean;
   status: string;
   creator: string;
 }

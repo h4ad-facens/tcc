@@ -103,6 +103,16 @@ h4 {
             color: #232323E5;
           }
         }
+
+        &--buttons {
+          display: flex;
+
+          button {
+            &:not(:first-child) {
+              margin-left: .5rem;
+            }
+          }
+        }
       }
 
       .shoots {

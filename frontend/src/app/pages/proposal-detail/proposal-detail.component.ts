@@ -2,10 +2,10 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, Observable } from 'rxjs';
-import { ShootProposalStepEnum } from '../../models/enums/shoot-proposal-step.enum';
+import { combineLatest, map, Observable } from 'rxjs';
 import { BidProxy } from '../../models/proxies/bid.proxy';
-import { ProposalProxy } from '../../models/proxies/proposal.proxy';
+import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { Web3Service } from '../../modules/web3/services/web3.service';
 import { BidService } from '../../services/bid/bid.service';
 import { ProposalService } from '../../services/proposal/proposal.service';
 
@@ -22,6 +22,7 @@ export class ProposalDetailComponent {
 
   constructor(
     protected readonly route: ActivatedRoute,
+    protected readonly web3: Web3Service,
     protected readonly proposalService: ProposalService,
     protected readonly bidService: BidService,
   ) {
@@ -35,6 +36,15 @@ export class ProposalDetailComponent {
     this.cannotCreateBid$ = this.myBids$.pipe(
       map(bids => bids.length > 0 && bids.some(bid => !bid.isCancelled)),
     );
+
+    this.isWaitingBid$ = this.proposal$.pipe(
+      map(proposal => proposal.status === ProposalStatus.WAITING_BID),
+    );
+
+    this.canCancelProposal$ = combineLatest([this.proposal$, this.web3.myAddress$])
+      .pipe(
+        map(([proposal, myAddress]) => proposal.creator === myAddress && proposal.status === ProposalStatus.WAITING_BID),
+      );
   }
 
   //#endregion
@@ -43,6 +53,8 @@ export class ProposalDetailComponent {
 
   public readonly proposalId: number;
   public readonly proposal$: Observable<ProposalProxy>;
+
+  public readonly isWaitingBid$: Observable<boolean>;
 
   public readonly cannotCreateBid$: Observable<boolean>;
 
@@ -53,8 +65,12 @@ export class ProposalDetailComponent {
   public readonly loadMoreBids: () => void;
   public readonly hasMoreBids$: Observable<boolean>;
 
+  public readonly canCancelProposal$: Observable<boolean>;
+
   public isCreatingBid: boolean = false;
-  public errorMessageOnCreateBid?: string;
+  public isCancellingProposal: boolean = false;
+
+  public errorMessageOnButtons?: string;
   public errorMessageOnCancelBid?: string;
 
   //#endregion
@@ -67,7 +83,16 @@ export class ProposalDetailComponent {
     const [, errorMessage] = await this.bidService.createBidForProposalId(this.proposalId);
 
     this.isCreatingBid = false;
-    this.errorMessageOnCreateBid = errorMessage;
+    this.errorMessageOnButtons = errorMessage;
+  }
+
+  public async cancelProposal(): Promise<void> {
+    this.isCancellingProposal = true;
+
+    const [, errorMessage] = await this.proposalService.cancelProposal(this.proposalId);
+
+    this.isCancellingProposal = false;
+    this.errorMessageOnButtons = errorMessage;
   }
 
   //#endregion

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BigNumber, ContractReceipt } from 'ethers';
-import { BehaviorSubject, filter, finalize, from, mergeMap, Observable, Subject } from 'rxjs';
+import { BigNumber } from 'ethers';
+import { BehaviorSubject, filter, finalize, firstValueFrom, from, mergeMap, Observable, Subject } from 'rxjs';
 import { BidProxy } from '../../models/proxies/bid.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
 import { getPaginatedClosure, PaginatedOrder } from '../../utils/paginated';
@@ -22,17 +22,13 @@ export class BidService {
         return;
 
       provider.once('block', () => {
-        provider.on(this.web3.bidContract.filters.Created(), ({ data }: { data: string }) => {
-          const id = BigNumber.from(data);
-
+        this.web3.bidContract.on(this.web3.bidContract.filters.Created(), (id) => {
           this.getBidById(id.toNumber()).then(
             bid => this.onCreateBid.next(bid),
           );
         });
 
-        provider.on(this.web3.bidContract.filters.Cancelled(), ({ data }: { data: string }) => {
-          const id = BigNumber.from(data);
-
+        this.web3.bidContract.on(this.web3.bidContract.filters.Cancelled(), (id) => {
           this.getBidById(id.toNumber()).then(
             bid => this.onCancelBid.next(bid),
           );
@@ -139,7 +135,7 @@ export class BidService {
         throw new Error('Você precisa estar conectado com a sua carteira para dar um lance.');
 
       const bidShareToParticipate = await this.web3.bidContract.BID_SHARE_TO_PARTICIPATE();
-      const proposal = await this.proposal.getProposalById(proposalId);
+      const proposal = await firstValueFrom(this.proposal.getProposalById$(proposalId));
 
       const transaction = await this.web3.bidContract
         .connect(signer)

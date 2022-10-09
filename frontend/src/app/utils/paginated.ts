@@ -27,6 +27,9 @@ export function getPaginatedClosure<TData extends { id: unknown }>(options: GetP
   const onAddDataSubscription = options.onAddData?.subscribe((data) => {
     const accumulatedData = currentData.getValue();
 
+    if (accumulatedData.some(oldData => oldData.id === data.id))
+      return;
+
     if (options.order === 'ASC') {
       accumulatedData.push(data);
     } else {

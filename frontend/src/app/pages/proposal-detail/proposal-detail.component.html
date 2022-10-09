@@ -17,7 +17,8 @@
 
           <div class="header--info">
             <h4>{{ proposal.name }}</h4>
-            <span>Criador: {{ proposal.creator }}</span>
+            <span>Criador: {{ proposal.creator }}</span><br>
+            <span>Status: <strong [style.color]="(proposal.status | proposalStatus).color">{{ (proposal.status | proposalStatus).text }}</strong></span>
           </div>
         </div>
 
@@ -28,12 +29,19 @@
             <b>{{ proposal.amount | formatEther }}</b>
           </div>
 
-          <button class="free--btn" (click)="createBid()"
-                  [disabled]="cannotCreateBid$ | async">Dar um lance
-          </button>
+          <div class="price--buttons">
+            <button class="free--btn" (click)="createBid()"
+                    *ngIf="isWaitingBid$ | async"
+                    [disabled]="cannotCreateBid$ | async">Dar um lance
+            </button>
 
-          <ng-container *ngIf="errorMessageOnCreateBid">
-            <app-error-message [message]="errorMessageOnCreateBid"></app-error-message>
+            <button class="free--btn" (click)="cancelProposal()"
+                    *ngIf="canCancelProposal$ | async">Cancelar proposta
+            </button>
+          </div>
+
+          <ng-container *ngIf="errorMessageOnButtons">
+            <app-error-message [message]="errorMessageOnButtons"></app-error-message>
           </ng-container>
         </div>
 
