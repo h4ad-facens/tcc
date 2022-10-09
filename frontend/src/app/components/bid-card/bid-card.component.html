@@ -1,0 +1,17 @@
+<div class="bid-card">
+  <ng-bauhaus-avatar class="bid-card--bg" [name]="'proposals_' + bid.proposalId" [square]="true" [fillBackground]="true" inputSize="100%"></ng-bauhaus-avatar>
+  <ng-beam-avatar class="bid-card--profile" [name]="bid.bidderAddress" inputSize="100%"></ng-beam-avatar>
+
+  <img class="bid-card--more" [src]="imageBaseUrl + '/info-icon.svg'" alt="Informação">
+  <div class="bid-card--gradient" [class.bid-card--gradient__cancelled]="bid.isCancelled"></div>
+
+  <div class="bid-card--info" *ngIf="proposal$ | async as proposal">
+    <p>{{ proposal.name }}</p>
+
+    <div class="bid-card--info--price">
+      <strong>
+        {{ bid.isCancelled ? 'Cancelado' : 'Aguardando' }}
+      </strong>
+    </div>
+  </div>
+</div>

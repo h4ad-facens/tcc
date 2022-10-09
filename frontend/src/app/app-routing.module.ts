@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule) },
-  { path: 'shoot', loadChildren: () => import('./pages/shoot/shoot.module').then(m => m.ShootModule) },
+  { path: 'bid', loadChildren: () => import('./pages/bid/bid.module').then(m => m.BidModule) },
   { path: 'proposal', loadChildren: () => import('./pages/proposal/proposal.module').then(m => m.ProposalModule) },
   { path: 'proposal/create', loadChildren: () => import('./pages/create-proposal/create-proposal.module').then(m => m.CreateProposalModule) },
   { path: 'proposal/:id', loadChildren: () => import('./pages/proposal-detail/proposal-detail.module').then(m => m.ProposalDetailModule) },

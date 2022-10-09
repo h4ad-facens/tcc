@@ -24,7 +24,7 @@
         <img [src]="(currentNavbar === navbarStates.HOME) ? imageBaseUrl + '/home-icon-active.svg' : imageBaseUrl + '/home-icon.svg'" alt="Home">
         <span *ngIf="currentNavbar !== navbarStates.HOME">Início</span>
       </div>
-      <div routerLink="/shoot" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.SHOOT">
+      <div routerLink="/bid" class="navbar--item" [class.navbar--item-active]="currentNavbar === navbarStates.SHOOT">
         <img [src]="(currentNavbar === navbarStates.SHOOT) ? imageBaseUrl + '/shoot-icon-active.svg' : imageBaseUrl + '/shoot-icon.svg'" alt="Lances">
         <span *ngIf="currentNavbar !== navbarStates.SHOOT">Lances</span>
       </div>

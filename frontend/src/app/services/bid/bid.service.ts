@@ -63,6 +63,16 @@ export class BidService {
     });
   }
 
+  public getPaginatedMyBids(itemsPerPage: number, order: PaginatedOrder): [data$: Observable<BidProxy[]>, isLoading$: Observable<boolean>, loadMore: () => void, hasMoreData$: Observable<boolean>] {
+    return getPaginatedClosure({
+      getById: index => this.getMyBidIdByIndex(index - 1).then(bidProxy => this.getBidById(bidProxy)),
+      getCount: () => this.getCountOfMyBids(),
+      itemsPerPage,
+      order,
+      refreshAllWhen: this.web3.myAddress$.asObservable(),
+    });
+  }
+
   public getMyBidsForProposal$(proposalId: number): Observable<BidProxy[]> {
     const myBids = new BehaviorSubject<BidProxy[]>([]);
 
@@ -195,6 +205,24 @@ export class BidService {
 
   protected async getCountOfBidsByProposalId(proposalId: number): Promise<number> {
     return this.web3.bidContract.getCountOfBidsByProposalId(proposalId).then(n => n.toNumber());
+  }
+
+  protected async getCountOfMyBids(): Promise<number> {
+    const myAddress = this.web3.myAddress$.getValue();
+
+    if (!myAddress)
+      return 0;
+
+    return await this.web3.bidContract.getCountOfBidsByUser(myAddress).then(n => n.toNumber());
+  }
+
+  protected async getMyBidIdByIndex(index: number): Promise<number> {
+    const myAddress = this.web3.myAddress$.getValue();
+
+    if (!myAddress)
+      return 0;
+
+    return this.web3.bidContract.getBidIdByUserAndIndex(myAddress, index).then(n => n.toNumber());
   }
 
   //#endregion

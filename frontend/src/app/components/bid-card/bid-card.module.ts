@@ -5,7 +5,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AvatarBauhausModule } from '../../modules/boring-avatars/avatar-bauhaus/avatar-bauhaus.module';
 import { AvatarBeamModule } from '../../modules/boring-avatars/avatar-beam/avatar-beam.module';
-import { HomeCardComponent } from './home-card.component';
+import { BoringPipeModule } from '../../pipes/boring.pipe';
+import { BidCardComponent } from './bid-card.component';
 
 //#endregion
 
@@ -17,10 +18,10 @@ import { HomeCardComponent } from './home-card.component';
     AvatarBauhausModule,
   ],
   declarations: [
-    HomeCardComponent,
+    BidCardComponent,
   ],
   exports: [
-    HomeCardComponent,
+    BidCardComponent,
   ],
 })
-export class HomeCardModule {}
+export class BidCardModule {}

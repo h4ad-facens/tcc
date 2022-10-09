@@ -1,0 +1,13 @@
+<div class="shoot">
+  <h3>Seus lances</h3>
+
+  <div class="shoot--cards">
+    <ng-container *ngFor="let bid of bids$ | async; trackBy: trackById">
+      <app-bid-card [bid]="bid" [routerLink]="'/proposal/' + bid.proposalId"></app-bid-card>
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="hasMoreData$ | async">
+    <button class="free--btn" [disabled]="isLoading$ | async" (click)="loadMore()">Carregar mais</button>
+  </ng-container>
+</div>

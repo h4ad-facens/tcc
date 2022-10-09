@@ -3,21 +3,23 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BidCardModule } from '../../components/bid-card/bid-card.module';
 import { HomeCardModule } from '../../components/home-card/home-card.module';
-import { ShootComponent } from './shoot.component';
+import { BidComponent } from './bid.component';
 
 //#endregion
 
-const routes: Routes = [{ path: '', component: ShootComponent }];
+const routes: Routes = [{ path: '', component: BidComponent }];
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     HomeCardModule,
+    BidCardModule,
   ],
   declarations: [
-    ShootComponent,
+    BidComponent,
   ],
 })
-export class ShootModule {}
+export class BidModule {}
