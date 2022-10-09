@@ -18,7 +18,7 @@ abstract contract ProposalBase is IProposalBase, ProposalStatus, EnumerateIdByAd
     event Created(uint256 id, string indexed category, uint256 indexed amount);
 
     /// @dev O evento lançado quando o status muda
-    event StatusChanged(uint256 indexed proposalId, bytes32 oldStatus, bytes32 newStatus);
+    event StatusChanged(uint256 indexed proposalId, bytes32 oldStatus, bytes32 indexed newStatus);
 
     /// @dev O modificador usado para garantir a execução de um método apenas se a proposta existir
     modifier proposalExist(uint256 proposalId) {
