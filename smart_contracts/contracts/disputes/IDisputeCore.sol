@@ -14,4 +14,9 @@ interface IDisputeCore is IDisputeBase {
     function selectMediator(uint256 disputeId, address mediatorAddress) external;
 
     function selectDistribution(uint256 disputeId, uint8 splitBidderShare) external;
+
+    function getPendingSelectedMediatorByUserAddressAndDisputeId(address userAddress, uint256 disputeId)
+        external
+        view
+        returns (address);
 }

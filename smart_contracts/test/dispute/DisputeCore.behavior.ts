@@ -124,7 +124,9 @@ export function shouldBehaveLikeDispute(): void {
       await this.disputeCore.connect(this.signers.third).selectMediator(1, this.signers.other.address);
       await this.disputeCore.connect(this.signers.admin).selectMediator(1, this.signers.other.address);
 
-      expect(await this.disputeCore.getSelectedMediatorForDisputeId(1)).to.equal(this.signers.other.address);
+      const dispute = await this.disputeCore.getDisputeById(1);
+
+      expect(dispute.mediatorAddress).to.equal(this.signers.other.address);
     });
 
     it("should override when select twice", async function () {
@@ -132,7 +134,9 @@ export function shouldBehaveLikeDispute(): void {
       await this.disputeCore.connect(this.signers.third).selectMediator(1, this.signers.other.address);
       await this.disputeCore.connect(this.signers.admin).selectMediator(1, this.signers.other.address);
 
-      expect(await this.disputeCore.getSelectedMediatorForDisputeId(1)).to.equal(this.signers.other.address);
+      const dispute = await this.disputeCore.getDisputeById(1);
+
+      expect(dispute.mediatorAddress).to.equal(this.signers.other.address);
     });
 
     it("should throw error if user is not the proposalCreator or bidder", async function () {
@@ -158,31 +162,6 @@ export function shouldBehaveLikeDispute(): void {
 
     it("should throw error if dispute dont exist", async function () {
       const error = await this.disputeCore.selectMediator(100, this.signers.other.address).catch(err => err);
-
-      expect(error.message).to.contains("DisputeNotFound");
-    });
-  });
-
-  describe("getSelectedMediatorForDisputeId", function () {
-    beforeEach(async function () {
-      await this.disputeCore.connect(this.signers.third).createDispute(1);
-    });
-
-    it("should return selected mediator", async function () {
-      await this.disputeCore.connect(this.signers.third).selectMediator(1, this.signers.other.address);
-      await this.disputeCore.connect(this.signers.admin).selectMediator(1, this.signers.other.address);
-
-      expect(await this.disputeCore.getSelectedMediatorForDisputeId(1)).to.equal(this.signers.other.address);
-    });
-
-    it("should throw error if mediator was not selected", async function () {
-      const error = await this.disputeCore.getSelectedMediatorForDisputeId(1).catch(err => err);
-
-      expect(error.message).to.contains("MediatorNotSelected");
-    });
-
-    it("should throw error if dispute dont exist", async function () {
-      const error = await this.disputeCore.getSelectedMediatorForDisputeId(100).catch(err => err);
 
       expect(error.message).to.contains("DisputeNotFound");
     });

@@ -100,6 +100,7 @@ Ações que poderão ser feitas com esse contrato:
   - Apenas os contratos de Lances e Disputas podem realizar essa ação.
   - Ao finalizar, o status vai para `FINISHED`.
   - Ao finalizar, o valor da proposta depositado é enviado para quem ganhou o lance.
+
 ### Lances
 
 Ações que poderão ser feitas com esse contrato:
@@ -143,7 +144,6 @@ Ações que poderão ser feitas com esse contrato:
   - Ao definir, deve ser alterado o status da proposta para `FINISHED`.
   - Ao definir, realizar a transferência dos valores de acordo com a distribuição no contrato de Lances.
 - `getDisputeById`: Retorna as informações da disputa, assim como, da distribuição.
-- `getSelectedMediatorForDisputeId`: Retorna o endereço do mediador selecionado para uma disputa.
 - `getCountOfDisputes`: Retorna a quantidade de disputas criadas.
 - `getCountOfDisputesByUser`: Retorna a contagem de disputas criadas por/para um usuário.
 - `getDisputeIdByUserAddressAndIndex`: Retorna a identificação de uma disputa pelo endereço do usuário e um índice.

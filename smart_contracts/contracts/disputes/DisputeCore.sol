@@ -15,9 +15,6 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
     /// @dev O endereço do mediador selecionado por cada usuário pela identificação da disputa
     mapping(uint256 => mapping(address => address)) internal _pendingSelectedMediatorByUserAndDisputeId;
 
-    /// @dev O endereço do mediador selecionado para uma disputa
-    mapping(uint256 => address) internal _selectedMediatorByDisputeId;
-
     function createDispute(uint256 proposalId) external returns (uint256) {
         if (_selectedDisputeIdByProposalId[proposalId] != 0) revert DisputeAlreadyExist();
 
@@ -41,26 +38,23 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         return newDisputeId;
     }
 
-    function getSelectedMediatorForDisputeId(uint256 disputeId)
+    function getPendingSelectedMediatorByUserAddressAndDisputeId(address userAddress, uint256 disputeId)
         external
         view
         disputeExist(disputeId)
         returns (address)
     {
-        address selectedMediator = _selectedMediatorByDisputeId[disputeId];
-
-        if (selectedMediator == address(0)) revert MediatorNotSelected();
+        address selectedMediator = _pendingSelectedMediatorByUserAndDisputeId[disputeId][userAddress];
 
         return selectedMediator;
     }
 
     function selectMediator(uint256 disputeId, address mediator) external disputeExist(disputeId) {
-        if (_selectedMediatorByDisputeId[disputeId] != address(0))
-            revert MediatorAlreadySelected(_selectedMediatorByDisputeId[disputeId]);
+        Dispute storage dispute = _disputes[disputeId];
+
+        if (dispute.mediatorAddress != address(0)) revert MediatorAlreadySelected(dispute.mediatorAddress);
 
         address caller = _msgSender();
-
-        Dispute storage dispute = _disputes[disputeId];
 
         if (dispute.bidderAddress != caller && dispute.proposalCreatorAddress != caller)
             revert YouAreNotTheBidderOrProposalCreator();
@@ -72,19 +66,18 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
             : dispute.bidderAddress;
 
         if (_pendingSelectedMediatorByUserAndDisputeId[disputeId][otherAddressToLook] == mediator) {
-            _selectedMediatorByDisputeId[disputeId] = mediator;
+            dispute.mediatorAddress = mediator;
 
             _onMediatorSelected(dispute.proposalId);
         }
     }
 
     function selectDistribution(uint256 disputeId, uint8 splitBidderShare) external disputeExist(disputeId) {
-        if (_selectedMediatorByDisputeId[disputeId] != _msgSender())
-            revert YouAreNotTheMediator(_selectedMediatorByDisputeId[disputeId]);
+        Dispute storage dispute = _disputes[disputeId];
+
+        if (dispute.mediatorAddress != _msgSender()) revert YouAreNotTheMediator(dispute.mediatorAddress);
 
         if (splitBidderShare > 100) revert InvalidAmountOfShare();
-
-        Dispute storage dispute = _disputes[disputeId];
 
         if (dispute.distributedAt > 0) revert DisputeAlreadyDistributed(dispute.distributedAt);
 
