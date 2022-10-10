@@ -24,12 +24,6 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
         address indexed bidderAddress
     );
 
-    /// @dev O evento lançado quando um mediador é selecionado pelo criador
-    event MediatorSelected(uint256 id, address indexed mediatorAddress);
-
-    /// @dev O evento lançado quando a distribuição for definida
-    event DistribuitionDefined(uint256 id, uint256 indexed proposalId, address indexed bidderAddress);
-
     /// @dev O modificador usado para garantir a execução de um método apenas se o lance existir
     modifier disputeExist(uint256 disputeId) {
         if (disputeId > _disputeIds.current()) revert DisputeNotFound();
@@ -120,6 +114,8 @@ abstract contract DisputeBase is IDisputeBase, ProposalStatus, EnumerateIdByAddr
 
         _addIdToAddress(newDisputeId, proposalCreator);
         _addIdToAddress(newDisputeId, bidder);
+
+        emit Created(newDisputeId, proposalId, proposalCreator, bidder);
 
         return newDisputeId;
     }

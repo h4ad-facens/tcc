@@ -12,6 +12,12 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         DisputeBid(bidContractAddress)
     {}
 
+    /// @dev O evento lançado quando um mediador é selecionado pelo criador
+    event MediatorSelected(uint256 id, address indexed mediatorAddress);
+
+    /// @dev O evento lançado quando a distribuição for definida
+    event DistribuitionDefined(uint256 id, uint256 indexed proposalId);
+
     /// @dev O endereço do mediador selecionado por cada usuário pela identificação da disputa
     mapping(uint256 => mapping(address => address)) internal _pendingSelectedMediatorByUserAndDisputeId;
 
@@ -69,6 +75,8 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
             dispute.mediatorAddress = mediator;
 
             _onMediatorSelected(dispute.proposalId);
+
+            emit MediatorSelected(disputeId, mediator);
         }
     }
 
@@ -85,5 +93,7 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         dispute.splitBidderShare = splitBidderShare;
 
         _onSelectDistribution(dispute.proposalId, dispute.bidId, dispute.bidderAddress, splitBidderShare);
+
+        emit DistribuitionDefined(disputeId, dispute.proposalId);
     }
 }
