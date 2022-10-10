@@ -139,12 +139,6 @@
         "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "bidderAddress",
-        "type": "address"
       }
     ],
     "name": "DistribuitionDefined",
@@ -422,12 +416,17 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "disputeId",
         "type": "uint256"
       }
     ],
-    "name": "getSelectedMediatorForDisputeId",
+    "name": "getPendingSelectedMediatorByUserAddressAndDisputeId",
     "outputs": [
       {
         "internalType": "address",

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, concatAll, filter, finalize, firstValueFrom, from, map, merge, mergeMap, Observable, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, concatAll, filter, finalize, firstValueFrom, from, lastValueFrom, map, merge, mergeMap, Observable, Subject, switchMap } from 'rxjs';
 import { BidProxy } from '../../models/proxies/bid.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
 import { getPaginatedClosure, PaginatedOrder } from '../../utils/paginated';
@@ -187,6 +187,9 @@ export class BidService {
 
       const bidShareToParticipate = await this.web3.bidContract.BID_SHARE_TO_PARTICIPATE();
       const proposal = await firstValueFrom(this.proposal.getProposalById$(proposalId));
+
+      if (!proposal)
+        throw new Error('Não foi possível encontrar a proposta com essa identificação.');
 
       const transaction = await this.web3.bidContract
         .connect(signer)

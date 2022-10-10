@@ -1,9 +1,12 @@
 //#region Imports
 
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, map, Observable } from 'rxjs';
+import { ethers } from 'ethers';
+import { combineLatest, firstValueFrom, lastValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
 import { BidProxy } from '../../models/proxies/bid.proxy';
+import { DisputeProxy } from '../../models/proxies/dispute.proxy';
 import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
 import { BidService } from '../../services/bid/bid.service';
@@ -27,6 +30,7 @@ export class ProposalDetailComponent {
     protected readonly proposalService: ProposalService,
     protected readonly bidService: BidService,
     protected readonly disputeService: DisputeService,
+    protected readonly fb: FormBuilder,
   ) {
     this.proposalId = Number(this.route.snapshot.params['id'] || 0);
     this.proposal$ = this.proposalService.getProposalById$(this.proposalId);
@@ -59,6 +63,29 @@ export class ProposalDetailComponent {
       .pipe(
         map(([selectedBid, proposal, myAddress]) => selectedBid && !!myAddress && proposal.status === ProposalStatus.IN_DEVELOPMENT),
       );
+
+    this.canPerformBasicActions$ = this.proposal$
+      .pipe(
+        map(proposal => [ProposalStatus.FINISHED, ProposalStatus.WAITING_BID, ProposalStatus.IN_DEVELOPMENT, ProposalStatus.CANCELLED].includes(proposal.status)),
+      );
+
+    this.dispute$ = this.disputeService.getDisputeByProposalId$(this.proposalId);
+
+    this.canSelectMediator$ = combineLatest([this.proposal$, this.dispute$, this.web3.myAddress$])
+      .pipe(
+        map(([proposal, dispute, myAddress]) => !!dispute && !!myAddress && (dispute.bidderAddress === myAddress || dispute.proposalCreatorAddress === myAddress) && proposal.status === ProposalStatus.IN_DISPUTE),
+      );
+
+    this.canSelectDistribution$ = combineLatest([this.proposal$, this.dispute$, this.web3.myAddress$])
+      .pipe(
+        map(([proposal, dispute, myAddress]) => !!dispute && !!myAddress && dispute.mediatorAddress === myAddress && proposal.status === ProposalStatus.IN_DISPUTE_DISTRIBUTION),
+      );
+
+    this.selectedPendingMediator$ = this.dispute$
+      .pipe(
+        switchMap(dispute => dispute ? this.disputeService.getMySelectedMediatorAddressForDisputeId$(dispute.id) : of(null)),
+        tap(selectedMediator => selectedMediator && this.formGroupForMediator.controls['mediator'].setValue(selectedMediator)),
+      );
   }
 
   //#endregion
@@ -83,6 +110,20 @@ export class ProposalDetailComponent {
   public readonly canCancelProposal$: Observable<boolean>;
   public readonly canSendPayment$: Observable<boolean>;
   public readonly canEnterInDispute$: Observable<boolean>;
+
+  public readonly canPerformBasicActions$: Observable<boolean>;
+  public readonly canSelectMediator$: Observable<boolean>;
+  public readonly canSelectDistribution$: Observable<boolean>;
+  public readonly dispute$: Observable<DisputeProxy | null>;
+  public readonly selectedPendingMediator$: Observable<string | null>;
+
+  public readonly formGroupForMediator: FormGroup = this.fb.group({
+    mediator: ['', [Validators.required]],
+  });
+
+  public readonly formGroupForDistribution: FormGroup = this.fb.group({
+    splitBidderShare: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+  });
 
   public isPerformingActionOnButtons: boolean = false;
 
@@ -124,6 +165,34 @@ export class ProposalDetailComponent {
     this.isPerformingActionOnButtons = true;
 
     const [, errorMessage] = await this.disputeService.enterInDispute(this.proposalId);
+
+    this.isPerformingActionOnButtons = false;
+    this.errorMessageOnButtons = errorMessage;
+  }
+
+  public async selectMediator(): Promise<void> {
+    this.errorMessageOnButtons = '';
+
+    const mediatorAddress = this.formGroupForMediator.getRawValue().mediator;
+
+    if (!ethers.utils.isAddress(mediatorAddress)) {
+      this.errorMessageOnButtons = 'O enderenço do mediator não é válido.';
+      return;
+    }
+
+    this.isPerformingActionOnButtons = true;
+
+    const [, errorMessage] = await this.disputeService.selectMediator(this.proposalId, mediatorAddress);
+
+    this.isPerformingActionOnButtons = false;
+    this.errorMessageOnButtons = errorMessage;
+  }
+
+  public async selectDistribution(): Promise<void> {
+    this.isPerformingActionOnButtons = true;
+
+    const splitBidderShare = this.formGroupForDistribution.getRawValue().splitBidderShare;
+    const [, errorMessage] = await this.disputeService.selectDistributionForProposalId(this.proposalId, splitBidderShare);
 
     this.isPerformingActionOnButtons = false;
     this.errorMessageOnButtons = errorMessage;

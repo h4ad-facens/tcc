@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { BigNumber, ethers } from 'ethers';
-import { combineLatest, filter, from, map, Observable, of, repeat, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, from, map, merge, Observable, of, repeat, Subject, switchMap } from 'rxjs';
 import { ProposalPayload } from '../../models/payloads/proposal.payload';
 import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
@@ -142,13 +142,7 @@ export class ProposalService {
   }
 
   public getProposalById$(id: number): Observable<ProposalProxy> {
-    return of(null)
-      .pipe(
-        repeat({
-          delay: () => combineLatest([this.onStatusChanged]),
-        }),
-        switchMap(() => from(this.getProposalById(id))),
-      );
+    return merge(this.onStatusChanged, from(this.getProposalById(id)));
   }
 
   //#endregion

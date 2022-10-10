@@ -2,7 +2,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BidItemModule } from '../../components/bid-item/bid-item.module';
 import { ErrorMessageModule } from '../../components/error-message/error-message.module';
@@ -31,6 +31,7 @@ const routes: Routes = [{ path: '', component: ProposalDetailComponent }];
     ErrorMessageModule,
     BidItemModule,
     ProposalStatusPipeModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     ProposalDetailComponent,

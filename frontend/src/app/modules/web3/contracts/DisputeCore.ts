@@ -2,28 +2,11 @@
 
 /* tslint:disable */
 
+import type { EventFragment, FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
+import type { BaseContract, BigNumber, BigNumberish, BytesLike, CallOverrides, ContractTransaction, Overrides, PopulatedTransaction, Signer, utils } from 'ethers';
 /* eslint-disable */
-import type {
-  EventFragment, FunctionFragment,
-  Result
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
-import type {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  CallOverrides,
-  ContractTransaction,
-  Overrides,
-  PopulatedTransaction,
-  Signer,
-  utils
-} from "ethers";
-import type {
-  OnEvent,
-  PromiseOrValue, TypedEvent, TypedEventFilter, TypedListener
-} from "./common";
+import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListener } from './common';
 
 export interface DisputeCoreInterface extends utils.Interface {
   functions: {
@@ -39,7 +22,7 @@ export interface DisputeCoreInterface extends utils.Interface {
     'getDisputeById(uint256)': FunctionFragment;
     'getDisputeIdByProposalId(uint256)': FunctionFragment;
     'getDisputeIdByUserAddressAndIndex(address,uint256)': FunctionFragment;
-    'getSelectedMediatorForDisputeId(uint256)': FunctionFragment;
+    'getPendingSelectedMediatorByUserAddressAndDisputeId(address,uint256)': FunctionFragment;
     'owner()': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'selectDistribution(uint256,uint8)': FunctionFragment;
@@ -61,149 +44,186 @@ export interface DisputeCoreInterface extends utils.Interface {
       | 'getDisputeById'
       | 'getDisputeIdByProposalId'
       | 'getDisputeIdByUserAddressAndIndex'
-      | 'getSelectedMediatorForDisputeId'
+      | 'getPendingSelectedMediatorByUserAddressAndDisputeId'
       | 'owner'
       | 'renounceOwnership'
       | 'selectDistribution'
       | 'selectMediator'
-      | 'transferOwnership'
+      | 'transferOwnership',
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: 'CANCELLED', values?: undefined): string;
+
   encodeFunctionData(functionFragment: 'FINISHED', values?: undefined): string;
+
   encodeFunctionData(
     functionFragment: 'IN_DEVELOPMENT',
-    values?: undefined
+    values?: undefined,
   ): string;
+
   encodeFunctionData(
     functionFragment: 'IN_DISPUTE',
-    values?: undefined
+    values?: undefined,
   ): string;
+
   encodeFunctionData(
     functionFragment: 'IN_DISPUTE_DISTRIBUTION',
-    values?: undefined
+    values?: undefined,
   ): string;
+
   encodeFunctionData(
     functionFragment: 'WAITING_BID',
-    values?: undefined
+    values?: undefined,
   ): string;
+
   encodeFunctionData(
     functionFragment: 'createDispute',
-    values: [PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
+
   encodeFunctionData(
     functionFragment: 'getCountOfDisputes',
-    values?: undefined
+    values?: undefined,
   ): string;
+
   encodeFunctionData(
     functionFragment: 'getCountOfDisputesByUser',
-    values: [PromiseOrValue<string>]
+    values: [PromiseOrValue<string>],
   ): string;
+
   encodeFunctionData(
     functionFragment: 'getDisputeById',
-    values: [PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
+
   encodeFunctionData(
     functionFragment: 'getDisputeIdByProposalId',
-    values: [PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>],
   ): string;
+
   encodeFunctionData(
     functionFragment: 'getDisputeIdByUserAddressAndIndex',
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
+
   encodeFunctionData(
-    functionFragment: 'getSelectedMediatorForDisputeId',
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: 'getPendingSelectedMediatorByUserAddressAndDisputeId',
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
+
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+
   encodeFunctionData(
     functionFragment: 'renounceOwnership',
-    values?: undefined
+    values?: undefined,
   ): string;
+
   encodeFunctionData(
     functionFragment: 'selectDistribution',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
   ): string;
+
   encodeFunctionData(
     functionFragment: 'selectMediator',
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
   ): string;
+
   encodeFunctionData(
     functionFragment: 'transferOwnership',
-    values: [PromiseOrValue<string>]
+    values: [PromiseOrValue<string>],
   ): string;
 
   decodeFunctionResult(functionFragment: 'CANCELLED', data: BytesLike): Result;
+
   decodeFunctionResult(functionFragment: 'FINISHED', data: BytesLike): Result;
+
   decodeFunctionResult(
     functionFragment: 'IN_DEVELOPMENT',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(functionFragment: 'IN_DISPUTE', data: BytesLike): Result;
+
   decodeFunctionResult(
     functionFragment: 'IN_DISPUTE_DISTRIBUTION',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'WAITING_BID',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'createDispute',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'getCountOfDisputes',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'getCountOfDisputesByUser',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'getDisputeById',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'getDisputeIdByProposalId',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'getDisputeIdByUserAddressAndIndex',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
-    functionFragment: 'getSelectedMediatorForDisputeId',
-    data: BytesLike
+    functionFragment: 'getPendingSelectedMediatorByUserAddressAndDisputeId',
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+
   decodeFunctionResult(
     functionFragment: 'renounceOwnership',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'selectDistribution',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'selectMediator',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
+
   decodeFunctionResult(
     functionFragment: 'transferOwnership',
-    data: BytesLike
+    data: BytesLike,
   ): Result;
 
   events: {
     'Created(uint256,uint256,address,address)': EventFragment;
-    'DistribuitionDefined(uint256,uint256,address)': EventFragment;
+    'DistribuitionDefined(uint256,uint256)': EventFragment;
     'MediatorSelected(uint256,address)': EventFragment;
     'OwnershipTransferred(address,address)': EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: 'Created'): EventFragment;
+
   getEvent(nameOrSignatureOrTopic: 'DistribuitionDefined'): EventFragment;
+
   getEvent(nameOrSignatureOrTopic: 'MediatorSelected'): EventFragment;
+
   getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
 }
 
@@ -213,22 +233,19 @@ export interface CreatedEventObject {
   proposalCreatorAddress: string;
   bidderAddress: string;
 }
-export type CreatedEvent = TypedEvent<
-  [BigNumber, BigNumber, string, string],
-  CreatedEventObject
->;
+
+export type CreatedEvent = TypedEvent<[BigNumber, BigNumber, string, string],
+  CreatedEventObject>;
 
 export type CreatedEventFilter = TypedEventFilter<CreatedEvent>;
 
 export interface DistribuitionDefinedEventObject {
   id: BigNumber;
   proposalId: BigNumber;
-  bidderAddress: string;
 }
-export type DistribuitionDefinedEvent = TypedEvent<
-  [BigNumber, BigNumber, string],
-  DistribuitionDefinedEventObject
->;
+
+export type DistribuitionDefinedEvent = TypedEvent<[BigNumber, BigNumber],
+  DistribuitionDefinedEventObject>;
 
 export type DistribuitionDefinedEventFilter =
   TypedEventFilter<DistribuitionDefinedEvent>;
@@ -237,10 +254,9 @@ export interface MediatorSelectedEventObject {
   id: BigNumber;
   mediatorAddress: string;
 }
-export type MediatorSelectedEvent = TypedEvent<
-  [BigNumber, string],
-  MediatorSelectedEventObject
->;
+
+export type MediatorSelectedEvent = TypedEvent<[BigNumber, string],
+  MediatorSelectedEventObject>;
 
 export type MediatorSelectedEventFilter =
   TypedEventFilter<MediatorSelectedEvent>;
@@ -249,17 +265,18 @@ export interface OwnershipTransferredEventObject {
   previousOwner: string;
   newOwner: string;
 }
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string],
-  OwnershipTransferredEventObject
->;
+
+export type OwnershipTransferredEvent = TypedEvent<[string, string],
+  OwnershipTransferredEventObject>;
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface DisputeCore extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
+
   attach(addressOrName: string): this;
+
   deployed(): Promise<this>;
 
   interface: DisputeCoreInterface;
@@ -267,17 +284,21 @@ export interface DisputeCore extends BaseContract {
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TEvent>>;
 
   listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
+    eventFilter?: TypedEventFilter<TEvent>,
   ): Array<TypedListener<TEvent>>;
+
   listeners(eventName?: string): Array<Listener>;
+
   removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
+    eventFilter: TypedEventFilter<TEvent>,
   ): this;
+
   removeAllListeners(eventName?: string): this;
+
   off: OnEvent<this>;
   on: OnEvent<this>;
   once: OnEvent<this>;
@@ -298,80 +319,79 @@ export interface DisputeCore extends BaseContract {
 
     createDispute(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     getCountOfDisputes(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getCountOfDisputesByUser(
       userAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     getDisputeById(
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        string,
-        number,
-        boolean,
-        BigNumber
-      ] & {
-        proposalId: BigNumber;
-        bidId: BigNumber;
-        createdAt: BigNumber;
-        proposalCreatorAddress: string;
-        bidderAddress: string;
-        mediatorAddress: string;
-        splitBidderShare: number;
-        createdByBidder: boolean;
-        distributedAt: BigNumber;
-      }
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[
+                 BigNumber,
+                 BigNumber,
+                 BigNumber,
+                 string,
+                 string,
+                 string,
+                 number,
+                 boolean,
+                 BigNumber
+               ] & {
+                 proposalId: BigNumber;
+                 bidId: BigNumber;
+                 createdAt: BigNumber;
+                 proposalCreatorAddress: string;
+                 bidderAddress: string;
+                 mediatorAddress: string;
+                 splitBidderShare: number;
+                 createdByBidder: boolean;
+                 distributedAt: BigNumber;
+               }>;
 
     getDisputeIdByProposalId(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
     getDisputeIdByUserAddressAndIndex(
       userAddress: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
-    getSelectedMediatorForDisputeId(
+    getPendingSelectedMediatorByUserAddressAndDisputeId(
+      userAddress: PromiseOrValue<string>,
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     selectDistribution(
       disputeId: PromiseOrValue<BigNumberish>,
       splitBidderShare: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     selectMediator(
       disputeId: PromiseOrValue<BigNumberish>,
       mediator: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
   };
 
@@ -389,80 +409,79 @@ export interface DisputeCore extends BaseContract {
 
   createDispute(
     proposalId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   getCountOfDisputes(overrides?: CallOverrides): Promise<BigNumber>;
 
   getCountOfDisputesByUser(
     userAddress: PromiseOrValue<string>,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   getDisputeById(
     disputeId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [
-      BigNumber,
-      BigNumber,
-      BigNumber,
-      string,
-      string,
-      string,
-      number,
-      boolean,
-      BigNumber
-    ] & {
-      proposalId: BigNumber;
-      bidId: BigNumber;
-      createdAt: BigNumber;
-      proposalCreatorAddress: string;
-      bidderAddress: string;
-      mediatorAddress: string;
-      splitBidderShare: number;
-      createdByBidder: boolean;
-      distributedAt: BigNumber;
-    }
-  >;
+    overrides?: CallOverrides,
+  ): Promise<[
+               BigNumber,
+               BigNumber,
+               BigNumber,
+               string,
+               string,
+               string,
+               number,
+               boolean,
+               BigNumber
+             ] & {
+               proposalId: BigNumber;
+               bidId: BigNumber;
+               createdAt: BigNumber;
+               proposalCreatorAddress: string;
+               bidderAddress: string;
+               mediatorAddress: string;
+               splitBidderShare: number;
+               createdByBidder: boolean;
+               distributedAt: BigNumber;
+             }>;
 
   getDisputeIdByProposalId(
     proposalId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
   getDisputeIdByUserAddressAndIndex(
     userAddress: PromiseOrValue<string>,
     index: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
-  getSelectedMediatorForDisputeId(
+  getPendingSelectedMediatorByUserAddressAndDisputeId(
+    userAddress: PromiseOrValue<string>,
     disputeId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
+    overrides?: CallOverrides,
   ): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   selectDistribution(
     disputeId: PromiseOrValue<BigNumberish>,
     splitBidderShare: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   selectMediator(
     disputeId: PromiseOrValue<BigNumberish>,
     mediator: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   transferOwnership(
     newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
   callStatic: {
@@ -480,57 +499,56 @@ export interface DisputeCore extends BaseContract {
 
     createDispute(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getCountOfDisputes(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCountOfDisputesByUser(
       userAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getDisputeById(
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        BigNumber,
-        BigNumber,
-        BigNumber,
-        string,
-        string,
-        string,
-        number,
-        boolean,
-        BigNumber
-      ] & {
-        proposalId: BigNumber;
-        bidId: BigNumber;
-        createdAt: BigNumber;
-        proposalCreatorAddress: string;
-        bidderAddress: string;
-        mediatorAddress: string;
-        splitBidderShare: number;
-        createdByBidder: boolean;
-        distributedAt: BigNumber;
-      }
-    >;
+      overrides?: CallOverrides,
+    ): Promise<[
+                 BigNumber,
+                 BigNumber,
+                 BigNumber,
+                 string,
+                 string,
+                 string,
+                 number,
+                 boolean,
+                 BigNumber
+               ] & {
+                 proposalId: BigNumber;
+                 bidId: BigNumber;
+                 createdAt: BigNumber;
+                 proposalCreatorAddress: string;
+                 bidderAddress: string;
+                 mediatorAddress: string;
+                 splitBidderShare: number;
+                 createdByBidder: boolean;
+                 distributedAt: BigNumber;
+               }>;
 
     getDisputeIdByProposalId(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getDisputeIdByUserAddressAndIndex(
       userAddress: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getSelectedMediatorForDisputeId(
+    getPendingSelectedMediatorByUserAddressAndDisputeId(
+      userAddress: PromiseOrValue<string>,
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
@@ -540,18 +558,18 @@ export interface DisputeCore extends BaseContract {
     selectDistribution(
       disputeId: PromiseOrValue<BigNumberish>,
       splitBidderShare: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     selectMediator(
       disputeId: PromiseOrValue<BigNumberish>,
       mediator: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<void>;
   };
 
@@ -560,42 +578,40 @@ export interface DisputeCore extends BaseContract {
       id?: null,
       proposalId?: null,
       proposalCreatorAddress?: PromiseOrValue<string> | null,
-      bidderAddress?: PromiseOrValue<string> | null
+      bidderAddress?: PromiseOrValue<string> | null,
     ): CreatedEventFilter;
     Created(
       id?: null,
       proposalId?: null,
       proposalCreatorAddress?: PromiseOrValue<string> | null,
-      bidderAddress?: PromiseOrValue<string> | null
+      bidderAddress?: PromiseOrValue<string> | null,
     ): CreatedEventFilter;
 
-    'DistribuitionDefined(uint256,uint256,address)'(
+    'DistribuitionDefined(uint256,uint256)'(
       id?: null,
       proposalId?: PromiseOrValue<BigNumberish> | null,
-      bidderAddress?: PromiseOrValue<string> | null
     ): DistribuitionDefinedEventFilter;
     DistribuitionDefined(
       id?: null,
       proposalId?: PromiseOrValue<BigNumberish> | null,
-      bidderAddress?: PromiseOrValue<string> | null
     ): DistribuitionDefinedEventFilter;
 
     'MediatorSelected(uint256,address)'(
       id?: null,
-      mediatorAddress?: PromiseOrValue<string> | null
+      mediatorAddress?: PromiseOrValue<string> | null,
     ): MediatorSelectedEventFilter;
     MediatorSelected(
       id?: null,
-      mediatorAddress?: PromiseOrValue<string> | null
+      mediatorAddress?: PromiseOrValue<string> | null,
     ): MediatorSelectedEventFilter;
 
     'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
+      newOwner?: PromiseOrValue<string> | null,
     ): OwnershipTransferredEventFilter;
     OwnershipTransferred(
       previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
+      newOwner?: PromiseOrValue<string> | null,
     ): OwnershipTransferredEventFilter;
   };
 
@@ -614,58 +630,59 @@ export interface DisputeCore extends BaseContract {
 
     createDispute(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     getCountOfDisputes(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCountOfDisputesByUser(
       userAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getDisputeById(
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getDisputeIdByProposalId(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     getDisputeIdByUserAddressAndIndex(
       userAddress: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getSelectedMediatorForDisputeId(
+    getPendingSelectedMediatorByUserAddressAndDisputeId(
+      userAddress: PromiseOrValue<string>,
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     selectDistribution(
       disputeId: PromiseOrValue<BigNumberish>,
       splitBidderShare: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     selectMediator(
       disputeId: PromiseOrValue<BigNumberish>,
       mediator: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
   };
 
@@ -679,67 +696,68 @@ export interface DisputeCore extends BaseContract {
     IN_DISPUTE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     IN_DISPUTE_DISTRIBUTION(
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     WAITING_BID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     createDispute(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     getCountOfDisputes(
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getCountOfDisputesByUser(
       userAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getDisputeById(
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getDisputeIdByProposalId(
       proposalId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     getDisputeIdByUserAddressAndIndex(
       userAddress: PromiseOrValue<string>,
       index: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getSelectedMediatorForDisputeId(
+    getPendingSelectedMediatorByUserAddressAndDisputeId(
+      userAddress: PromiseOrValue<string>,
       disputeId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     selectDistribution(
       disputeId: PromiseOrValue<BigNumberish>,
       splitBidderShare: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     selectMediator(
       disputeId: PromiseOrValue<BigNumberish>,
       mediator: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
   };
 }

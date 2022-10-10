@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <div class="price card">
+        <div class="price card" *ngIf="canPerformBasicActions$ | async">
           <h4>Valor da proposta</h4>
           <div class="price--info">
             <img src="https://cloudflare-ipfs.com/ipfs/bafybeicvymlc5hzi6jvcavypsp3uzeuej4pyhp75gnk4ab4ewhnfsgqun4/price.png" alt="Preço">
@@ -54,6 +54,40 @@
                     *ngIf="canEnterInDispute$ | async">Entrar em disputa
             </button>
           </div>
+
+          <ng-container *ngIf="errorMessageOnButtons">
+            <app-error-message [message]="errorMessageOnButtons"></app-error-message>
+          </ng-container>
+        </div>
+
+        <div class="mediator card" *ngIf="canSelectMediator$ | async">
+          <h4>Escolher mediador</h4>
+
+          <form [formGroup]="formGroupForMediator" class="mediator--form">
+            <input class="free--input" type="text" placeholder="Digite o endereço do mediador" formControlName="mediator">
+          </form>
+
+          <button class="free--btn"
+                  (click)="selectMediator()"
+                  [disabled]="formGroupForMediator.invalid || isPerformingActionOnButtons">Escolher mediador
+          </button>
+
+          <ng-container *ngIf="errorMessageOnButtons">
+            <app-error-message [message]="errorMessageOnButtons"></app-error-message>
+          </ng-container>
+        </div>
+
+        <div class="distribution card" *ngIf="canSelectDistribution$ | async">
+          <h4>Escolher a distribuição</h4>
+
+          <form [formGroup]="formGroupForDistribution" class="distribution--form">
+            <input class="free--input" type="number" min="0" max="100" placeholder="Digite a porcentagem para o Freelancer (0-100)" formControlName="splitBidderShare">
+          </form>
+
+          <button class="free--btn"
+                  (click)="selectDistribution()"
+                  [disabled]="formGroupForDistribution.invalid || isPerformingActionOnButtons">Definir distribuição
+          </button>
 
           <ng-container *ngIf="errorMessageOnButtons">
             <app-error-message [message]="errorMessageOnButtons"></app-error-message>
