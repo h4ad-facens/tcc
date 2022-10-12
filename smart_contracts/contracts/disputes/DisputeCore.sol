@@ -92,7 +92,13 @@ contract DisputeCore is IDisputeCore, DisputeProposal, DisputeBid, DisputeBase {
         dispute.distributedAt = uint64(block.timestamp);
         dispute.splitBidderShare = splitBidderShare;
 
-        _onSelectDistribution(dispute.proposalId, dispute.bidId, dispute.bidderAddress, splitBidderShare);
+        _onSelectDistribution(
+            dispute.mediatorAddress,
+            dispute.proposalId,
+            dispute.bidId,
+            dispute.bidderAddress,
+            splitBidderShare
+        );
 
         emit DistribuitionDefined(disputeId, dispute.proposalId);
     }

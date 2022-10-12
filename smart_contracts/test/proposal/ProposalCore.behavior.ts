@@ -280,13 +280,13 @@ export function shouldBehaveLikeProposal(): void {
       await this.proposalCore.connect(this.signers.admin).setDisputeContractAddress(this.signers.other.address);
 
       await this.proposalCore.connect(this.signers.admin).createProposal("teste", "uma proposta legal", "teste", "00", {
-        value: 20,
+        value: 100,
       });
 
       expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.WAITING_BID());
 
       await this.bidCore.connect(this.signers.third).createBid(1, {
-        value: 1,
+        value: 5,
       });
       await this.bidCore.connect(this.signers.admin).selectBid(1, 1);
 
@@ -306,45 +306,55 @@ export function shouldBehaveLikeProposal(): void {
     it("should can call correctly and transfer the values", async function () {
       const balance = await this.signers.third.getBalance();
 
-      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 50);
+      await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 50);
 
       expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
 
       const newBalance = await this.signers.third.getBalance();
 
-      const valueToRestore = 10 + 1; // 10 (proposta) + 1 (lance)
+      const valueToRestore = 47 + 5; // 10 (proposta) + 1 (lance)
       expect(newBalance.eq(balance.add(valueToRestore)), `${balance.toString()} = ${newBalance.toString()}`).to.equal(
         true,
       );
 
       const error = await this.proposalCore
         .connect(this.signers.other)
-        .onSelectDistribution(1, 1, this.signers.third.address, 50)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 50)
         .catch(error => error);
 
       expect(error.message).to.contains("InvalidProposalStatus");
     });
 
     it("should transfer ok with splitShare in 0", async function () {
-      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 0);
+      await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 0);
 
       expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
     });
 
     it("should transfer ok with splitShare in 100", async function () {
-      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 100);
+      await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 100);
 
       expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
     });
 
     it("should transfer not transfer when splitShare result in low amount for bidder", async function () {
-      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 1);
+      await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 1);
 
       expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
     });
 
     it("should transfer not transfer when splitShare result in low amount for creator", async function () {
-      await this.proposalCore.connect(this.signers.other).onSelectDistribution(1, 1, this.signers.third.address, 99);
+      await this.proposalCore
+        .connect(this.signers.other)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 99);
 
       expect(await this.proposalCore.getStatusOfProposal(1)).to.equal(await this.proposalCore.FINISHED());
     });
@@ -352,7 +362,7 @@ export function shouldBehaveLikeProposal(): void {
     it("should throw error when bidId is wrong", async function () {
       const errorAboutBidNotFound = await this.proposalCore
         .connect(this.signers.other)
-        .onSelectDistribution(1, 100, this.signers.third.address, 50)
+        .onSelectDistribution(this.signers.other.address, 1, 100, this.signers.third.address, 50)
         .catch(error => error);
 
       expect(errorAboutBidNotFound.message, JSON.stringify(errorAboutBidNotFound)).to.contains("BidNotFound");
@@ -361,7 +371,7 @@ export function shouldBehaveLikeProposal(): void {
     it("should throw if dont have access", async function () {
       const errorAboutPermission = await this.proposalCore
         .connect(this.signers.third)
-        .onSelectDistribution(1, 1, this.signers.third.address, 50)
+        .onSelectDistribution(this.signers.third.address, 1, 1, this.signers.third.address, 50)
         .catch(error => error);
 
       expect(errorAboutPermission.message).to.contains("ForbiddenAccessToMethod");
@@ -370,7 +380,7 @@ export function shouldBehaveLikeProposal(): void {
     it("should throw if proposal dont exist", async function () {
       const errorAboutNotFound = await this.proposalCore
         .connect(this.signers.other)
-        .onSelectDistribution(1000, 1, this.signers.third.address, 50)
+        .onSelectDistribution(this.signers.other.address, 1000, 1, this.signers.third.address, 50)
         .catch(error => error);
 
       expect(errorAboutNotFound.message).to.contains("ProposalNotFound");
@@ -379,7 +389,7 @@ export function shouldBehaveLikeProposal(): void {
     it("should throw if split share is wrong", async function () {
       const errorInvalidSplitBidderShare = await this.proposalCore
         .connect(this.signers.other)
-        .onSelectDistribution(1, 1, this.signers.third.address, 200)
+        .onSelectDistribution(this.signers.other.address, 1, 1, this.signers.third.address, 200)
         .catch(error => error);
 
       expect(errorInvalidSplitBidderShare.message).to.contains("InvalidSplitBidderShare");

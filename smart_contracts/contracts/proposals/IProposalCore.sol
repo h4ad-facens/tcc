@@ -27,6 +27,7 @@ interface IProposalCore is IProposalBase {
     function onMediatorSelected(uint256 proposalId) external;
 
     function onSelectDistribution(
+        address mediatorAddress,
         uint256 proposalId,
         uint256 bidId,
         address bidderAddress,

@@ -9,6 +9,8 @@ import "./ProposalPermission.sol";
 contract ProposalCore is IProposalCore, ProposalPermission {
     receive() external payable {}
 
+    uint256 public constant SHARE_FOR_MEDIATOR = 5;
+
     function createProposal(
         string memory name,
         string memory description,
@@ -88,6 +90,7 @@ contract ProposalCore is IProposalCore, ProposalPermission {
     }
 
     function onSelectDistribution(
+        address mediatorAddress,
         uint256 proposalId,
         uint256 bidId,
         address bidderAddress,
@@ -101,8 +104,14 @@ contract ProposalCore is IProposalCore, ProposalPermission {
 
         _updateProposalStatus(proposalId, FINISHED);
 
+        uint256 amount = proposal.amount;
+        uint256 amountToMediator = Math.mulDiv(amount, SHARE_FOR_MEDIATOR, 100, Math.Rounding.Zero);
+        uint256 restToSplit = amount - amountToMediator;
+
+        Address.sendValue(payable(mediatorAddress), amountToMediator);
+
         if (splitBidderShare > 0) {
-            uint256 bidderAmountToPay = Math.mulDiv(proposal.amount, splitBidderShare, 100, Math.Rounding.Zero);
+            uint256 bidderAmountToPay = Math.mulDiv(restToSplit, splitBidderShare, 100, Math.Rounding.Zero);
 
             if (bidderAmountToPay > 0) {
                 /// transfere o valor da proposta para o recebedor
@@ -114,7 +123,7 @@ contract ProposalCore is IProposalCore, ProposalPermission {
 
         if (splitProposalCreatorShare > 0) {
             uint256 proposalCreatorAmountToPay = Math.mulDiv(
-                proposal.amount,
+                restToSplit,
                 splitProposalCreatorShare,
                 100,
                 Math.Rounding.Zero

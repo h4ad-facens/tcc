@@ -186,7 +186,7 @@ export function shouldBehaveLikeDispute(): void {
       const newProposalCreatorBalance = await this.signers.admin.getBalance();
 
       expect(
-        newProposalCreatorBalance.eq(proposalCreatorBalance.add(100)),
+        newProposalCreatorBalance.eq(proposalCreatorBalance.add(95)),
         `${proposalCreatorBalance.toString()} = ${newProposalCreatorBalance.toString()}`,
       ).to.equal(true);
 
@@ -210,7 +210,7 @@ export function shouldBehaveLikeDispute(): void {
       const newBidderBalance = await this.signers.third.getBalance();
 
       expect(
-        newBidderBalance.eq(bidderBalance.add(100 + 5)),
+        newBidderBalance.eq(bidderBalance.add(95 + 5)),
         `${bidderBalance.toString()} = ${newBidderBalance.toString()}`,
       ).to.equal(true);
 

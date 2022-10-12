@@ -28,11 +28,12 @@ abstract contract DisputeProposal {
     }
 
     function _onSelectDistribution(
+        address mediatorAddress,
         uint256 proposalId,
         uint256 bidId,
         address bidder,
         uint8 splitBidderShare
     ) internal {
-        proposalBaseContract.onSelectDistribution(proposalId, bidId, bidder, splitBidderShare);
+        proposalBaseContract.onSelectDistribution(mediatorAddress, proposalId, bidId, bidder, splitBidderShare);
     }
 }
