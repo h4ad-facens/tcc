@@ -8,9 +8,25 @@
   <div class="bid-card--info" *ngIf="proposal$ | async as proposal">
     <p>{{ proposal.name }}</p>
 
-    <div class="bid-card--info--price">
+    <div class="bid-card--info--price" *ngIf="bid.isCancelled">
       <strong>
-        {{ bid.isCancelled ? 'Cancelado' : 'Aguardando' }}
+        Cancelado
+      </strong>
+    </div>
+
+    <div class="bid-card--info--price" *ngIf="!bid.isCancelled">
+      <strong>
+        <ng-container *ngIf="proposal.status === proposalStatus.WAITING_BID && !(selectedBid$ | async)">
+          Aguardando
+        </ng-container>
+
+        <ng-container *ngIf="proposal.status !== proposalStatus.WAITING_BID && (selectedBid$ | async)?.id === bid.id">
+          Selecionado
+        </ng-container>
+
+        <ng-container *ngIf="proposal.status !== proposalStatus.WAITING_BID && (selectedBid$ | async)?.id !== bid.id">
+          Rejeitado
+        </ng-container>
       </strong>
     </div>
   </div>

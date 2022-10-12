@@ -1,8 +1,10 @@
 //#region Imports
 
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { NavbarStateEnum } from '../../models/enums/navbar-state.enum';
-import { createMockProposal, ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { DisputeProxy } from '../../models/proxies/dispute.proxy';
+import { DisputeService } from '../../services/dispute/dispute.service';
 import { NavbarService } from '../../services/navbar/navbar.service';
 
 //#endregion
@@ -17,19 +19,24 @@ export class DisputeComponent {
   //#region Constructors
 
   constructor(
-    private readonly navbarService: NavbarService,
+    protected readonly navbarService: NavbarService,
+    protected readonly disputeService: DisputeService,
   ) {
     this.navbarService.setCurrentNavbar(NavbarStateEnum.DISPUTE);
+
+    [this.disputes$, this.isLoading$, this.loadMore, this.hasMoreData$] = this.disputeService.getPaginatedMyDisputes(8, 'DESC');
   }
 
   //#endregion
 
   //#region Public Properties
 
-  public choosingProposal: ProposalProxy = createMockProposal(1, ProposalStatus.WAITING_BID);
-  public awaitingProposal: ProposalProxy = createMockProposal(2, ProposalStatus.IN_DEVELOPMENT);
-  public finishedProposal: ProposalProxy = createMockProposal(3, ProposalStatus.FINISHED);
-  public distributeProposal: ProposalProxy = createMockProposal(4, ProposalStatus.IN_DISPUTE);
+  public isLoading$: Observable<boolean>;
+  public disputes$: Observable<DisputeProxy[]>;
+  public loadMore: () => void;
+  public hasMoreData$: Observable<boolean>;
+
+  public trackById = (index: number, dispute: DisputeProxy) => dispute.id;
 
   //#endregion
 

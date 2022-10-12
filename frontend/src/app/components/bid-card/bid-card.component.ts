@@ -1,10 +1,11 @@
 //#region Imports
 
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { BidProxy } from '../../models/proxies/bid.proxy';
-import { ProposalProxy } from '../../models/proxies/proposal.proxy';
+import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
+import { BidService } from '../../services/bid/bid.service';
 import { ProposalService } from '../../services/proposal/proposal.service';
 
 //#endregion
@@ -20,6 +21,7 @@ export class BidCardComponent implements AfterViewInit {
   //#region Constructor
 
   constructor(
+    protected readonly bidService: BidService,
     protected readonly proposalService: ProposalService,
     protected readonly changes: ChangeDetectorRef,
   ) {
@@ -34,6 +36,9 @@ export class BidCardComponent implements AfterViewInit {
 
   public imageBaseUrl: string = environment.imageBaseUrl;
 
+  public proposalStatus: typeof ProposalStatus = ProposalStatus;
+
+  public selectedBid$?: Observable<BidProxy>;
   public proposal$?: Observable<ProposalProxy | undefined>;
 
   //#endregion
@@ -42,6 +47,7 @@ export class BidCardComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     this.proposal$ = this.proposalService.getProposalById$(this.bid.proposalId);
+    this.selectedBid$ = this.bidService.getSelectedBidByProposalId$(this.bid.proposalId);
 
     this.changes.markForCheck();
   }

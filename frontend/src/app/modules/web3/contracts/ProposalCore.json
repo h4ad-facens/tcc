@@ -219,6 +219,19 @@
   },
   {
     "inputs": [],
+    "name": "SHARE_FOR_MEDIATOR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "WAITING_BID",
     "outputs": [
       {
@@ -465,6 +478,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "mediatorAddress",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "proposalId",

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
-import { catchError, combineLatest, concat, concatAll, filter, first, forkJoin, from, last, merge, Observable, of, race, Subject, switchMap, takeLast } from 'rxjs';
+import { combineLatest, filter, from, map, merge, mergeMap, Observable, repeat, Subject, switchMap } from 'rxjs';
 import { DisputeProxy } from '../../models/proxies/dispute.proxy';
 import { Web3Service } from '../../modules/web3/services/web3.service';
+import { getPaginatedClosure, PaginatedOrder } from '../../utils/paginated';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +52,28 @@ export class DisputeService {
 
   //#region Public Methods
 
+  public getPaginatedMyDisputes(itemsPerPage: number, order: PaginatedOrder): [data: Observable<DisputeProxy[]>, isLoading$: Observable<boolean>, loadMore: () => void, hasMoreData$: Observable<boolean>] {
+    return getPaginatedClosure({
+      getById: index => this.getDisputeIdCreatedByMeByIndex(index - 1).then(proposalId => this.getDisputeById(proposalId)),
+      getCount: () => this.getCountOfMyDisputes(),
+      itemsPerPage,
+      order,
+      // basicamente escuta qualquer mudança, e ao logar ou deslogar
+      // ele busca novamente os dados.
+      refreshAllWhen: this.web3.myAddress$.asObservable(),
+      onAddData: combineLatest([this.onCreateDispute, this.web3.myAddress$])
+        .pipe(
+          filter(([dispute, myAddress]) => !!myAddress && [dispute.bidderAddress, dispute.proposalCreatorAddress, dispute.mediatorAddress].includes(myAddress)),
+          map(([dispute]) => dispute),
+        ),
+      onUpdateData: combineLatest([this.onUpdateDispute, this.web3.myAddress$])
+        .pipe(
+          filter(([dispute, myAddress]) => !!myAddress && [dispute.bidderAddress, dispute.proposalCreatorAddress, dispute.mediatorAddress].includes(myAddress)),
+          map(([dispute]) => dispute),
+        ),
+    });
+  }
+
   public async enterInDispute(proposalId: number): Promise<[boolean, string?]> {
     try {
       const currentSigner = this.web3.signer$.getValue();
@@ -92,6 +115,10 @@ export class DisputeService {
         );
 
       const receipt = await transaction.wait();
+
+      await this.getDisputeById(disputeId).then(dispute => {
+        this.onUpdateDispute.next(dispute);
+      });
 
       console.log(receipt);
       console.log(transaction);
@@ -144,7 +171,7 @@ export class DisputeService {
       this.getDisputeIdByProposalId(proposalId),
     ).pipe(
       filter(v => v > 0),
-      switchMap((disputeId) => this.getDisputeById$(disputeId)),
+      mergeMap((disputeId) => this.getDisputeById$(disputeId)),
     );
 
     return merge(getFromBlockchain$, onCreateDisputeForProposal$, onUpdateDisputeForProposal$);
@@ -169,9 +196,12 @@ export class DisputeService {
         filter(dispute => dispute.id === disputeId),
       );
 
-    return combineLatest([this.web3.myAddress$, onUpdateDispute])
+    return this.web3.myAddress$
       .pipe(
-        switchMap(([myAddress]) => this.getMySelectedMediatorByDisputeId(myAddress, disputeId)),
+        repeat({
+          delay: () => onUpdateDispute,
+        }),
+        switchMap((myAddress) => from(this.getMySelectedMediatorByDisputeId(myAddress, disputeId))),
       );
   }
 
@@ -203,6 +233,24 @@ export class DisputeService {
       return null;
 
     return this.web3.disputeContract.getPendingSelectedMediatorByUserAddressAndDisputeId(userAddress, disputeId);
+  }
+
+  protected async getCountOfMyDisputes(): Promise<number> {
+    const myAddress = this.web3.myAddress$.getValue();
+
+    if (!myAddress)
+      return 0;
+
+    return this.web3.disputeContract.getCountOfDisputesByUser(myAddress).then(count => count.toNumber());
+  }
+
+  protected async getDisputeIdCreatedByMeByIndex(index: number): Promise<number> {
+    const myAddress = this.web3.myAddress$.getValue();
+
+    if (!myAddress)
+      return 0;
+
+    return this.web3.disputeContract.getDisputeIdByUserAddressAndIndex(myAddress, index).then(count => count.toNumber());
   }
 
   //#endregion

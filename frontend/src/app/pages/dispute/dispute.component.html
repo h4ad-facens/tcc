@@ -1,10 +1,13 @@
 <div class="dispute">
-  <h3>Disputas</h3>
+  <h3>Minhas disputas</h3>
 
   <div class="dispute--cards">
-      <app-home-card [proposal]="choosingProposal"  [routerLink]="'/proposal/' + choosingProposal.id + '/challenge'"></app-home-card>
-      <app-home-card [proposal]="awaitingProposal"  [routerLink]="'/proposal/' + awaitingProposal.id + '/challenge/selected'"></app-home-card>
-      <app-home-card [proposal]="distributeProposal"  [routerLink]="'/proposal/' + distributeProposal.id + '/challenge/distribute'"></app-home-card>
-      <app-home-card [proposal]="finishedProposal"  [routerLink]="'/proposal/' + finishedProposal.id + '/challenge/claim'"></app-home-card>
+    <ng-container *ngFor="let dispute of disputes$ | async; trackBy: trackById">
+      <app-dispute-card [dispute]="dispute" [routerLink]="'/proposal/' + dispute.proposalId"></app-dispute-card>
+    </ng-container>
   </div>
+
+  <ng-container *ngIf="hasMoreData$ | async">
+    <button class="free--btn" [disabled]="isLoading$ | async" (click)="loadMore()">Carregar mais</button>
+  </ng-container>
 </div>

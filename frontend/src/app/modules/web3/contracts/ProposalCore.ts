@@ -2,33 +2,11 @@
 
 /* tslint:disable */
 
-/* eslint-disable */
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from './common';
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from '@ethersproject/abi';
+import type { EventFragment, FunctionFragment, Result } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
-import type {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  CallOverrides,
-  ContractTransaction,
-  Overrides,
-  PayableOverrides,
-  PopulatedTransaction,
-  Signer,
-  utils,
-} from 'ethers';
+import type { BaseContract, BigNumber, BigNumberish, BytesLike, CallOverrides, ContractTransaction, Overrides, PayableOverrides, PopulatedTransaction, Signer, utils } from 'ethers';
+/* eslint-disable */
+import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListener } from './common';
 
 export interface ProposalCoreInterface extends utils.Interface {
   functions: {
@@ -37,6 +15,7 @@ export interface ProposalCoreInterface extends utils.Interface {
     'IN_DEVELOPMENT()': FunctionFragment;
     'IN_DISPUTE()': FunctionFragment;
     'IN_DISPUTE_DISTRIBUTION()': FunctionFragment;
+    'SHARE_FOR_MEDIATOR()': FunctionFragment;
     'WAITING_BID()': FunctionFragment;
     'cancelProposal(uint256)': FunctionFragment;
     'createProposal(string,string,string,string)': FunctionFragment;
@@ -49,7 +28,7 @@ export interface ProposalCoreInterface extends utils.Interface {
     'onCreateDispute(uint256)': FunctionFragment;
     'onMediatorSelected(uint256)': FunctionFragment;
     'onPaymentTransferred(uint256,address)': FunctionFragment;
-    'onSelectDistribution(uint256,uint256,address,uint8)': FunctionFragment;
+    'onSelectDistribution(address,uint256,uint256,address,uint8)': FunctionFragment;
     'owner()': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'setBidContractAddress(address)': FunctionFragment;
@@ -64,6 +43,7 @@ export interface ProposalCoreInterface extends utils.Interface {
       | 'IN_DEVELOPMENT'
       | 'IN_DISPUTE'
       | 'IN_DISPUTE_DISTRIBUTION'
+      | 'SHARE_FOR_MEDIATOR'
       | 'WAITING_BID'
       | 'cancelProposal'
       | 'createProposal'
@@ -100,6 +80,11 @@ export interface ProposalCoreInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: 'IN_DISPUTE_DISTRIBUTION',
+    values?: undefined,
+  ): string;
+
+  encodeFunctionData(
+    functionFragment: 'SHARE_FOR_MEDIATOR',
     values?: undefined,
   ): string;
 
@@ -171,6 +156,7 @@ export interface ProposalCoreInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'onSelectDistribution',
     values: [
+      PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
@@ -213,6 +199,11 @@ export interface ProposalCoreInterface extends utils.Interface {
 
   decodeFunctionResult(
     functionFragment: 'IN_DISPUTE_DISTRIBUTION',
+    data: BytesLike,
+  ): Result;
+
+  decodeFunctionResult(
+    functionFragment: 'SHARE_FOR_MEDIATOR',
     data: BytesLike,
   ): Result;
 
@@ -420,6 +411,8 @@ export interface ProposalCore extends BaseContract {
 
     IN_DISPUTE_DISTRIBUTION(overrides?: CallOverrides): Promise<[string]>;
 
+    SHARE_FOR_MEDIATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     WAITING_BID(overrides?: CallOverrides): Promise<[string]>;
 
     cancelProposal(
@@ -489,6 +482,7 @@ export interface ProposalCore extends BaseContract {
     ): Promise<ContractTransaction>;
 
     onSelectDistribution(
+      mediatorAddress: PromiseOrValue<string>,
       proposalId: PromiseOrValue<BigNumberish>,
       bidId: PromiseOrValue<BigNumberish>,
       bidderAddress: PromiseOrValue<string>,
@@ -527,6 +521,8 @@ export interface ProposalCore extends BaseContract {
   IN_DISPUTE(overrides?: CallOverrides): Promise<string>;
 
   IN_DISPUTE_DISTRIBUTION(overrides?: CallOverrides): Promise<string>;
+
+  SHARE_FOR_MEDIATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
   WAITING_BID(overrides?: CallOverrides): Promise<string>;
 
@@ -597,6 +593,7 @@ export interface ProposalCore extends BaseContract {
   ): Promise<ContractTransaction>;
 
   onSelectDistribution(
+    mediatorAddress: PromiseOrValue<string>,
     proposalId: PromiseOrValue<BigNumberish>,
     bidId: PromiseOrValue<BigNumberish>,
     bidderAddress: PromiseOrValue<string>,
@@ -635,6 +632,8 @@ export interface ProposalCore extends BaseContract {
     IN_DISPUTE(overrides?: CallOverrides): Promise<string>;
 
     IN_DISPUTE_DISTRIBUTION(overrides?: CallOverrides): Promise<string>;
+
+    SHARE_FOR_MEDIATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
     WAITING_BID(overrides?: CallOverrides): Promise<string>;
 
@@ -705,6 +704,7 @@ export interface ProposalCore extends BaseContract {
     ): Promise<void>;
 
     onSelectDistribution(
+      mediatorAddress: PromiseOrValue<string>,
       proposalId: PromiseOrValue<BigNumberish>,
       bidId: PromiseOrValue<BigNumberish>,
       bidderAddress: PromiseOrValue<string>,
@@ -794,6 +794,8 @@ export interface ProposalCore extends BaseContract {
 
     IN_DISPUTE_DISTRIBUTION(overrides?: CallOverrides): Promise<BigNumber>;
 
+    SHARE_FOR_MEDIATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     WAITING_BID(overrides?: CallOverrides): Promise<BigNumber>;
 
     cancelProposal(
@@ -854,6 +856,7 @@ export interface ProposalCore extends BaseContract {
     ): Promise<BigNumber>;
 
     onSelectDistribution(
+      mediatorAddress: PromiseOrValue<string>,
       proposalId: PromiseOrValue<BigNumberish>,
       bidId: PromiseOrValue<BigNumberish>,
       bidderAddress: PromiseOrValue<string>,
@@ -893,6 +896,10 @@ export interface ProposalCore extends BaseContract {
     IN_DISPUTE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     IN_DISPUTE_DISTRIBUTION(
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    SHARE_FOR_MEDIATOR(
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -958,6 +965,7 @@ export interface ProposalCore extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     onSelectDistribution(
+      mediatorAddress: PromiseOrValue<string>,
       proposalId: PromiseOrValue<BigNumberish>,
       bidId: PromiseOrValue<BigNumberish>,
       bidderAddress: PromiseOrValue<string>,

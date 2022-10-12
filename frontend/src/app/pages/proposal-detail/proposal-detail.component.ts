@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ethers } from 'ethers';
-import { combineLatest, firstValueFrom, lastValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
+import { combineLatest, filter, map, Observable, switchMap, tap } from 'rxjs';
 import { BidProxy } from '../../models/proxies/bid.proxy';
 import { DisputeProxy } from '../../models/proxies/dispute.proxy';
 import { ProposalProxy, ProposalStatus } from '../../models/proxies/proposal.proxy';
@@ -83,9 +83,12 @@ export class ProposalDetailComponent {
 
     this.selectedPendingMediator$ = this.dispute$
       .pipe(
-        switchMap(dispute => dispute ? this.disputeService.getMySelectedMediatorAddressForDisputeId$(dispute.id) : of(null)),
+        filter(dispute => !!dispute),
+        switchMap(dispute => this.disputeService.getMySelectedMediatorAddressForDisputeId$(dispute!.id)),
         tap(selectedMediator => selectedMediator && this.formGroupForMediator.controls['mediator'].setValue(selectedMediator)),
       );
+
+    this.selectedPendingMediator$.subscribe()
   }
 
   //#endregion
@@ -176,7 +179,7 @@ export class ProposalDetailComponent {
     const mediatorAddress = this.formGroupForMediator.getRawValue().mediator;
 
     if (!ethers.utils.isAddress(mediatorAddress)) {
-      this.errorMessageOnButtons = 'O enderenço do mediator não é válido.';
+      this.errorMessageOnButtons = 'O endereço do mediator não é válido.';
       return;
     }
 
