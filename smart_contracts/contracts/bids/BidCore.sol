@@ -19,7 +19,10 @@ contract BidCore is IBidCore, BidBase {
     }
 
     function cancelBid(uint256 proposalId, uint256 bidId) external {
-        _cancelBid(proposalId, bidId);
+        (address refundAddress, uint256 refundAmount) = _cancelBid(proposalId, bidId);
+
+        // devolve o valor pago no lance
+        Address.sendValue(payable(refundAddress), refundAmount);
     }
 
     function transferPayment(uint256 proposalId) external {
