@@ -121,8 +121,25 @@ export function shouldBehaveLikeDispute(): void {
     });
 
     it("should select correctly the mediator", async function () {
+      expect(
+        await this.disputeCore.getPendingSelectedMediatorByUserAddressAndDisputeId(this.signers.third.address, 1)
+      ).to.equal(ethers.constants.AddressZero);
+
       await this.disputeCore.connect(this.signers.third).selectMediator(1, this.signers.other.address);
+
+      expect(
+        await this.disputeCore.getPendingSelectedMediatorByUserAddressAndDisputeId(this.signers.third.address, 1)
+      ).to.equal(this.signers.other.address);
+
+      expect(
+        await this.disputeCore.getPendingSelectedMediatorByUserAddressAndDisputeId(this.signers.admin.address, 1)
+      ).to.equal(ethers.constants.AddressZero);
+
       await this.disputeCore.connect(this.signers.admin).selectMediator(1, this.signers.other.address);
+
+      expect(
+        await this.disputeCore.getPendingSelectedMediatorByUserAddressAndDisputeId(this.signers.admin.address, 1)
+      ).to.equal(this.signers.other.address);
 
       const dispute = await this.disputeCore.getDisputeById(1);
 
