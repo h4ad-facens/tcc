@@ -5,7 +5,7 @@ import { Signer } from '@ethersproject/abstract-signer';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
-import Web3Modal from 'web3modal';
+import type Web3Modal from 'web3modal';
 import { environment } from '../../../../environments/environment';
 import { BidCoreAbi, DisputeCoreAbi, ProposalCoreAbi } from '../contracts';
 import { BidCore } from '../contracts/BidCore';
@@ -35,7 +35,7 @@ export class Web3Service {
   public bidContract!: BidCore;
   public disputeContract!: DisputeCore;
 
-  private web3Modal = new Web3Modal();
+  private web3Modal?: Web3Modal;
 
   public web3Provider$: BehaviorSubject<Web3Provider | null> = new BehaviorSubject<Web3Provider | null>(null);
   public myAddress$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
@@ -64,6 +64,9 @@ export class Web3Service {
   }
 
   public async connect(): Promise<void> {
+    if (!this.web3Modal)
+      this.web3Modal = await import('web3modal').then(m => new m.default());
+
     const instance = await this.web3Modal.connect().catch(() => null);
 
     if (!instance) {
@@ -138,7 +141,7 @@ export class Web3Service {
     this.signer$.next(null);
     this.isConnected$.next(false);
     this.web3ModalInstance = null;
-    this.web3Provider$.next(null)
+    this.web3Provider$.next(null);
 
     this.setupDefaultContract();
   }
