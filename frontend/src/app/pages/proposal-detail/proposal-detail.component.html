@@ -18,7 +18,8 @@
           <div class="header--info">
             <h4>{{ proposal.name }}</h4>
             <span>Criador: {{ proposal.creator }}</span><br>
-            <span>Status: <strong [style.color]="(proposal.status | proposalStatus).bgColor">{{ (proposal.status | proposalStatus).text }}</strong></span>
+            <span>Status: <strong [style.color]="(proposal.status | proposalStatus).bgColor">{{ (proposal.status | proposalStatus).text }}</strong></span><br>
+            <span>Contato: {{ proposal.contactInfo }}</span>
           </div>
         </div>
 
