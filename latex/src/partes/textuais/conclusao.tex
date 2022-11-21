@@ -1,4 +1,41 @@
-\chapter{Conclusões}
-% ---
+\chapter{Análise de Resultados}
 
-\lipsum[31-33]
+Pode-se observar em resultados o que foi produzido para o site e os \textit{Smart Contracts}, um total de 5 telas com diversos estados que se integram com 3 contratos diferentes.
+
+Com o objetivo de criar uma plataforma de freelance descentralizada, a implementação com a \textit{Polygon} ocorreu sem nenhum problema, além disso, com os contratos escritos em \textit{Solidity}, pode-se no futuro hospedar os mesmos contratos na \textit{Ethereum} caso os custos sejam viáveis.
+
+Quanto aos custos de se usar a plataforma, a decisão de optar pela \textit{Polygon} se mostrou muito boa, para criar uma proposta na \textit{Ethereum} custa R\$ 263,07 (01/05/2022) em comparação com os R\$ 0,15 (01/05/2022) da \textit{Polygon}. Contudo, os preços das taxas de transação são variáveis, por exemplo, o custo da criação de uma proposta na \textit{Ethereum} em 01/09/2019 e 01/10/2022 foi de, respectivamente, R\$ 6,32 e R\$ 23,27. Nessa faixa, tanto em 2019 quanto no mês 10/2022 faz-se necessário que o valor armazenado em uma proposta tenha que ser muito maior do que poderia ser, como no caso da rede da \textit{Polygon} com as taxas mais baixas.
+
+E uma informação importante a se atentar, em 01/05/2022 a \textit{Ethereum} funcionava com o algoritmo de consenso chamado \textit{Proof-of-Work}, e em 01/10/2022, o algoritmo de consenso já havia sido alterado para o \textit{Proof-of-Stake}, causando uma redução nos custos das taxas de transação, e esse é o motivo do porque os custos da criação de proposta no exemplo anterior foi reduzido de R\$ 263,07 (01/05/2022) para R\$ 23,27 (01/10/2022). Apesar dessa mudança, os custos da rede \textit{Polygon} ainda estão muito abaixo dos custos da \textit{Ethereum}, o que é mais um indicador que a \textit{Polygon} consegue ser mais eficiente que a \textit{Ethereum} com relação a taxas de transação. 
+
+Além disso, é necessário considerar que as taxas não estão apenas na criação da proposta, para um ciclo completo, considerando que tudo ocorra sem problemas de disputa, seria necessário chamar os métodos: \textit{createProposal}, \textit{createBid}, \textit{selectBid} e \textit{transferPayment}. Ao chamar esses métodos, as taxas pagas,  usando a data de 01/10/2022 como referência, ficam em R\$ 38,07 para o criador e R\$ 22,93 para o freelancer, desconsiderando a porcentagem de 5\% a ser pago pelo freelancer. Ao calcular as mesmas taxas usando a data de 01/10/2022 como referência na \textit{Polygon}, o valor fica R\$ 0,30 para o criador e R\$ 0,18 para o freelancer, o que é muito abaixo e viabiliza o projeto como um todo.
+
+Ademais, é importante mencionar o tamanho dos contratos, foi optado por implementar todas as funcionalidades que o sistema poderia ter em três contratos diferentes para evitar que atingisse o limite de tamanho de contrato de 24KiB. Como pode ser observado na tabela \ref{tab:report_contract_size}, o contrato mais pesado, o de proposta, ficou em torno de 10,9 KiB. Dessa forma, é possível levar esse resultado como uma melhoria para um próximo trabalho, no qual os três contratos poderiam ser apenas um, visto que, o tamanho somado dos três contratos é 21,593 KiB e isso poderia trazer um custo de taxa bem menor por não haver comunicação entre contratos.
+
+Na introdução, também foi mencionado a hospedagem do site utilizando a tecnologia \textit{IPFS}, que foi realizada com sucesso, sendo possível acessar os arquivos através das identificações na seção de resultados.
+Contudo, é interessante notar que o sistema \textit{IPFS} não necessariamente armazena indefinidamente, ainda é necessário que, alguns servidores em algum lugar do mundo, armazenem essa informação. Todavia, pode ocorrer que todos esses servidores removam a página sem aviso prévio, como uma forma de liberar espaço ao remover conteúdos pouco acessados. 
+
+Porém, há como contornar esse problema com a funcionalidade de \textit{PIN}, ou fixar, que basicamente é uma função que uma pessoa com algum servidor diz que os arquivos fixados nunca devem ser apagados, dessa forma, o criador da plataforma e seus usuários podem coordenar de ter alguns servidores com os arquivos do site fixados para que os arquivos não sejam apagados acidentalmente.
+
+Ademais, não houve problemas durante o desenvolvimento do site em \textit{Angular}, que junto das bibliotecas \textit{ethers} e \textit{rxjs}, pode-se ter um site reativo, de forma que, todo a lógica de lidar com atualização de estado ao modificar uma proposta se tornou simples de gerenciar, apesar de utilizar conceitos avançados.
+
+Por fim, é importante salientar que para hospedar os contratos dentro da \textit{Solidity}, é necessário criar uma conta na plataforma, e os contratos hospedados podem ser pausados caso o número de operações ultrapasse uma quantia fixa. Dessa forma, foi possível atingir um certo grau de descentralização através das tecnologias de \textit{Blockchain}, contudo, é possível que em um outro trabalho possa ser feito a hospedagem dos contratos criados na \textit{Ethereum} ou outra solução, visando um grau ainda maior de descentralização ao mesmo tempo que se compara os custos.
+
+% resposta a nossa introdução e ligação direta com o resto do TCC
+
+%fichacatalografica@facens.br
+
+
+\chapter{Conclusão}
+
+Esse trabalho começou com um objetivo de criar uma plataforma de \textit{Freelance} que fosse descentralizada, de forma que, qualquer pessoa pudesse usar de qualquer lugar do mundo. Esse objetivo foi atingido ao utilizar das mesmas tecnologias que compõem o \textit{Bitcoin} e a \textit{Ethereum}, duas soluções que é usado pelo mundo inteiro com alta disponibilidade e de livre acesso.
+
+Ao optar por utilizar tecnologias que estão em constante evolução, foi possível observar evoluções enquanto esse trabalho estava sendo desenvolvido, como a mudança do algoritmo de consenso da \textit{Ethereum} descrito em fundamentos teóricos, visando a redução das taxas de transação. E apesar dessa constante evolução, foi possível criar uma solução que pode ser usada por qualquer pessoa a rede da \textit{Polygon}, em conjunto com tecnologias como \textit{IPFS} e \textit{Angular}.
+
+Esse trabalho é um pequeno passo para novas soluções que podem surgir no futuro para melhorar a qualidade de vida e a segurança das pessoas, como mencionado na introdução, a descentralização tem como objetivo não apenas a alta disponibilidade como também endereça uma questão ainda mais fundamental, a segurança e privacidade das pessoas. 
+
+Além disso, foi disponibilizado o código desse projeto completo de forma aberta para que futuros trabalhos utilizem e criem novas soluções, de forma que possam propor novas soluções para os problemas que não foram endereçados nesse trabalho, como a questão da comunicação. Além disso, foi possível fazer uma análise sobre as vantagens e desvantagens de se utilizar duas redes diferentes, \textit{Ethereum} e \textit{Polygon}, para hospedar os contratos, assim como, conhecer em mais detalhes questões de segurança de código e de performance com o intuito de tornar a solução mais eficiente.
+
+Por fim, foi possível aprofundar mais os conhecimentos sobre soluções descentralizadas, redes de \textit{Blockchain}, redes de armazenamento de arquivos e sobre arquitetura de software, através da construção de uma plataforma descentralizada que é processada por computadores do mundo todo. Além disso, tudo que é usado para se conectar com a solução para que um usuário possa realizar pagamentos, e conseguir novos freelances, é uma extensão no navegador chamada \textit{Metamask}.
+
+

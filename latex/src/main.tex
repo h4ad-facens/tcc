@@ -1,6 +1,5 @@
 %% abtex2-modelo-trabalho-academico.tex, v-1.9.7 laurocesar
 %% Copyright 2012-2018 by abnTeX2 group at http://www.abntex.net.br/ 
-%%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
@@ -39,8 +38,6 @@
 	sumario=tradicional, % estilo do sumário (tradicional = indentado)
 	% -- opções do pacote babel --
 	english,			 % idioma adicional para hifenização
-	french,				 % idioma adicional para hifenização
-	spanish,			 % idioma adicional para hifenização
 	brazil				 % o último idioma é o principal do documento
 	]{abntex2}
 
@@ -58,7 +55,6 @@
 \usepackage{pdfpages}           % Para incluir pdf no documento
 \usepackage{ragged2e}           % Para alinhamento de texto
 \usepackage{titlesec}
-\usepackage{booktabs} % adiciona italico
 % ---
 		
 % ---
@@ -70,30 +66,8 @@
 % ---
 % Pacotes de citações
 % ---
-\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
-\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
-
-
-% --- 
-% CONFIGURAÇÕES DE PACOTES
-% --- 
-
-% ---
-% Configurações do pacote backref
-% Usado sem a opção hyperpageref de backref
-\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
-% Texto padrão antes do número das páginas
-\renewcommand{\backref}{}
-% Define os textos da citação
-\renewcommand*{\backrefalt}[4]{
-	\ifcase #1 %
-		Nenhuma citação no texto.%
-	\or
-		Citado na página #2.%
-	\else
-		Citado #1 vezes nas páginas #2.%
-	\fi}%
-% ---
+\usepackage[alf]{abntex2cite}
+\usepackage{lib/url6023} % Referências customizadas
 
 % --- 
 % CONFIGURAÇÕES DE ESTILO E TAMANHO DA FONTE
@@ -119,16 +93,15 @@
 % ---
 \coordenadoria{Coordenadoria de Engenharia da Computação}
 \titulo{Plataforma de Freelance em Blockchain}
-% \subtitulo{Subtitulo se houver}
-\integranteum{Vinícius Lourenço Claro Cardoso}
-\integrantedois{Henrique Rodrigues Silva}
+\integranteum{Henrique Rodrigues Silva}
+\integrantedois{Vinícius Lourenço Claro Cardoso}
 \local{Sorocaba/SP}
 \data{2022}
 
 % ---
 % Informações sobre orientador
 % ---
-\orientador{Kleber de Jesus Dias}
+\orientador{Prof. Kleber de Jesus Dias}
 
 % ---
 % Informações sobre coorientador
@@ -194,6 +167,57 @@
 \setfloatlocations{quadro}{hbtp} % Ver https://github.com/abntex/abntex2/issues/176
 % ---
 
+% ---
+% Adaptações para atender o sumário da biblioteca FACENS
+%
+
+% Define os capítulos como caixa alta
+\makeatletter
+\settocpreprocessor{chapter}{%
+    \let\tempf@rtoc\f@rtoc% 
+    \def\f@rtoc{%
+      \texorpdfstring{\MakeTextUppercase{%
+        \tempf@rtoc}%
+      }{\tempf@rtoc}%
+    }% 
+}
+\makeatother
+
+% define seções como caixa alta
+\makeatletter
+\let\oldcontentsline\contentsline
+\def\contentsline#1#2{%
+  \expandafter\ifx\csname l@#1\endcsname\l@section
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+  {%
+    \oldcontentsline{#1}{\textbf{#2}}%
+  }{%
+    \oldcontentsline{#1}{#2}%
+  }%
+}
+\makeatother
+
+% define capítulo de referencias como caixa alta
+\renewcommand{\bibsection}{%
+    \chapter*{\bibname}
+    \bibmark
+    \ifnobibintoc\else
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\uppercase{\bibname}}
+    \fi
+    \prebibhook
+}
+
+% remove identação
+\cftsetindents{chapter}{0cm}{0.5cm}
+\cftsetindents{section}{0cm}{0.8cm}
+\cftsetindents{subsection}{0cm}{1.1cm}
+\cftsetindents{subsubsection}{0cm}{1.4cm}
+% ---
+
 % --- 
 % Espaçamentos entre linhas e parágrafos 
 % --- 
@@ -208,6 +232,10 @@
 \setlength{\afterchapskip}{\baselineskip}
 \setlength{\aftersecskip}{\baselineskip}
 \setlength{\aftersubsecskip}{\baselineskip}
+
+%\makepagestyle{cabecalhopaginaimpar}
+%\makeoddhead{cabecalhopaginaimpar}
+%{}{}{\small\thepage}
 
 % ---
 % compila o indice
@@ -233,66 +261,35 @@
 \imprimircapa
 \imprimirfolhaderosto*
 
-% TODO: Adicionar de volta quando obter a ficha \input{partes/pre_textuais/ficha_catalografica.tex}
-% TODO: Adicionar de volta quando obter a folha de aprovação \input{partes/pre_textuais/folha_aprovacao.tex}
-% TODO: Adicioanr de volta quando começar a escrever os agradecimentos \input{partes/pre_textuais/agradecimentos.tex}
-% TODO: Adicionar de volta quando entender para que serve \input{partes/pre_textuais/epigrafe.tex}
-% TODO: Adicionar de volta quando for escrever o resumo \input{partes/pre_textuais/resumo.tex}
-% TODO: Adicionar de volta quando tiver alguma figura \input{partes/pre_textuais/lista_figuras.tex}
-% TODO: Adicionar de volta quando tiver algum quadro \input{partes/pre_textuais/lista_quadros.tex}
-% TODO: Adicionar de volta quando tiver alguma tabela \input{partes/pre_textuais/lista_tabelas.tex}
+%\input{partes/pre_textuais/ficha_catalografica.tex}
+%\input{partes/pre_textuais/folha_aprovacao.tex}
+\input{partes/pre_textuais/agradecimentos.tex}
+\input{partes/pre_textuais/epigrafe.tex}
+\input{partes/pre_textuais/resumo.tex}
+\input{partes/pre_textuais/lista_figuras.tex}
+\input{partes/pre_textuais/lista_quadros.tex}
+\input{partes/pre_textuais/lista_tabelas.tex}
 \input{partes/pre_textuais/lista_siglas.tex}
 \input{partes/pre_textuais/sumario.tex}
 
 % ----------------------------------------------------------
 % ELEMENTOS TEXTUAIS
 % ----------------------------------------------------------
+\textual % informa o inicio da numeração de páginas em algarismos arábicos
 \input{partes/textuais/introducao.tex}
-% TODO: Adicionar de volta quando chegar na parte de escrever o referencial teórico \input{partes/textuais/referencial_teorico.tex}
-% TODO: Adicionar de volta quando chegar na parte de escrever o metodologias \input{partes/textuais/metodologias.tex}
-% TODO: Adicionar de volta quando chegar na parte de escrever o resultado \input{partes/textuais/resultados.tex}
-% TODO: Adicionar de volta quando chegar na parte de escrever a conclusão \input{partes/textuais/conclusao.tex}
+\input{partes/textuais/referencial_teorico.tex}
+\input{partes/textuais/desenvolvimento.tex}
+\input{partes/textuais/resultados.tex}
+\input{partes/textuais/conclusao.tex}
 
 % ----------------------------------------------------------
 % ELEMENTOS PÓS-TEXTUAIS
 % ----------------------------------------------------------
-
+% \postextual % coloca um espaço no sumário entre os elementos textuais e pós-textuais
 \bibliography{abntex2-modelo-references}
 
-Os textos abaixo serão removidos na versão final, eles estão aqui apenas como parte da entrega do Report 2.
-
-\cite{bitcoin} 
-A popularização do Blockchain começou quando o Bitcoin foi lançado, e muito dos conceitos de criptomoedas vem desse white-paper, por isso colocamos essa referência.
-
-\cite{blockchain}
-Com o white-paper do Bitcoin dando uma introdução sobre o conceito do Blockchain, nesse paper do MIT, eles definem o que é realmente o Blockchain e entram em tópicos mais avançados, e essa referência será usada para definir o termo Blockchain, assim como, falar dos detalhes de implementação ao mencionar outras redes de Blockchain.
-
-\cite{ethereum}
-É um white-paper do co-fundador do Ethereum que é uma das redes de Blockchain mais famosas e nela que este trabalho toma forma, apesar da implementação final não usar a Ethereum por conta de custos, é necessário falar e descrever o que é o Ethereum e a sua influência, assim como, entender os conceitos apresentados.
-
-\cite{ethereum_yellow}
-É um yellow-paper do co-fundador do Ethereum, Gavin Wood, e nesse yellow-paper temos uma descrição mais detalhada de como funciona o sistema que roda os Smart Contracts, e essas definições serão usadas para embasar os detalhes técnicos deste trabalho.
-
-\cite{smart_contract}
-É um paper de Nick Szabo, onde ele descreve uma das primeiras definições de Smart Contracts e esse trabalho é a referencia principal quando se trata de descrever o que são os Smart Contracts em sua natureza.
-
-\cite{smart_contract_blockchain}
-Nessa referencia, é uma continuação que aprofunda as explicações e definições de Smart Contracts definidas por Nick Szabo ao apresentar até mesmo a implementação de Smart Contracts em Solidity, assim como, fala também da aplicação de Smart Contracts para substituir contratos legais.
-
-\cite{ipfs}
-É o white-paper que descreve o que é o IPFS, o protocolo para salvar arquivos de forma permanente que será usado durante o contrato para hospedar o site.
-
-\cite{decentralization}
-Durante a criação do referencia teórico, esse trabalho de Markus Boeckenfoerde é uma peça importante para entender a motivação por trás do nosso trabalho de criar uma plataforma totalmente descentralizada de freelance, Markus em seu trabalho descreve como a descentralização ajuda a manter a paz e segurança em relações de governança entre entidades e indivíduos.
-
-\cite{polygon}
-Como mencionado anteriormente, não iremos usar a Ethereum, em vez disso, foi escolhido a rede Polygon que é mais nova que a Ethereum e possui custos de transação menores, e nesse white-paper, é definido o que é o Polygon e o Matic (a moeda da rede).
-
-\cite{curses_of_blockchain}
-Esse trabalho de Shumo Chu e Sophia Wang será usado para embasar melhor o motivo da escolha da implementação usando Polygon em vez do Ethereum, e também falar mais sobre os problemas que ocorrem ao criar uma solução totalmente descentralizada.
-
-% TODO: Adicionar de volta se fizer sentido \input{partes/pos_textuais/apendices.tex}
-% TODO: Adicionar de volta se fizer sentido \input{partes/pos_textuais/anexos.tex}
+\input{partes/pos_textuais/apendices.tex}
+\input{partes/pos_textuais/anexos.tex}
 
 %---------------------------------------------------------------------
 % INDICE REMISSIVO
